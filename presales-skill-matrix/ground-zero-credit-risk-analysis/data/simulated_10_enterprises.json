@@ -1,0 +1,373 @@
+[
+  {
+    "case_id": "S01",
+    "enterprise_name": "宁波某智能装备有限公司",
+    "industry": "高端装备制造",
+    "region": "浙江省宁波市",
+    "credit_type": "续贷",
+    "requested_amount": "3000 万元",
+    "use_of_funds": "采购原材料和日常流动资金",
+    "known_background": "企业为某核心厂商二级供应商，近两年收入增长较快，但应收账款余额同步上升。",
+    "business_registration": "企业成立 8 年，注册资本 5000 万元，实控人持股 65%，近一年无经营异常记录。",
+    "financials": {
+      "revenue_growth": 35,
+      "profit_growth": 8,
+      "operating_cash_flow": "连续两年为负",
+      "receivables_to_revenue": 48,
+      "asset_liability_ratio": 62
+    },
+    "operations": "主要客户集中于 3 家大型制造企业，前五大客户收入占比约 70%。企业表示订单充足，但回款周期较长。",
+    "legal_records": "无失信被执行记录，无重大未决诉讼。",
+    "public_sentiment": "暂无明显负面舆情。",
+    "related_parties": "实控人另控制一家贸易公司，该贸易公司与本企业存在采购往来。",
+    "bank_internal_data": "历史还款正常，无逾期记录。",
+    "expected_level": "L3",
+    "change_tests": [
+      {
+        "name": "应收账款下降且现金流转正",
+        "change": "将应收账款占营收比例从 48% 降至 25%，经营性现金流改为近两年为正。",
+        "expected_level_after_change": "L2",
+        "reason": "财务质量明显改善，仅保留客户集中和关联交易待核验。"
+      },
+      {
+        "name": "新增被执行记录",
+        "change": "司法信息新增被执行金额 800 万元。",
+        "expected_level_after_change": "L4",
+        "reason": "在原有财务和关联风险基础上增加司法风险。"
+      }
+    ]
+  },
+  {
+    "case_id": "S02",
+    "enterprise_name": "成都某供应链服务有限公司",
+    "industry": "供应链服务",
+    "region": "四川省成都市",
+    "credit_type": "首次授信",
+    "requested_amount": "1000 万元",
+    "use_of_funds": "补充流动资金",
+    "known_background": "客户由园区推荐，暂未提供详细经营资料。",
+    "business_registration": "",
+    "financials": {},
+    "operations": "",
+    "legal_records": "",
+    "public_sentiment": "",
+    "related_parties": "",
+    "bank_internal_data": "",
+    "expected_level": "L2",
+    "change_tests": [
+      {
+        "name": "补齐基础资料且无异常",
+        "change": "补充工商、财务、经营、司法、舆情、关联关系和银行内部资料，均未发现明显异常。",
+        "expected_level_after_change": "L2",
+        "reason": "首次授信即使资料完整且无明显风险，也保留常规核验关注。"
+      },
+      {
+        "name": "发现真实贸易背景不足",
+        "change": "补充资料后发现主要订单缺少合同、发票和物流凭证。",
+        "expected_level_after_change": "L3",
+        "reason": "经营真实性需要重点现场核验。"
+      }
+    ]
+  },
+  {
+    "case_id": "S03",
+    "enterprise_name": "武汉某建筑工程有限公司",
+    "industry": "建筑工程",
+    "region": "湖北省武汉市",
+    "credit_type": "增额",
+    "requested_amount": "5000 万元",
+    "use_of_funds": "项目回款前的工程款垫付和日常周转",
+    "known_background": "企业存量授信仍在正常还款，但近期申请较大额度增额。",
+    "business_registration": "近一年法定代表人和股东发生多次变更。",
+    "financials": {
+      "short_term_debt": "短期借款大幅增加",
+      "operating_cash_flow": "经营性现金流为负"
+    },
+    "operations": "部分项目回款延期，企业解释为业主方付款节奏影响。",
+    "legal_records": "存在多起买卖合同纠纷，被执行金额合计 1200 万元。",
+    "public_sentiment": "公开报道提及工程停工和拖欠供应商款项。",
+    "related_parties": "暂无完整关联企业清单。",
+    "bank_internal_data": "存量授信尚未逾期。",
+    "expected_level": "L5",
+    "change_tests": [
+      {
+        "name": "司法风险解除且项目恢复",
+        "change": "被执行事项已结清，停工项目恢复，短期借款未继续增加。",
+        "expected_level_after_change": "L3",
+        "reason": "重大风险解除后，仍需核验现金流和工程回款。"
+      },
+      {
+        "name": "新增失信记录",
+        "change": "新增失信被执行记录。",
+        "expected_level_after_change": "L5",
+        "reason": "重大司法风险，需人工专项复核。"
+      }
+    ]
+  },
+  {
+    "case_id": "S04",
+    "enterprise_name": "苏州某医疗器械有限公司",
+    "industry": "医疗器械",
+    "region": "江苏省苏州市",
+    "credit_type": "首次授信",
+    "requested_amount": "2000 万元",
+    "use_of_funds": "扩大产线和采购核心零部件",
+    "known_background": "企业订单增长稳定，客户包括多家三甲医院和区域经销商。",
+    "business_registration": "企业成立 10 年，股权结构稳定，近三年无经营异常记录。",
+    "financials": {
+      "revenue_growth": 18,
+      "profit_growth": 15,
+      "operating_cash_flow": "近两年为正",
+      "receivables_to_revenue": 22,
+      "asset_liability_ratio": 45
+    },
+    "operations": "前五大客户收入占比约 38%，主要订单有合同、发票和验收材料。",
+    "legal_records": "无被执行记录，无重大诉讼。",
+    "public_sentiment": "暂无明显负面舆情。",
+    "related_parties": "未发现重大关联交易或对外担保。",
+    "bank_internal_data": "暂无历史授信记录。",
+    "expected_level": "L2",
+    "change_tests": [
+      {
+        "name": "新增产品质量处罚",
+        "change": "舆情和行政处罚信息显示因产品质量问题受到监管处罚。",
+        "expected_level_after_change": "L3",
+        "reason": "医疗器械行业对质量和合规高度敏感。"
+      },
+      {
+        "name": "现金流转负且应收上升",
+        "change": "经营性现金流转负，应收账款占营收比例上升至 45%。",
+        "expected_level_after_change": "L3",
+        "reason": "财务质量恶化，需要重点核验回款。"
+      }
+    ]
+  },
+  {
+    "case_id": "S05",
+    "enterprise_name": "佛山某家居制造有限公司",
+    "industry": "家居制造",
+    "region": "广东省佛山市",
+    "credit_type": "年审",
+    "requested_amount": "2500 万元",
+    "use_of_funds": "季节性原材料采购",
+    "known_background": "企业受地产链景气度影响，近一年订单有所下降。",
+    "business_registration": "企业成立 12 年，股权结构稳定。",
+    "financials": {
+      "revenue_growth": -18,
+      "profit_growth": -35,
+      "operating_cash_flow": "近一年为负",
+      "receivables_to_revenue": 35,
+      "asset_liability_ratio": 68
+    },
+    "operations": "主要客户为家具卖场和地产精装供应链客户，订单出现延期。",
+    "legal_records": "无失信被执行记录，存在一笔小额买卖合同纠纷。",
+    "public_sentiment": "行业景气度下行，暂无企业自身重大负面舆情。",
+    "related_parties": "未发现重大关联交易。",
+    "bank_internal_data": "历史还款正常，但近半年账户流水波动较大。",
+    "expected_level": "L3",
+    "change_tests": [
+      {
+        "name": "订单恢复且现金流转正",
+        "change": "新增稳定订单，经营性现金流转正，账户流水恢复稳定。",
+        "expected_level_after_change": "L2",
+        "reason": "主要风险缓释，但行业周期仍需关注。"
+      },
+      {
+        "name": "出现大额被执行",
+        "change": "新增被执行金额 1500 万元。",
+        "expected_level_after_change": "L4",
+        "reason": "行业下行叠加司法风险。"
+      }
+    ]
+  },
+  {
+    "case_id": "S06",
+    "enterprise_name": "郑州某农产品贸易有限公司",
+    "industry": "农产品贸易",
+    "region": "河南省郑州市",
+    "credit_type": "首次授信",
+    "requested_amount": "1500 万元",
+    "use_of_funds": "采购玉米、小麦等农产品",
+    "known_background": "企业交易规模增长较快，但利润率较低。",
+    "business_registration": "企业成立 4 年，注册资本 1000 万元，股权结构较简单。",
+    "financials": {
+      "revenue_growth": 50,
+      "profit_growth": 5,
+      "operating_cash_flow": "近一年为负",
+      "receivables_to_revenue": 30,
+      "asset_liability_ratio": 72
+    },
+    "operations": "主要供应商和客户集中，部分交易缺少完整物流和仓储凭证。",
+    "legal_records": "无被执行记录。",
+    "public_sentiment": "暂无明显负面舆情。",
+    "related_parties": "实控人亲属控制一家下游贸易商，与本企业有往来。",
+    "bank_internal_data": "暂无历史授信记录。",
+    "expected_level": "L3",
+    "change_tests": [
+      {
+        "name": "补齐物流仓储凭证",
+        "change": "补充完整仓储、物流、发票和回款材料，关联交易占比很低。",
+        "expected_level_after_change": "L3",
+        "reason": "经营真实性风险缓释，但高杠杆和现金流仍需关注。"
+      },
+      {
+        "name": "发现资金回流",
+        "change": "银行流水显示资金流向关联贸易商后回流实控人账户。",
+        "expected_level_after_change": "L5",
+        "reason": "存在资金闭环和挪用嫌疑。"
+      }
+    ]
+  },
+  {
+    "case_id": "S07",
+    "enterprise_name": "青岛某冷链物流有限公司",
+    "industry": "冷链物流",
+    "region": "山东省青岛市",
+    "credit_type": "续贷",
+    "requested_amount": "1800 万元",
+    "use_of_funds": "车辆维护、油费和仓储周转",
+    "known_background": "企业服务区域食品加工企业，收入较稳定。",
+    "business_registration": "企业成立 9 年，股权稳定，无经营异常。",
+    "financials": {
+      "revenue_growth": 8,
+      "profit_growth": 6,
+      "operating_cash_flow": "近两年为正",
+      "receivables_to_revenue": 28,
+      "asset_liability_ratio": 55
+    },
+    "operations": "车辆、仓储和订单资料较完整，前五大客户占比 45%。",
+    "legal_records": "无重大诉讼，无被执行记录。",
+    "public_sentiment": "暂无明显负面舆情。",
+    "related_parties": "存在少量关联租赁交易，金额较小。",
+    "bank_internal_data": "历史还款正常，无逾期。",
+    "expected_level": "L2",
+    "change_tests": [
+      {
+        "name": "去除关联租赁且补充合同",
+        "change": "补齐关联租赁合同和定价说明，确认金额较小且定价公允。",
+        "expected_level_after_change": "L1",
+        "reason": "轻微信号被解释清楚。"
+      },
+      {
+        "name": "核心客户流失",
+        "change": "前两大客户停止合作，新增订单不足。",
+        "expected_level_after_change": "L3",
+        "reason": "经营稳定性和收入持续性需要重点核验。"
+      }
+    ]
+  },
+  {
+    "case_id": "S08",
+    "enterprise_name": "杭州某跨境电商有限公司",
+    "industry": "跨境电商",
+    "region": "浙江省杭州市",
+    "credit_type": "增额",
+    "requested_amount": "4000 万元",
+    "use_of_funds": "海外仓备货和平台推广",
+    "known_background": "企业近两年收入增长较快，海外平台销售占比高。",
+    "business_registration": "企业成立 6 年，近一年新增两家境外关联主体。",
+    "financials": {
+      "revenue_growth": 60,
+      "profit_growth": 12,
+      "operating_cash_flow": "近一年为负",
+      "receivables_to_revenue": 42,
+      "asset_liability_ratio": 66
+    },
+    "operations": "平台销售数据增长较快，但库存周转周期拉长，海外仓库存增加。",
+    "legal_records": "无被执行记录。",
+    "public_sentiment": "存在少量消费者投诉，暂无重大负面舆情。",
+    "related_parties": "境外关联主体与企业存在采购和结算往来。",
+    "bank_internal_data": "历史还款正常。",
+    "expected_level": "L3",
+    "change_tests": [
+      {
+        "name": "海外仓库存下降且回款改善",
+        "change": "库存周转恢复，应收账款占比降至 25%，经营性现金流转正。",
+        "expected_level_after_change": "L2",
+        "reason": "主要财务和经营压力缓释，保留首次授信或跨境结算资料核验关注。"
+      },
+      {
+        "name": "平台封店",
+        "change": "主要销售平台账号被限制销售。",
+        "expected_level_after_change": "L5",
+        "reason": "主营收入来源受到重大影响。"
+      }
+    ]
+  },
+  {
+    "case_id": "S09",
+    "enterprise_name": "西安某软件服务有限公司",
+    "industry": "企业软件服务",
+    "region": "陕西省西安市",
+    "credit_type": "首次授信",
+    "requested_amount": "800 万元",
+    "use_of_funds": "项目人力投入和研发周转",
+    "known_background": "企业服务政企客户，收入以项目制交付为主。",
+    "business_registration": "企业成立 7 年，股权结构稳定。",
+    "financials": {
+      "revenue_growth": 12,
+      "profit_growth": 10,
+      "operating_cash_flow": "近一年为正",
+      "receivables_to_revenue": 38,
+      "asset_liability_ratio": 40
+    },
+    "operations": "项目合同较完整，但回款受客户验收周期影响。",
+    "legal_records": "无被执行记录，无重大诉讼。",
+    "public_sentiment": "暂无明显负面舆情。",
+    "related_parties": "未发现重大关联交易。",
+    "bank_internal_data": "暂无历史授信记录。",
+    "expected_level": "L2",
+    "change_tests": [
+      {
+        "name": "应收账款超过阈值",
+        "change": "应收账款占营收比例从 38% 升至 55%，且多个项目验收延期。",
+        "expected_level_after_change": "L3",
+        "reason": "项目回款和验收风险上升。"
+      },
+      {
+        "name": "补齐回款和验收材料",
+        "change": "补齐项目验收单、回款计划和客户确认函。",
+        "expected_level_after_change": "L2",
+        "reason": "首次授信即使补齐项目材料，仍保留轻微信息缺口关注。"
+      }
+    ]
+  },
+  {
+    "case_id": "S10",
+    "enterprise_name": "天津某化工材料有限公司",
+    "industry": "化工材料",
+    "region": "天津市",
+    "credit_type": "续贷",
+    "requested_amount": "3500 万元",
+    "use_of_funds": "原材料采购和环保设备改造",
+    "known_background": "企业受原材料价格波动影响较大，近期申请续贷。",
+    "business_registration": "企业成立 15 年，股权稳定。",
+    "financials": {
+      "revenue_growth": -5,
+      "profit_growth": -20,
+      "operating_cash_flow": "近一年为负",
+      "receivables_to_revenue": 32,
+      "asset_liability_ratio": 70
+    },
+    "operations": "主要客户稳定，但毛利率受原材料价格波动影响明显。",
+    "legal_records": "无被执行记录。",
+    "public_sentiment": "近一年存在环保整改报道，企业表示已完成整改。",
+    "related_parties": "存在关联担保，金额约 600 万元。",
+    "bank_internal_data": "历史还款正常，但授信敞口较高。",
+    "expected_level": "L4",
+    "change_tests": [
+      {
+        "name": "环保整改完成且现金流改善",
+        "change": "提供环保验收材料，经营性现金流转正，关联担保解除。",
+        "expected_level_after_change": "L2",
+        "reason": "环保、现金流和关联担保风险明显缓释。"
+      },
+      {
+        "name": "新增环保处罚",
+        "change": "新增环保处罚和停产整改要求。",
+        "expected_level_after_change": "L5",
+        "reason": "化工行业环保处罚可能直接影响经营连续性。"
+      }
+    ]
+  }
+]

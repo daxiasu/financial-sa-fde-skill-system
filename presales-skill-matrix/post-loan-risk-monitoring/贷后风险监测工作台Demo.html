@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>贷后风险监测报告生成工作台</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --panel: #ffffff;
+      --line: #d8dee7;
+      --text: #17202a;
+      --muted: #5f6d7c;
+      --blue: #1f6feb;
+      --teal: #0f8b8d;
+      --green: #157f3b;
+      --amber: #b7791f;
+      --red: #b42318;
+      --purple: #6f42c1;
+      --shadow: 0 12px 30px rgba(20, 30, 44, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      letter-spacing: 0;
+    }
+
+    button,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    header {
+      min-height: 68px;
+      padding: 12px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      border: 1px solid #aeb9c7;
+      color: var(--blue);
+      background: #f8fafc;
+      font-weight: 850;
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .pill {
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 5px;
+      border: 1px solid #d8dee7;
+      background: #f8fafc;
+      color: #435264;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .main {
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 390px minmax(0, 1fr) 360px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      min-height: 54px;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .panel-note {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .panel-body {
+      padding: 14px;
+    }
+
+    .notice {
+      grid-column: 1 / -1;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 13px;
+      border: 1px solid #d3e0ef;
+      background: #f6fbff;
+      color: #25466a;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .task-panel {
+      display: grid;
+      min-height: calc(100vh - 150px);
+      align-content: start;
+    }
+
+    .task-card {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #fbfcfd;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .task-card h2 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .task-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: #334155;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .check-item {
+      min-height: 34px;
+      border: 1px solid #d8dee7;
+      border-radius: 7px;
+      background: #ffffff;
+      padding: 7px 8px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .check-item input {
+      margin: 0;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      resize: vertical;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      padding: 10px;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.5;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .task-summary {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 11px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .task-summary strong {
+      color: var(--text);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-height: 36px;
+      border: 1px solid #9fb4ce;
+      border-radius: 6px;
+      padding: 7px 12px;
+      cursor: pointer;
+      font-weight: 750;
+      color: #164c86;
+      background: #f7fbff;
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .btn:disabled {
+      opacity: 0.62;
+      cursor: not-allowed;
+    }
+
+    .workspace {
+      display: grid;
+      gap: 16px;
+    }
+
+    .planner-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stage {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      padding: 11px;
+      min-height: 112px;
+      background: #fbfcfd;
+    }
+
+    .stage.active {
+      border-color: #93bdf4;
+      background: #f3f8ff;
+    }
+
+    .stage.done {
+      border-color: #b9dfc4;
+      background: #f5fbf7;
+    }
+
+    .stage.warn {
+      border-color: #efd49a;
+      background: #fff9ec;
+    }
+
+    .stage-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .stage h3 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .stage p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .l1-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .l1-item {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      gap: 9px;
+      align-items: start;
+    }
+
+    .l1-code {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      color: #ffffff;
+      background: var(--teal);
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .l1-item strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .l1-item span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.42;
+    }
+
+    .status {
+      min-width: 54px;
+      text-align: center;
+      border: 1px solid #d3dce8;
+      border-radius: 5px;
+      padding: 3px 6px;
+      color: #556273;
+      background: #f7f9fb;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .status.done {
+      color: var(--green);
+      background: #f0f9f3;
+      border-color: #bfe5ca;
+    }
+
+    .status.active {
+      color: var(--blue);
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .report {
+      display: grid;
+      gap: 12px;
+    }
+
+    .report-section {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+    }
+
+    .report-section h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .report-section p,
+    .report-section li {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .report-section ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .risk-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .risk-table th,
+    .risk-table td {
+      border-bottom: 1px solid #e5e9ef;
+      text-align: left;
+      padding: 8px 6px;
+      vertical-align: top;
+    }
+
+    .risk-table th {
+      color: #425164;
+      background: #f8fafc;
+      font-weight: 800;
+    }
+
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 7px;
+      border-radius: 5px;
+      font-weight: 800;
+      font-size: 12px;
+      border: 1px solid #d8dee7;
+      white-space: nowrap;
+    }
+
+    .level-stable {
+      color: var(--green);
+      background: #f0f9f3;
+      border-color: #bfe5ca;
+    }
+
+    .level-light {
+      color: #8a620f;
+      background: #fff8e8;
+      border-color: #efd49a;
+    }
+
+    .level-obvious {
+      color: #9f3a0c;
+      background: #fff3eb;
+      border-color: #f1c3a3;
+    }
+
+    .level-critical {
+      color: var(--red);
+      background: #fff1f0;
+      border-color: #f2b8b5;
+    }
+
+    .data-tools {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    select {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      color: var(--text);
+      background: #ffffff;
+      padding: 6px 8px;
+      outline: none;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stat {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #fbfcfd;
+      padding: 10px;
+      min-height: 70px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.2;
+      color: var(--text);
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .portfolio-list {
+      display: grid;
+      gap: 8px;
+      max-height: calc(100vh - 360px);
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .customer-row {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      padding: 10px;
+      background: #ffffff;
+      display: grid;
+      gap: 7px;
+    }
+
+    .customer-row strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .customer-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .rule-hits {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .empty {
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 18px;
+      color: var(--muted);
+      background: #fbfcfd;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1220px) {
+      .main {
+        grid-template-columns: 360px minmax(0, 1fr);
+      }
+
+      .data-panel {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 860px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .header-right {
+        flex-wrap: wrap;
+      }
+
+      .main {
+        grid-template-columns: 1fr;
+        padding: 12px;
+      }
+
+      .task-panel {
+        min-height: auto;
+      }
+
+      .planner-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-mark">贷</div>
+        <div>
+          <h1>贷后风险监测报告生成工作台</h1>
+          <div class="subtitle">固定贷后监测任务、L1 Skill 加载链路、风险变化报告生成</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <span>Skill：post-loan-risk-monitoring</span>
+        <span>版本：v0.1 演示原型</span>
+        <span>Author: daxiasu</span>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="notice">
+        <strong>公开演示说明：</strong>
+        <span>本页面使用模拟存量授信客户数据，展示 L2 场景 Skill 如何盘点并调用 L1 原子能力完成贷后监测。结果不构成正式风险分类、授信调整或处置决定。</span>
+      </div>
+
+      <section class="panel task-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">贷后经理工作台</div>
+            <div class="panel-note">固定贷后监测任务入口，突出 L2 调用 L1 的执行过程</div>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div class="task-card">
+            <h2>本月存量授信客户贷后风险监测</h2>
+            <p>客户经理发起标准化贷后监测任务，Skill 自动加载企业画像、还款、财务、公开风险、关联关系等 L1 原子能力，生成重点客户名单和监测报告。</p>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="scopeSelect">监测范围</label>
+              <select id="scopeSelect">
+                <option value="all">全部存量授信客户</option>
+                <option value="trade">贸易/供应链客户专项</option>
+                <option value="manufacturing">制造相关客户专项</option>
+                <option value="warning">重大预警客户复核</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="periodSelect">监测周期</label>
+              <select id="periodSelect">
+                <option value="2026 年 6 月">2026 年 6 月</option>
+                <option value="最近一期">最近一期</option>
+                <option value="季度监测">季度监测</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>关注维度</label>
+              <div class="checkbox-grid">
+                <label class="check-item"><input type="checkbox" value="repayment" checked /> 还款行为</label>
+                <label class="check-item"><input type="checkbox" value="finance" checked /> 财务变化</label>
+                <label class="check-item"><input type="checkbox" value="public" checked /> 公开风险</label>
+                <label class="check-item"><input type="checkbox" value="relation" checked /> 关联关系</label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="taskNote">任务备注</label>
+              <textarea id="taskNote">优先识别风险上升客户，输出客户经理跟进动作和需补充材料。</textarea>
+            </div>
+
+            <div class="task-summary" id="taskSummary">
+              <strong>当前任务：</strong>全部存量授信客户 / 2026 年 6 月 / 还款行为、财务变化、公开风险、关联关系。
+            </div>
+
+            <div class="toolbar">
+              <button class="btn primary" id="runBtn" type="button">生成监测报告</button>
+              <button class="btn" id="resetBtn" type="button">恢复默认任务</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">L2 执行链路</div>
+              <div class="panel-note">展示固定场景 Skill 如何盘点、加载并调用 L1 原子能力</div>
+            </div>
+            <span class="pill" id="runStatus">等待任务</span>
+          </div>
+          <div class="panel-body">
+            <div class="planner-grid">
+              <div class="stage" id="intentStage">
+                <div class="stage-label"><span>01</span><span>Task</span></div>
+                <h3>任务装载</h3>
+                <p id="intentText">等待贷后经理发起监测任务。</p>
+              </div>
+              <div class="stage" id="slotStage">
+                <div class="stage-label"><span>02</span><span>Scope</span></div>
+                <h3>监测口径</h3>
+                <p id="slotText">待读取监测范围、周期和关注维度。</p>
+              </div>
+              <div class="stage" id="planStage">
+                <div class="stage-label"><span>03</span><span>L1</span></div>
+                <h3>L1 能力盘点</h3>
+                <p id="planText">待加载 L1 原子 Skill。</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">L1 原子 Skill 调用</div>
+              <div class="panel-note">本演示以本地模拟方式展示调用链路</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="l1-list" id="l1List">
+              <div class="empty">尚未生成调用计划。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">贷后风险监测报告</div>
+              <div class="panel-note">报告随监测范围和关注维度生成</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="report" id="reportView">
+              <div class="empty">等待执行监测任务。</div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel data-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">存量授信客户数据区</div>
+            <div class="panel-note">模拟组合数据，用于展示风险变化识别</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="data-tools">
+            <select id="portfolioFilter">
+              <option value="all">全部客户</option>
+              <option value="trade">贸易/供应链客户</option>
+              <option value="manufacturing">制造相关客户</option>
+              <option value="warning">重大预警客户</option>
+              <option value="stable">稳定客户</option>
+            </select>
+          </div>
+          <div class="stats" id="statsView"></div>
+          <div class="portfolio-list" id="portfolioList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const portfolio = [
+      { id: "PL01", name: "宁波某智能装备有限公司", industry: "高端制造", region: "浙江宁波", manager: "王经理", amount: 38, previous: "稳定", revenue: -8, cashflow: false, debt: 61, receivable: false, inventory: false, overdue: 0, extension: false, repaymentUnclear: false, publicRisk: "none", relatedRatio: 6, relatedNegative: false, fundFlow: false, industryDownturn: false, regionalEvent: false, notes: "订单相对稳定，主要客户回款正常。" },
+      { id: "PL02", name: "成都某供应链服务有限公司", industry: "贸易/供应链", region: "四川成都", manager: "李经理", amount: 52, previous: "轻微上升", revenue: -22, cashflow: true, debt: 74, receivable: true, inventory: false, overdue: 0, extension: false, repaymentUnclear: false, publicRisk: "administrative_penalty", relatedRatio: 8, relatedNegative: false, fundFlow: false, industryDownturn: false, regionalEvent: false, notes: "近期回款节奏放缓，存在轻度行政处罚线索。" },
+      { id: "PL03", name: "武汉某建筑工程有限公司", industry: "建筑工程", region: "湖北武汉", manager: "张经理", amount: 64, previous: "明显上升", revenue: -36, cashflow: true, debt: 82, receivable: true, inventory: false, overdue: 18, extension: true, repaymentUnclear: true, publicRisk: "lawsuit", relatedRatio: 9, relatedNegative: false, fundFlow: false, industryDownturn: true, regionalEvent: false, notes: "多个工程项目回款延期，存在诉讼线索。" },
+      { id: "PL04", name: "苏州某医疗器械有限公司", industry: "医疗器械", region: "江苏苏州", manager: "陈经理", amount: 29, previous: "稳定", revenue: -5, cashflow: false, debt: 48, receivable: false, inventory: true, overdue: 0, extension: false, repaymentUnclear: false, publicRisk: "none", relatedRatio: 12, relatedNegative: false, fundFlow: false, industryDownturn: true, regionalEvent: false, notes: "库存增加且行业招采节奏放缓，需要跟进渠道库存。" },
+      { id: "PL05", name: "佛山某家居制造有限公司", industry: "制造业", region: "广东佛山", manager: "周经理", amount: 41, previous: "稳定", revenue: -18, cashflow: true, debt: 69, receivable: true, inventory: false, overdue: 0, extension: false, repaymentUnclear: false, publicRisk: "none", relatedRatio: 6, relatedNegative: false, fundFlow: false, industryDownturn: true, regionalEvent: false, notes: "下游需求走弱，应收压力和现金流压力上升。" },
+      { id: "PL06", name: "郑州某农产品贸易有限公司", industry: "贸易/农产品", region: "河南郑州", manager: "赵经理", amount: 33, previous: "轻微上升", revenue: -12, cashflow: false, debt: 73, receivable: false, inventory: false, overdue: 0, extension: false, repaymentUnclear: false, publicRisk: "none", relatedRatio: 28, relatedNegative: false, fundFlow: true, industryDownturn: false, regionalEvent: false, notes: "关联交易占比升高，部分资金往来解释需要补充。" },
+      { id: "PL07", name: "青岛某冷链物流有限公司", industry: "物流", region: "山东青岛", manager: "刘经理", amount: 47, previous: "稳定", revenue: -5, cashflow: false, debt: 58, receivable: false, inventory: false, overdue: 0, extension: false, repaymentUnclear: false, publicRisk: "none", relatedRatio: 3, relatedNegative: false, fundFlow: false, industryDownturn: false, regionalEvent: false, notes: "运营稳定，新增冷链线路开始贡献收入。" },
+      { id: "PL08", name: "杭州某跨境电商有限公司", industry: "跨境电商", region: "浙江杭州", manager: "孙经理", amount: 26, previous: "轻微上升", revenue: -31, cashflow: true, debt: 74, receivable: false, inventory: true, overdue: 0, extension: false, repaymentUnclear: false, publicRisk: "none", relatedRatio: 9, relatedNegative: false, fundFlow: false, industryDownturn: false, regionalEvent: false, notes: "平台规则变化导致销量下降，库存周转放缓。" },
+      { id: "PL09", name: "西安某软件服务有限公司", industry: "软件服务", region: "陕西西安", manager: "黄经理", amount: 22, previous: "稳定", revenue: 12, cashflow: false, debt: 39, receivable: false, inventory: false, overdue: 0, extension: false, repaymentUnclear: false, publicRisk: "none", relatedRatio: 2, relatedNegative: false, fundFlow: false, industryDownturn: false, regionalEvent: false, notes: "现金流健康，客户结构分散。" },
+      { id: "PL10", name: "天津某化工材料有限公司", industry: "化工材料", region: "天津", manager: "马经理", amount: 58, previous: "明显上升", revenue: -28, cashflow: true, debt: 80, receivable: true, inventory: true, overdue: 38, extension: true, repaymentUnclear: true, publicRisk: "regulatory_penalty", relatedRatio: 31, relatedNegative: true, fundFlow: true, industryDownturn: true, regionalEvent: false, notes: "出现监管处罚和逾期叠加，关联方亦有负面信息。" }
+    ];
+
+    const l1Catalog = [
+      { id: "L1-01", name: "企业基础画像生成", desc: "读取行业、区域、授信金额、客户经理和历史关注状态。" },
+      { id: "L1-02", name: "还款行为监测", desc: "检查逾期、展期、借新还旧和还款来源解释情况。" },
+      { id: "L1-03", name: "财务异常指标识别", desc: "识别营收、现金流、负债率、应收和存货变化。" },
+      { id: "L1-04", name: "公开风险线索检索", desc: "提取司法、舆情、监管处罚和经营异常线索。" },
+      { id: "L1-05", name: "关联关系与交易识别", desc: "识别关联交易占比、关联方负面和异常资金往来。" },
+      { id: "L1-06", name: "风险变化归因", desc: "汇总多维信号，解释风险为什么上升。" },
+      { id: "L1-07", name: "贷后处置动作生成", desc: "生成客户经理跟进、风险经理复核和补充材料清单。" }
+    ];
+
+    const els = {
+      scopeSelect: document.getElementById("scopeSelect"),
+      periodSelect: document.getElementById("periodSelect"),
+      taskNote: document.getElementById("taskNote"),
+      taskSummary: document.getElementById("taskSummary"),
+      runBtn: document.getElementById("runBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      runStatus: document.getElementById("runStatus"),
+      intentStage: document.getElementById("intentStage"),
+      slotStage: document.getElementById("slotStage"),
+      planStage: document.getElementById("planStage"),
+      intentText: document.getElementById("intentText"),
+      slotText: document.getElementById("slotText"),
+      planText: document.getElementById("planText"),
+      l1List: document.getElementById("l1List"),
+      reportView: document.getElementById("reportView"),
+      portfolioFilter: document.getElementById("portfolioFilter"),
+      statsView: document.getElementById("statsView"),
+      portfolioList: document.getElementById("portfolioList")
+    };
+
+    let currentFilter = "all";
+
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    function evaluate(customer) {
+      let score = 0;
+      const hits = [];
+
+      if (customer.overdue >= 1 && customer.overdue <= 7) {
+        score += 18;
+        hits.push("逾期 1-7 天");
+      } else if (customer.overdue >= 8 && customer.overdue <= 30) {
+        score += 35;
+        hits.push("逾期 8-30 天");
+      } else if (customer.overdue > 30) {
+        score += 55;
+        hits.push("逾期超过 30 天");
+      }
+
+      if (customer.extension) {
+        score += 20;
+        hits.push("最近 3 个月展期或借新还旧");
+      }
+      if (customer.repaymentUnclear) {
+        score += 12;
+        hits.push("还款资金来源解释不足");
+      }
+      if (customer.revenue <= -15 && customer.revenue >= -30) {
+        score += 12;
+        hits.push("营收同比下降 15%-30%");
+      } else if (customer.revenue < -30) {
+        score += 25;
+        hits.push("营收同比下降超过 30%");
+      }
+      if (customer.cashflow) {
+        score += 18;
+        hits.push("经营性现金流为负");
+      }
+      if (customer.debt > 75) {
+        score += 15;
+        hits.push("资产负债率超过 75%");
+      }
+      if (customer.receivable) {
+        score += 12;
+        hits.push("应收账款周转明显放缓");
+      }
+      if (customer.inventory) {
+        score += 10;
+        hits.push("存货周转明显放缓");
+      }
+      if (customer.publicRisk === "administrative_penalty") {
+        score += 12;
+        hits.push("行政处罚或经营异常");
+      } else if (customer.publicRisk === "lawsuit" || customer.publicRisk === "negative_news") {
+        score += 25;
+        hits.push("诉讼、被执行或重大负面舆情");
+      } else if (customer.publicRisk === "regulatory_penalty") {
+        score += 35;
+        hits.push("监管处罚或重大负面事件");
+      }
+      if (customer.relatedRatio >= 10 && customer.relatedRatio <= 25) {
+        score += 8;
+        hits.push("关联交易占比 10%-25%");
+      } else if (customer.relatedRatio > 25) {
+        score += 18;
+        hits.push("关联交易占比超过 25%");
+      }
+      if (customer.relatedNegative) {
+        score += 20;
+        hits.push("关联方出现重大负面");
+      }
+      if (customer.fundFlow) {
+        score += 15;
+        hits.push("异常资金往来解释不足");
+      }
+      if (customer.industryDownturn) {
+        score += 8;
+        hits.push("行业景气度下行");
+      }
+      if (customer.regionalEvent) {
+        score += 8;
+        hits.push("区域风险事件影响");
+      }
+
+      let level = "稳定";
+      if (score >= 60) level = "重大预警";
+      else if (score >= 35) level = "明显上升";
+      else if (score >= 15) level = "轻微上升";
+
+      return { ...customer, score, level, hits };
+    }
+
+    function levelClass(level) {
+      if (level === "重大预警") return "level-critical";
+      if (level === "明显上升") return "level-obvious";
+      if (level === "轻微上升") return "level-light";
+      return "level-stable";
+    }
+
+    function actionFor(level) {
+      if (level === "重大预警") return "立即提交风险经理复核，安排现场走访，核实还款来源和公开负面。";
+      if (level === "明显上升") return "纳入重点观察名单，客户经理 5 个工作日内完成跟进计划。";
+      if (level === "轻微上升") return "补充材料并持续观察，下一监测周期复核变化。";
+      return "维持常规贷后跟进。";
+    }
+
+    function filterRows(rows, filter) {
+      if (filter === "trade") return rows.filter((row) => row.industry.includes("贸易") || row.industry.includes("供应链"));
+      if (filter === "manufacturing") return rows.filter((row) => row.industry.includes("制造") || row.industry.includes("医疗器械") || row.industry.includes("化工"));
+      if (filter === "warning") return rows.filter((row) => row.level === "重大预警");
+      if (filter === "stable") return rows.filter((row) => row.level === "稳定");
+      return rows;
+    }
+
+    function selectedDimensions() {
+      return Array.from(document.querySelectorAll(".check-item input:checked")).map((item) => item.value);
+    }
+
+    function dimensionLabel(value) {
+      const labels = {
+        repayment: "还款行为",
+        finance: "财务变化",
+        public: "公开风险",
+        relation: "关联关系"
+      };
+      return labels[value] || value;
+    }
+
+    function buildL1Plan(dimensions) {
+      const plan = [l1Catalog[0]];
+      if (dimensions.includes("repayment")) plan.push(l1Catalog[1]);
+      if (dimensions.includes("finance")) plan.push(l1Catalog[2]);
+      if (dimensions.includes("public")) plan.push(l1Catalog[3]);
+      if (dimensions.includes("relation")) plan.push(l1Catalog[4]);
+      plan.push(l1Catalog[5], l1Catalog[6]);
+      return plan;
+    }
+
+    function taskConfig() {
+      const dimensions = selectedDimensions();
+      return {
+        filter: els.scopeSelect.value,
+        period: els.periodSelect.value,
+        dimensions,
+        dimensionText: dimensions.map(dimensionLabel).join("、") || "未选择关注维度",
+        note: els.taskNote.value.trim()
+      };
+    }
+
+    function updateTaskSummary() {
+      const config = taskConfig();
+      els.taskSummary.innerHTML = `<strong>当前任务：</strong>${filterLabel(config.filter)} / ${config.period} / ${config.dimensionText}。`;
+      renderPortfolio(config.filter);
+    }
+
+    function setStage(stage, state) {
+      stage.classList.remove("active", "done", "warn");
+      if (state) stage.classList.add(state);
+    }
+
+    function renderL1Plan(plan, activeIndex = -1, completed = false) {
+      els.l1List.innerHTML = plan.map((item, index) => {
+        let status = "待执行";
+        let statusClass = "";
+        if (completed || index < activeIndex) {
+          status = "完成";
+          statusClass = "done";
+        } else if (index === activeIndex) {
+          status = "执行中";
+          statusClass = "active";
+        }
+        return `
+          <div class="l1-item">
+            <div class="l1-code">${item.id.replace("L1-", "")}</div>
+            <div>
+              <strong>${item.name}</strong>
+              <span>${item.desc}</span>
+            </div>
+            <div class="status ${statusClass}">${status}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function sortedRows(filter) {
+      return filterRows(portfolio.map(evaluate), filter).sort((a, b) => b.score - a.score);
+    }
+
+    function renderPortfolio(filter = currentFilter) {
+      currentFilter = filter;
+      els.portfolioFilter.value = filter;
+      const rows = sortedRows(filter);
+      const allRows = portfolio.map(evaluate);
+      const critical = allRows.filter((row) => row.level === "重大预警").length;
+      const obvious = allRows.filter((row) => row.level === "明显上升").length;
+      const light = allRows.filter((row) => row.level === "轻微上升").length;
+      const stable = allRows.filter((row) => row.level === "稳定").length;
+
+      els.statsView.innerHTML = `
+        <div class="stat"><strong>${allRows.length}</strong><span>存量客户</span></div>
+        <div class="stat"><strong>${critical}</strong><span>重大预警</span></div>
+        <div class="stat"><strong>${obvious + light}</strong><span>风险上升</span></div>
+        <div class="stat"><strong>${stable}</strong><span>稳定客户</span></div>
+      `;
+
+      els.portfolioList.innerHTML = rows.map((row) => `
+        <div class="customer-row">
+          <div>
+            <strong>${row.name}</strong>
+            <div class="customer-meta">
+              <span>${row.industry} / ${row.region}</span>
+              <span>${row.amount} 百万</span>
+            </div>
+          </div>
+          <div class="customer-meta">
+            <span class="level-badge ${levelClass(row.level)}">${row.level}</span>
+            <span>评分 ${row.score}</span>
+          </div>
+          <div class="rule-hits">${row.hits.length ? row.hits.slice(0, 3).join("；") : "未发现明显风险上升信号"}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderReport(config, plan) {
+      const filter = config.filter;
+      const rows = sortedRows(filter);
+      const focusRows = rows.filter((row) => row.level !== "稳定").slice(0, 5);
+      const tableRows = focusRows.map((row) => `
+        <tr>
+          <td>${row.name}<br><span style="color:#6b7280;">${row.industry}</span></td>
+          <td>${row.amount} 百万</td>
+          <td><span class="level-badge ${levelClass(row.level)}">${row.level}</span></td>
+          <td>${row.hits.slice(0, 3).join("；") || "未发现明显异常"}</td>
+          <td>${actionFor(row.level)}</td>
+        </tr>
+      `).join("");
+
+      const critical = rows.filter((row) => row.level === "重大预警");
+      const tradeCount = rows.filter((row) => row.industry.includes("贸易") || row.industry.includes("供应链")).length;
+      const l1Names = plan.map((item) => item.name).join("、");
+
+      els.reportView.innerHTML = `
+        <div class="report-section">
+          <h3>一、监测任务摘要</h3>
+          <p>任务：贷后风险监测报告生成。监测范围：${filterLabel(filter)}。监测周期：${config.period}。关注维度：${config.dimensionText}。本次调用 L1 Skill：${l1Names}。</p>
+          <p>任务备注：${config.note || "无"}</p>
+        </div>
+        <div class="report-section">
+          <h3>二、重点客户名单</h3>
+          <table class="risk-table">
+            <thead>
+              <tr>
+                <th>客户</th>
+                <th>授信金额</th>
+                <th>风险变化</th>
+                <th>主要原因</th>
+                <th>建议动作</th>
+              </tr>
+            </thead>
+            <tbody>${tableRows || `<tr><td colspan="5">当前范围内未发现风险上升客户。</td></tr>`}</tbody>
+          </table>
+        </div>
+        <div class="report-section">
+          <h3>三、组合层面观察</h3>
+          <ul>
+            <li>当前筛选范围共 ${rows.length} 户客户，其中重大预警 ${critical.length} 户。</li>
+            <li>贸易及供应链相关客户 ${tradeCount} 户，应关注回款真实性、关联交易和资金流转解释。</li>
+            <li>高分客户的主要风险来源集中在还款异常、经营性现金流为负、公开负面和关联交易变化。</li>
+          </ul>
+        </div>
+        <div class="report-section">
+          <h3>四、后续工作建议</h3>
+          <ul>
+            <li>客户经理优先跟进重大预警和明显上升客户，补充还款来源、合同订单、回款流水和关联交易说明。</li>
+            <li>风险经理复核公开风险线索，判断是否纳入重点观察名单。</li>
+            <li>本报告仅用于贷后监测准备，所有结论需结合行内制度和真实材料复核。</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    function filterLabel(filter) {
+      if (filter === "trade") return "贸易/供应链客户";
+      if (filter === "manufacturing") return "制造相关客户";
+      if (filter === "warning") return "重大预警客户";
+      if (filter === "stable") return "稳定客户";
+      return "全部存量授信客户";
+    }
+
+    async function runMonitoring() {
+      const config = taskConfig();
+      if (!config.dimensions.length) {
+        setStage(els.intentStage, "warn");
+        setStage(els.slotStage, "warn");
+        setStage(els.planStage, "");
+        els.runStatus.textContent = "待选择维度";
+        els.intentText.textContent = "贷后监测任务已装载，但未选择关注维度。";
+        els.slotText.textContent = "请至少选择一个关注维度。";
+        els.planText.textContent = "无法加载 L1 原子 Skill。";
+        return;
+      }
+
+      els.runBtn.disabled = true;
+      els.runStatus.textContent = "执行中";
+      const plan = buildL1Plan(config.dimensions);
+
+      setStage(els.intentStage, "active");
+      els.intentText.textContent = "已装载 L2 场景任务：贷后风险监测报告生成。";
+      await sleep(420);
+      setStage(els.intentStage, "done");
+
+      setStage(els.slotStage, "active");
+      els.slotText.textContent = `范围：${filterLabel(config.filter)}；周期：${config.period}；关注维度：${config.dimensionText}。`;
+      await sleep(420);
+      setStage(els.slotStage, "done");
+
+      setStage(els.planStage, "active");
+      els.planText.textContent = `盘点并加载 ${plan.length} 个 L1 原子 Skill，按“画像 → 监测信号 → 归因 → 动作”执行。`;
+      renderL1Plan(plan, 0);
+      await sleep(420);
+
+      for (let i = 0; i < plan.length; i += 1) {
+        renderL1Plan(plan, i);
+        await sleep(360);
+      }
+
+      renderL1Plan(plan, plan.length, true);
+      setStage(els.planStage, "done");
+
+      renderPortfolio(config.filter);
+      renderReport(config, plan);
+
+      els.runStatus.textContent = "已完成";
+      els.runBtn.disabled = false;
+    }
+
+    els.runBtn.addEventListener("click", () => {
+      runMonitoring();
+    });
+
+    els.resetBtn.addEventListener("click", () => {
+      els.scopeSelect.value = "all";
+      els.periodSelect.value = "2026 年 6 月";
+      document.querySelectorAll(".check-item input").forEach((item) => {
+        item.checked = true;
+      });
+      els.taskNote.value = "优先识别风险上升客户，输出客户经理跟进动作和需补充材料。";
+      els.runStatus.textContent = "等待任务";
+      setStage(els.intentStage, "");
+      setStage(els.slotStage, "");
+      setStage(els.planStage, "");
+      els.intentText.textContent = "等待贷后经理发起监测任务。";
+      els.slotText.textContent = "待读取监测范围、周期和关注维度。";
+      els.planText.textContent = "待加载 L1 原子 Skill。";
+      els.l1List.innerHTML = `<div class="empty">尚未加载 L1 原子 Skill。</div>`;
+      els.reportView.innerHTML = `<div class="empty">等待执行监测任务。</div>`;
+      updateTaskSummary();
+      renderPortfolio("all");
+    });
+
+    els.portfolioFilter.addEventListener("change", () => {
+      renderPortfolio(els.portfolioFilter.value);
+    });
+
+    els.scopeSelect.addEventListener("change", updateTaskSummary);
+    els.periodSelect.addEventListener("change", updateTaskSummary);
+    els.taskNote.addEventListener("input", updateTaskSummary);
+    document.querySelectorAll(".check-item input").forEach((item) => {
+      item.addEventListener("change", updateTaskSummary);
+    });
+
+    updateTaskSummary();
+    renderPortfolio("all");
+  </script>
+</body>
+</html>

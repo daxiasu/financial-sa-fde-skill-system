@@ -1,0 +1,62 @@
+[
+  {
+    "case_id": "A",
+    "enterprise_name": "宁波某智能装备有限公司",
+    "industry": "高端装备制造",
+    "region": "浙江省宁波市",
+    "credit_type": "续贷",
+    "requested_amount": "3000 万元",
+    "use_of_funds": "采购原材料和日常流动资金",
+    "known_background": "企业为某核心厂商二级供应商，近两年收入增长较快，但应收账款余额同步上升。",
+    "business_registration": "企业成立 8 年，注册资本 5000 万元，实控人持股 65%，近一年无经营异常记录。",
+    "financials": {
+      "revenue_growth": 35,
+      "profit_growth": 8,
+      "operating_cash_flow": "连续两年为负",
+      "receivables_to_revenue": 48,
+      "asset_liability_ratio": 62
+    },
+    "operations": "主要客户集中于 3 家大型制造企业，前五大客户收入占比约 70%。企业表示订单充足，但回款周期较长。",
+    "legal_records": "无失信被执行记录，无重大未决诉讼。",
+    "public_sentiment": "暂无明显负面舆情。",
+    "related_parties": "实控人另控制一家贸易公司，该贸易公司与本企业存在采购往来。",
+    "bank_internal_data": "历史还款正常，无逾期记录。"
+  },
+  {
+    "case_id": "B",
+    "enterprise_name": "成都某供应链服务有限公司",
+    "industry": "供应链服务",
+    "region": "四川省成都市",
+    "credit_type": "首次授信",
+    "requested_amount": "1000 万元",
+    "use_of_funds": "补充流动资金",
+    "known_background": "客户由园区推荐，暂未提供详细经营资料。",
+    "business_registration": "",
+    "financials": {},
+    "operations": "",
+    "legal_records": "",
+    "public_sentiment": "",
+    "related_parties": "",
+    "bank_internal_data": ""
+  },
+  {
+    "case_id": "C",
+    "enterprise_name": "武汉某建筑工程有限公司",
+    "industry": "建筑工程",
+    "region": "湖北省武汉市",
+    "credit_type": "增额",
+    "requested_amount": "5000 万元",
+    "use_of_funds": "项目回款前的工程款垫付和日常周转",
+    "known_background": "企业存量授信仍在正常还款，但近期申请较大额度增额。",
+    "business_registration": "近一年法定代表人和股东发生多次变更。",
+    "financials": {
+      "short_term_debt": "短期借款大幅增加",
+      "operating_cash_flow": "经营性现金流为负"
+    },
+    "operations": "部分项目回款延期，企业解释为业主方付款节奏影响。",
+    "legal_records": "存在多起买卖合同纠纷，被执行金额合计 1200 万元。",
+    "public_sentiment": "公开报道提及工程停工和拖欠供应商款项。",
+    "related_parties": "暂无完整关联企业清单。",
+    "bank_internal_data": "存量授信尚未逾期。"
+  }
+]

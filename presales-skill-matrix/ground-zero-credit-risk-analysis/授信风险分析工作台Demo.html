@@ -1,0 +1,1720 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>授信走访前穿透式风险分析工作台</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --line: #d8dee8;
+      --text: #172033;
+      --muted: #637083;
+      --blue: #2563eb;
+      --teal: #0f766e;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --violet: #6d28d9;
+      --shadow: 0 10px 30px rgba(23, 32, 51, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 1180px;
+      color: var(--text);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.45;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 64px 1fr;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: #ffffff;
+      background: var(--blue);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(410px, 1.08fr) minmax(330px, 0.86fr) minmax(390px, 1fr);
+      gap: 14px;
+      padding: 14px;
+      min-height: 0;
+    }
+
+    .notice {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #f3d18a;
+      border-radius: 8px;
+      background: #fff8e8;
+      color: #7c4a03;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .notice strong {
+      color: #5f3900;
+    }
+
+    .panel {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 54px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .panel-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel-body {
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    label {
+      color: #334155;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    textarea,
+    select,
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--text);
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    select:focus,
+    textarea:focus,
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0 14px;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 9px 12px;
+      background: #edf2f7;
+      color: #1f2937;
+      cursor: pointer;
+      font-weight: 650;
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .btn.secondary {
+      background: #ffffff;
+      border-color: #cfd7e3;
+    }
+
+    .btn:hover {
+      filter: brightness(0.97);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+      filter: none;
+    }
+
+    .run-status {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      border: 1px solid #d8dee8;
+      border-radius: 7px;
+      background: #f8fafc;
+      color: #475569;
+      padding: 8px 10px;
+      margin: 0 0 12px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .run-status.running {
+      border-color: #bfdbfe;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .run-status.dirty {
+      border-color: #f3d18a;
+      background: #fff8e8;
+      color: #7c4a03;
+    }
+
+    .result-top {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      align-items: stretch;
+      margin-bottom: 12px;
+    }
+
+    .level-box {
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 12px;
+      min-height: 112px;
+    }
+
+    .level {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .score {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .summary {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    .summary h2 {
+      margin: 0 0 7px;
+      font-size: 16px;
+    }
+
+    .summary p {
+      margin: 0;
+      color: #344054;
+      font-size: 13px;
+    }
+
+    .section {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .risk-list,
+    .question-list,
+    .material-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .item {
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      padding: 9px 10px;
+      background: #ffffff;
+    }
+
+    .item strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    .item span,
+    .item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pipeline {
+      display: grid;
+      gap: 9px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 26px 1fr auto;
+      gap: 8px;
+      align-items: start;
+      border: 1px solid #e1e7f0;
+      border-radius: 8px;
+      padding: 10px;
+      background: #ffffff;
+    }
+
+    .step.pending {
+      background: #f8fafc;
+      color: #64748b;
+    }
+
+    .step.running {
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: #eaf2ff;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .step-title {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .step-text {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tag {
+      align-self: start;
+      border-radius: 999px;
+      padding: 3px 8px;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .tag.ok { background: var(--green); }
+    .tag.info { background: var(--blue); }
+    .tag.warn { background: var(--amber); }
+    .tag.danger { background: var(--red); }
+    .tag.violet { background: var(--violet); }
+    .tag.pending { background: #94a3b8; }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .span-2 {
+      grid-column: span 2;
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 1fr 54px;
+      gap: 9px;
+      align-items: center;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--blue);
+    }
+
+    .toggle-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .toggle {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 8px;
+      align-items: start;
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      padding: 8px;
+      background: #ffffff;
+      color: #334155;
+      font-size: 13px;
+    }
+
+    .toggle small {
+      display: block;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    .scenario-buttons {
+      display: grid;
+      gap: 8px;
+    }
+
+    .scenario {
+      text-align: left;
+      border: 1px solid #d8dee8;
+      border-radius: 7px;
+      background: #ffffff;
+      padding: 9px 10px;
+      cursor: pointer;
+    }
+
+    .scenario:hover {
+      border-color: var(--blue);
+      background: #f8fbff;
+    }
+
+    .scenario strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .scenario span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .kv b {
+      color: #334155;
+    }
+
+    .level-L1 { color: var(--green); }
+    .level-L2 { color: var(--teal); }
+    .level-L3 { color: var(--amber); }
+    .level-L4 { color: #c2410c; }
+    .level-L5 { color: var(--red); }
+
+    .copy-status {
+      color: var(--green);
+      font-size: 12px;
+      min-height: 18px;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 10px;
+      background: #f8fafc;
+      border: 1px dashed #cfd7e3;
+      border-radius: 7px;
+    }
+
+    .log-box {
+      display: grid;
+      gap: 7px;
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      background: #0f172a;
+      color: #dbeafe;
+      padding: 10px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      min-height: 112px;
+    }
+
+    .log-line {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 8px;
+    }
+
+    .log-time {
+      color: #93c5fd;
+    }
+
+    .rule-hit-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .rule-hit {
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      background: #ffffff;
+      padding: 9px 10px;
+    }
+
+    .rule-hit strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    .rule-hit span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .trace-card {
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      background: #eff6ff;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .trace-card strong {
+      display: block;
+      color: #1d4ed8;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .trace-card span {
+      display: block;
+      color: #334155;
+      font-size: 12px;
+    }
+
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .score-table th,
+    .score-table td {
+      border-bottom: 1px solid #e1e7f0;
+      padding: 7px 6px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .score-table th {
+      color: #475569;
+      background: #f8fafc;
+      font-weight: 750;
+    }
+
+    .score-table td:last-child,
+    .score-table th:last-child {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.46);
+      padding: 24px;
+      z-index: 10;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(980px, 92vw);
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .modal-body {
+      overflow: auto;
+      padding: 14px;
+      background: #0f172a;
+    }
+
+    .modal-body pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #dbeafe;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-mark">信</div>
+        <div>
+          <h1>授信走访前穿透式风险分析工作台</h1>
+          <div class="subtitle">模拟企业智能体平台：自然语言入口、Skill 路由、数据驱动评级变化</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <span>Skill：credit-visit-risk-analysis</span>
+        <span>版本：v0.3 演示原型</span>
+        <span>Author: daxiasu</span>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="notice">
+        <strong>公开演示说明：</strong>
+        <span>本页面仅使用模拟企业数据，用于展示金融 SA-FDE Skill 原型。不包含真实客户信息，不构成授信审批、拒贷、定价或银行内部评级意见。</span>
+      </div>
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">信贷经理工作台</div>
+            <div class="panel-note">输入自然语言任务，查看面向走访前准备的报告</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label for="enterpriseSelect">当前企业</label>
+            <select id="enterpriseSelect"></select>
+          </div>
+          <div class="field">
+            <label for="promptInput">信贷经理输入</label>
+            <textarea id="promptInput">帮我看下这家企业本次授信的风险情况，准备走访前问题清单和补充材料清单。</textarea>
+          </div>
+          <div class="toolbar">
+            <button class="btn primary" id="runBtn">生成分析</button>
+            <button class="btn secondary" id="resetBtn">恢复样例数据</button>
+            <button class="btn secondary" id="copyBtn">复制报告</button>
+          </div>
+          <div class="run-status dirty" id="runStatus">资料已加载，等待发起 Skill 分析。</div>
+          <div class="copy-status" id="copyStatus"></div>
+
+          <div class="result-top">
+            <div class="level-box">
+              <div class="level" id="levelText">L2</div>
+              <div class="score" id="scoreText">关注分 21</div>
+            </div>
+            <div class="summary">
+              <h2 id="summaryTitle">企业风险摘要</h2>
+              <p id="summaryText"></p>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">关键风险线索</div>
+            <div class="risk-list" id="riskList"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">现场走访问询清单</div>
+            <div class="question-list" id="questionList"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">补充材料清单</div>
+            <div class="material-list" id="materialList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">后台 Skill 执行链路</div>
+            <div class="panel-note">演示平台如何从一句话路由到 Skill 并执行规则</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="section" style="border-top:0;margin-top:0;padding-top:0;">
+            <div class="section-title">平台路由</div>
+            <div class="pipeline" id="routerPipeline"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">SKILL.md 工作流进度</div>
+            <div class="pipeline" id="skillPipeline"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">risk_rules.md 命中规则</div>
+            <div id="causeTrace"></div>
+            <div id="scoreBreakdown"></div>
+            <div class="rule-hit-list" id="ruleHits"></div>
+          </div>
+
+          <!-- 保留旧 id 作为脚本兼容容器，不直接展示。 -->
+          <div class="pipeline" id="pipeline" style="display:none;"></div>
+
+          <!--
+          <div class="pipeline" id="pipeline"></div>
+          -->
+
+          <div class="section">
+            <div class="section-title">执行日志</div>
+            <div class="log-box" id="logBox"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Skill 包调用关系</div>
+            <div class="toolbar" style="margin-top:0;">
+              <button class="btn secondary" id="viewSkillBtn">查看 SKILL.md</button>
+              <button class="btn secondary" id="viewRulesBtn">查看 risk_rules.md</button>
+            </div>
+            <div class="step">
+              <div class="step-num">S</div>
+              <div>
+                <div class="step-title">SKILL.md</div>
+                <div class="step-text">定义触发条件、工作流、输入输出和合规边界。</div>
+              </div>
+              <span class="tag info">入口</span>
+            </div>
+            <div class="step">
+              <div class="step-num">R</div>
+              <div>
+                <div class="step-title">risk_rules.md</div>
+                <div class="step-text">承载业务专家定标后的风险维度、权重和等级边界。</div>
+              </div>
+              <span class="tag violet">规则</span>
+            </div>
+            <div class="step">
+              <div class="step-num">T</div>
+              <div>
+                <div class="step-title">report_template.md</div>
+                <div class="step-text">约束输出报告结构，避免模型自由发挥过度。</div>
+              </div>
+              <span class="tag ok">模板</span>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">当前规则口径</div>
+            <div class="item">
+              <strong>首次授信</strong>
+              <span>即使资料相对完整、无明显风险，也至少 L2。</span>
+            </div>
+            <div class="item">
+              <strong>少量关联交易</strong>
+              <span>影响等级，但作为轻微信号处理，避免过度报高。</span>
+            </div>
+            <div class="item">
+              <strong>贸易类真实性</strong>
+              <span>交易凭证不足在贸易/供应链类企业中提高权重。</span>
+            </div>
+            <div class="item">
+              <strong>风险等级边界</strong>
+              <span>这是走访前关注等级，不是审批结论、拒贷结论或内部评级。</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">企业数据区</div>
+            <div class="panel-note">修改关键变量，观察评级和报告如何变化</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="section" style="border-top:0;margin-top:0;padding-top:0;">
+            <div class="section-title">企业画像</div>
+            <div id="profileBox"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">财务变量</div>
+            <div class="data-grid">
+              <div class="field">
+                <label for="creditType">授信类型</label>
+                <select id="creditType">
+                  <option>首次授信</option>
+                  <option>续贷</option>
+                  <option>增额</option>
+                  <option>年审</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cashFlow">经营性现金流</label>
+                <select id="cashFlow">
+                  <option value="positive">为正</option>
+                  <option value="negative">为负</option>
+                </select>
+              </div>
+              <div class="field span-2">
+                <label>应收账款占营收比例</label>
+                <div class="slider-row">
+                  <input id="receivables" type="range" min="0" max="80" value="30">
+                  <input id="receivablesValue" type="number" min="0" max="80">
+                </div>
+              </div>
+              <div class="field span-2">
+                <label>资产负债率</label>
+                <div class="slider-row">
+                  <input id="liability" type="range" min="20" max="95" value="55">
+                  <input id="liabilityValue" type="number" min="20" max="95">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">风险信号开关</div>
+            <div class="toggle-list">
+              <label class="toggle">
+                <input type="checkbox" id="customerConcentration">
+                <span>客户集中度较高<small>前五大客户收入占比超过 60% 或核心客户依赖明显。</small></span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="missingProof">
+                <span>交易真实性佐证不足<small>合同、发票、物流、仓储、验收或回款凭证不完整。</small></span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="relatedParty">
+                <span>存在关联交易或关联担保<small>含少量关联交易，作为轻微信号影响等级。</small></span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="legalIssue">
+                <span>存在被执行或重大诉讼<small>用于模拟司法风险上升。</small></span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="negativeSentiment">
+                <span>存在负面舆情/停工/环保事项<small>用于模拟经营连续性或合规风险。</small></span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="shareholderChange">
+                <span>法定代表人或股东频繁变更<small>用于模拟主体稳定性风险。</small></span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="shortDebt">
+                <span>短期债务压力上升<small>短期借款明显增加或再融资压力上升。</small></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">一键情景</div>
+            <div class="scenario-buttons">
+              <button class="scenario" data-preset="improve">
+                <strong>风险缓释</strong>
+                <span>现金流转正、应收下降、移除重大司法舆情。</span>
+              </button>
+              <button class="scenario" data-preset="enforcement">
+                <strong>新增被执行</strong>
+                <span>模拟司法风险上升，观察等级变化。</span>
+              </button>
+              <button class="scenario" data-preset="tradeProof">
+                <strong>贸易凭证不足</strong>
+                <span>适合供应链/贸易类企业演示经营真实性风险。</span>
+              </button>
+              <button class="scenario" data-preset="severe">
+                <strong>多项异常叠加</strong>
+                <span>现金流为负、司法舆情、主体变化同时出现。</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="fileModal" role="dialog" aria-modal="true" aria-labelledby="fileModalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title" id="fileModalTitle">文件内容</div>
+        <button class="btn secondary" id="closeModalBtn">关闭</button>
+      </div>
+      <div class="modal-body">
+        <pre id="fileModalContent"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const skillMdContent = `---
+name: credit-visit-risk-analysis
+description: 当用户需要对银行对公授信客户进行走访前风险分析、生成贷前走访准备报告、识别授信风险线索、生成现场核验问题清单，或设计企业授信尽调类金融 Skill/工作流时，使用本 Skill。
+---
+
+# 授信走访前穿透式风险分析 Skill
+
+本 Skill 用于银行对公授信场景，帮助客户经理、信贷经理、风险经理在企业现场走访前完成风险线索整理和走访准备。
+
+本 Skill 的输出仅用于贷前走访准备、风险线索梳理和人工复核辅助，不替代正式授信审批、银行内部评级、合规审查或人工判断。
+
+## 核心工作流
+
+1. 收集企业基础信息和本次授信背景。
+2. 检查关键资料是否完整。
+3. 生成企业基本画像和授信背景摘要。
+4. 从主体资质、财务质量、经营真实性、司法舆情、关联关系、行业环境、授信用途等维度提取风险线索。
+5. 给出 L1-L5 的“走访前风险关注等级”。
+6. 生成现场走访问询清单，覆盖企业负责人、财务负责人、销售负责人、生产/运营负责人等对象。
+7. 生成优先级明确的补充材料清单。
+8. 输出数据缺口、置信度、合规边界和人工复核建议。
+
+## 必要输入
+
+最小可运行输入：
+
+- 企业名称
+- 所属行业
+- 所在地区
+- 授信类型：首次授信、续贷、增额、年审或其他
+- 申请金额
+- 授信用途
+- 已知背景
+
+增强输入可以包括：
+
+- 工商信息
+- 财务信息
+- 经营信息
+- 司法信息
+- 舆情信息
+- 关联关系
+- 银行内部信息
+- 抵押担保信息
+- 行业信息
+
+如果关键输入缺失，不得编造；应继续输出低置信度分析，并明确列出缺失资料。
+
+## 风险关注等级
+
+- L1：基于已提供材料，暂未发现明显风险信号。
+- L2：存在资料缺口或轻微信号，需要常规核验。
+- L3：存在需要重点现场核验和交叉验证的风险线索。
+- L4：存在多项异常或较高风险，建议风险经理参与。
+- L5：存在重大风险信号，建议进入人工专项复核，不输出正向授信建议。
+
+必须称为“走访前风险关注等级”，不得称为最终评级、审批结论或授信结论。
+
+## 执行指引
+
+当任务需要评分、风险分类或解释判断规则时，读取 references/risk_rules.md。
+
+当任务需要生成报告时，优先使用 references/report_template.md 中的报告结构，除非用户指定其他格式。
+
+当任务需要测试、演示或构造样例时，读取 references/test_cases.md。
+
+当任务需要做本地冒烟测试或样例规则评分时，运行 scripts/smoke_test.py。
+
+## 默认输出结构
+
+默认输出《授信走访前风险分析报告》，包含：
+
+1. 企业基本画像
+2. 授信背景摘要
+3. 资料完整性检查
+4. 走访前风险关注等级
+5. 关键风险线索
+6. 现场走访问询清单
+7. 补充材料清单
+8. 交叉验证建议
+9. 数据缺口与置信度
+10. 合规提示与人工复核建议
+
+## 合规边界
+
+- 不输出最终授信审批、拒贷、定价或银行内部评级结论。
+- 不编造缺失的事实、数据、司法记录或舆情信息。
+- 不把未经核验的公开信息写成确定事实。
+- 涉及个人信息、征信数据、客户敏感数据和银行内部数据时，必须提示用户仅在授权和受控环境中处理。
+- 证据不足时，应明确说明“不足以判断”，并列出需要补充的资料。`;
+
+    const riskRulesMdContent = `# 风险规则
+
+## 风险维度
+
+| 维度 | 典型关注点 |
+|---|---|
+| 主体资质 | 成立时间较短、法定代表人或股东频繁变更、经营异常、行政处罚、经营范围与授信用途不匹配 |
+| 司法与舆情 | 被执行、失信、重大诉讼、行政处罚、负面新闻、安全环保事故、欠薪、停工 |
+| 财务质量 | 收入下滑、利润质量弱、经营性现金流为负、应收账款高、存货高、资产负债率高 |
+| 经营真实性 | 订单证据不足、客户集中、供应商集中、纳税/发票/物流/流水与收入不匹配 |
+| 关联关系 | 关联交易、关联担保、交叉持股、同地址同电话、共同管理人员、资金回流 |
+| 行业与区域 | 行业周期下行、政策收紧、区域产业风险、原材料或商品价格大幅波动 |
+| 授信用途 | 用途笼统、与经营规模不匹配、存在资金挪用可能、存在借新还旧迹象 |
+| 抵押担保 | 权属不清、重复抵押、估值依据不足、变现能力弱、担保链条复杂 |
+
+## 建议权重
+
+该分数是“走访前风险关注分”，分数越高表示客户经理在走访前需要投入越高关注度。
+
+| 维度 | 权重 |
+|---|---:|
+| 主体资质与工商异常 | 15 |
+| 司法舆情与行政处罚 | 20 |
+| 财务质量与偿债压力 | 25 |
+| 经营真实性 | 15 |
+| 关联关系与资金闭环风险 | 15 |
+| 行业环境与授信用途 | 10 |
+
+## 等级映射
+
+| 分数 | 等级 | 含义 |
+|---:|---|---|
+| 0-20 | L1 | 已提供资料中暂未发现明显风险信号 |
+| 21-40 | L2 | 存在资料缺口或轻微信号 |
+| 41-60 | L3 | 存在需要重点现场核验的风险线索 |
+| 61-80 | L4 | 存在多项异常或较高风险 |
+| 81-100 | L5 | 存在重大风险信号，需要人工专项复核 |
+
+## 典型规则示例
+
+### 财务质量
+
+- 经营性现金流连续两年为负：属于重要风险信号。
+- 应收账款占收入比例超过 40%：需要重点核验回款真实性和账期。
+- 收入快速增长，但利润和现金流未同步改善：需要核验收入质量。
+- 短期借款明显增加：需要核验偿债压力、再融资压力和真实资金缺口。
+
+### 经营真实性
+
+- 前五大客户收入占比超过 60%：需要关注客户集中度。
+- 大额订单缺少合同、发票、物流、验收或回款凭证：需要核验交易真实性。
+- 收入增长与纳税、开票、物流、银行流水等证据不匹配：需要重点交叉验证。
+
+### 关联关系
+
+- 实控人控制的贸易公司与申请企业存在交易：需要核验关联交易定价和资金流向。
+- 存在较大关联担保或互保：需要核验或有负债。
+- 多家公司存在同地址、同电话或共同管理人员：需要核验实际控制关系。
+
+### 司法与舆情
+
+- 存在失信或较大金额被执行记录：高关注。
+- 存在多起供应商合同纠纷：需要核验付款压力和隐藏债务。
+- 存在停工、欠薪、环保、安全、质量等负面舆情：需要现场核验并收集佐证材料。
+
+## 等级选择指引
+
+- L1 仅适用于资料相对完整，且未发现明显风险信号的情况。
+- L2 适用于资料不足但暂未提供明确负面信号的情况。
+- L3 适用于存在一个或多个需要现场重点核验的风险信号，例如高应收、现金流为负、客户集中、关联交易等。
+- L4 适用于多个维度同时异常，例如股东频繁变更、现金流为负、诉讼较多等。
+- L5 适用于重大风险信号，例如失信记录、大额被执行、重大欺诈嫌疑、严重负面舆情或经营真实性无法核验。
+
+## 证据纪律
+
+每一条风险线索必须标注其依据类型：
+
+- 已提供证据
+- 根据已提供数据推导
+- 公开来源待核验
+- 银行内部数据待核验
+- 资料缺失
+
+不得在证据不足时写出确定性结论。`;
+
+    const enterprises = [
+      {
+        id: "S01", name: "宁波某智能装备有限公司", industry: "高端装备制造", region: "浙江省宁波市", creditType: "续贷",
+        amount: "3000 万元", useOfFunds: "采购原材料和日常流动资金", background: "企业为某核心厂商二级供应商，近两年收入增长较快，但应收账款余额同步上升。",
+        revenueGrowth: 35, profitGrowth: 8, receivables: 48, liability: 62, cashFlowNegative: true,
+        customerConcentration: true, missingProof: false, relatedParty: true, relatedMinor: false, legalIssue: false,
+        negativeSentiment: false, shareholderChange: false, shortDebt: false, industryDownturn: false, environmentalIssue: false
+      },
+      {
+        id: "S02", name: "成都某供应链服务有限公司", industry: "供应链服务", region: "四川省成都市", creditType: "首次授信",
+        amount: "1000 万元", useOfFunds: "补充流动资金", background: "客户由园区推荐，暂未提供详细经营资料。",
+        revenueGrowth: 0, profitGrowth: 0, receivables: 0, liability: 50, cashFlowNegative: false,
+        customerConcentration: false, missingProof: false, relatedParty: false, relatedMinor: false, legalIssue: false,
+        negativeSentiment: false, shareholderChange: false, shortDebt: false, industryDownturn: false, environmentalIssue: false, insufficientData: true
+      },
+      {
+        id: "S03", name: "武汉某建筑工程有限公司", industry: "建筑工程", region: "湖北省武汉市", creditType: "增额",
+        amount: "5000 万元", useOfFunds: "项目回款前的工程款垫付和日常周转", background: "企业存量授信仍在正常还款，但近期申请较大额度增额。",
+        revenueGrowth: 0, profitGrowth: 0, receivables: 30, liability: 65, cashFlowNegative: true,
+        customerConcentration: false, missingProof: false, relatedParty: true, relatedMinor: false, legalIssue: true,
+        negativeSentiment: true, shareholderChange: true, shortDebt: true, industryDownturn: false, environmentalIssue: false
+      },
+      {
+        id: "S04", name: "苏州某医疗器械有限公司", industry: "医疗器械", region: "江苏省苏州市", creditType: "首次授信",
+        amount: "2000 万元", useOfFunds: "扩大产线和采购核心零部件", background: "企业订单增长稳定，客户包括多家三甲医院和区域经销商。",
+        revenueGrowth: 18, profitGrowth: 15, receivables: 22, liability: 45, cashFlowNegative: false,
+        customerConcentration: false, missingProof: false, relatedParty: false, relatedMinor: false, legalIssue: false,
+        negativeSentiment: false, shareholderChange: false, shortDebt: false, industryDownturn: false, environmentalIssue: false
+      },
+      {
+        id: "S05", name: "佛山某家居制造有限公司", industry: "家居制造", region: "广东省佛山市", creditType: "年审",
+        amount: "2500 万元", useOfFunds: "季节性原材料采购", background: "企业受地产链景气度影响，近一年订单有所下降。",
+        revenueGrowth: -18, profitGrowth: -35, receivables: 35, liability: 68, cashFlowNegative: true,
+        customerConcentration: false, missingProof: false, relatedParty: false, relatedMinor: false, legalIssue: false,
+        negativeSentiment: false, shareholderChange: false, shortDebt: false, industryDownturn: true, environmentalIssue: false
+      },
+      {
+        id: "S06", name: "郑州某农产品贸易有限公司", industry: "农产品贸易", region: "河南省郑州市", creditType: "首次授信",
+        amount: "1500 万元", useOfFunds: "采购玉米、小麦等农产品", background: "企业交易规模增长较快，但利润率较低。",
+        revenueGrowth: 50, profitGrowth: 5, receivables: 30, liability: 72, cashFlowNegative: true,
+        customerConcentration: true, missingProof: true, relatedParty: false, relatedMinor: false, legalIssue: false,
+        negativeSentiment: false, shareholderChange: false, shortDebt: false, industryDownturn: false, environmentalIssue: false
+      },
+      {
+        id: "S07", name: "青岛某冷链物流有限公司", industry: "冷链物流", region: "山东省青岛市", creditType: "续贷",
+        amount: "1800 万元", useOfFunds: "车辆维护、油费和仓储周转", background: "企业服务区域食品加工企业，收入较稳定。",
+        revenueGrowth: 8, profitGrowth: 6, receivables: 28, liability: 55, cashFlowNegative: false,
+        customerConcentration: false, missingProof: false, relatedParty: true, relatedMinor: true, legalIssue: false,
+        negativeSentiment: false, shareholderChange: false, shortDebt: false, industryDownturn: false, environmentalIssue: false
+      },
+      {
+        id: "S08", name: "杭州某跨境电商有限公司", industry: "跨境电商", region: "浙江省杭州市", creditType: "增额",
+        amount: "4000 万元", useOfFunds: "海外仓备货和平台推广", background: "企业近两年收入增长较快，海外平台销售占比高。",
+        revenueGrowth: 60, profitGrowth: 12, receivables: 42, liability: 66, cashFlowNegative: true,
+        customerConcentration: false, missingProof: false, relatedParty: true, relatedMinor: false, legalIssue: false,
+        negativeSentiment: false, shareholderChange: false, shortDebt: false, inventoryPressure: true, industryDownturn: false, environmentalIssue: false
+      },
+      {
+        id: "S09", name: "西安某软件服务有限公司", industry: "企业软件服务", region: "陕西省西安市", creditType: "首次授信",
+        amount: "800 万元", useOfFunds: "项目人力投入和研发周转", background: "企业服务政企客户，收入以项目制交付为主。",
+        revenueGrowth: 12, profitGrowth: 10, receivables: 38, liability: 40, cashFlowNegative: false,
+        customerConcentration: false, missingProof: false, relatedParty: false, relatedMinor: false, legalIssue: false,
+        negativeSentiment: false, shareholderChange: false, shortDebt: false, industryDownturn: false, environmentalIssue: false
+      },
+      {
+        id: "S10", name: "天津某化工材料有限公司", industry: "化工材料", region: "天津市", creditType: "续贷",
+        amount: "3500 万元", useOfFunds: "原材料采购和环保设备改造", background: "企业受原材料价格波动影响较大，近期申请续贷。",
+        revenueGrowth: -5, profitGrowth: -20, receivables: 32, liability: 70, cashFlowNegative: true,
+        customerConcentration: false, missingProof: false, relatedParty: true, relatedMinor: false, legalIssue: false,
+        negativeSentiment: true, shareholderChange: false, shortDebt: false, industryDownturn: false, environmentalIssue: true
+      }
+    ];
+
+    let baseCase = structuredClone(enterprises[0]);
+    let currentCase = structuredClone(baseCase);
+    let lastReport = "";
+    let lastResult = null;
+    let hasRun = false;
+    let running = false;
+    let logLines = [];
+
+    const els = {
+      enterpriseSelect: document.getElementById("enterpriseSelect"),
+      promptInput: document.getElementById("promptInput"),
+      runBtn: document.getElementById("runBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      copyBtn: document.getElementById("copyBtn"),
+      viewSkillBtn: document.getElementById("viewSkillBtn"),
+      viewRulesBtn: document.getElementById("viewRulesBtn"),
+      fileModal: document.getElementById("fileModal"),
+      fileModalTitle: document.getElementById("fileModalTitle"),
+      fileModalContent: document.getElementById("fileModalContent"),
+      closeModalBtn: document.getElementById("closeModalBtn"),
+      copyStatus: document.getElementById("copyStatus"),
+      levelText: document.getElementById("levelText"),
+      scoreText: document.getElementById("scoreText"),
+      summaryTitle: document.getElementById("summaryTitle"),
+      summaryText: document.getElementById("summaryText"),
+      riskList: document.getElementById("riskList"),
+      questionList: document.getElementById("questionList"),
+      materialList: document.getElementById("materialList"),
+      pipeline: document.getElementById("pipeline"),
+      routerPipeline: document.getElementById("routerPipeline"),
+      skillPipeline: document.getElementById("skillPipeline"),
+      ruleHits: document.getElementById("ruleHits"),
+      causeTrace: document.getElementById("causeTrace"),
+      scoreBreakdown: document.getElementById("scoreBreakdown"),
+      runStatus: document.getElementById("runStatus"),
+      logBox: document.getElementById("logBox"),
+      profileBox: document.getElementById("profileBox"),
+      creditType: document.getElementById("creditType"),
+      cashFlow: document.getElementById("cashFlow"),
+      receivables: document.getElementById("receivables"),
+      receivablesValue: document.getElementById("receivablesValue"),
+      liability: document.getElementById("liability"),
+      liabilityValue: document.getElementById("liabilityValue"),
+      customerConcentration: document.getElementById("customerConcentration"),
+      missingProof: document.getElementById("missingProof"),
+      relatedParty: document.getElementById("relatedParty"),
+      legalIssue: document.getElementById("legalIssue"),
+      negativeSentiment: document.getElementById("negativeSentiment"),
+      shareholderChange: document.getElementById("shareholderChange"),
+      shortDebt: document.getElementById("shortDebt")
+    };
+
+    function levelForScore(score) {
+      if (score <= 20) return "L1";
+      if (score <= 40) return "L2";
+      if (score <= 60) return "L3";
+      if (score <= 80) return "L4";
+      return "L5";
+    }
+
+    function evaluate(c) {
+      const signals = [];
+      const add = (dimension, name, basis, attention, score, rule) => signals.push({ dimension, name, basis, attention, score, rule });
+
+      if (c.cashFlowNegative) add("财务质量", "经营性现金流为负", "经营性现金流为负，需要核验回款质量和资金缺口。", "高", 15, "risk_rules.md / 财务质量 / 经营性现金流为负");
+      if (c.receivables >= 40) add("财务质量", "应收账款占收入比例偏高", `应收账款占营收比例为 ${c.receivables}%，超过 40% 重点核验阈值。`, "中", 12, "risk_rules.md / 财务质量 / 应收账款超过 40%");
+      if (c.liability >= 70) add("财务质量", "资产负债率偏高", `资产负债率为 ${c.liability}%，需关注偿债压力。`, "中", 8, "risk_rules.md / 财务质量 / 资产负债率偏高");
+      if (c.revenueGrowth <= -15) add("财务质量", "收入明显下滑", `收入增长率为 ${c.revenueGrowth}%。`, "中", 10, "risk_rules.md / 财务质量 / 收入下滑");
+      if (c.profitGrowth <= -20) add("财务质量", "利润明显下滑", `利润增长率为 ${c.profitGrowth}%。`, "中", 8, "risk_rules.md / 财务质量 / 利润下滑");
+      if (c.customerConcentration) add("经营真实性", "客户集中度较高", "核心客户依赖明显，需要核验订单稳定性和回款持续性。", "中", 10, "risk_rules.md / 经营真实性 / 前五大客户占比超过 60%");
+      if (c.missingProof) add("经营真实性", "交易真实性佐证不足", "合同、发票、物流、仓储、验收或回款凭证不完整。", "高", /贸易|供应链/.test(c.industry) ? 25 : 15, /贸易|供应链/.test(c.industry) ? "risk_rules.md / 经营真实性 / 贸易类交易凭证不足加权" : "risk_rules.md / 经营真实性 / 交易凭证不足");
+      if (c.inventoryPressure) add("经营真实性", "库存周转压力上升", "库存周转周期拉长或库存增加，需要核验备货和销售转化。", "中", 10, "risk_rules.md / 经营真实性 / 库存周转压力");
+      if (c.relatedParty) add("关联关系", c.relatedMinor ? "存在少量关联交易待核验" : "存在关联交易或关联担保待核验", c.relatedMinor ? "少量关联交易作为轻微信号处理。" : "关联交易、关联担保或关联结算需要核验定价和资金流向。", c.relatedMinor ? "低" : "中", c.relatedMinor ? 6 : 10, c.relatedMinor ? "risk_rules.md / 关联关系 / 少量关联交易轻微信号" : "risk_rules.md / 关联关系 / 关联交易或担保");
+      if (c.legalIssue) add("司法与舆情", "存在被执行或重大诉讼", "司法风险可能影响履约能力和偿债安排。", "高", 25, "risk_rules.md / 司法与舆情 / 被执行或重大诉讼");
+      if (c.negativeSentiment) add("司法与舆情", "存在负面舆情或经营异常报道", "需核验停工、拖欠、投诉、整改或其他公开负面信息。", "高", 18, "risk_rules.md / 司法与舆情 / 负面舆情");
+      if (c.environmentalIssue) add("司法与舆情", "环保合规事项待核验", "化工、制造等行业中环保整改可能影响经营连续性。", "高", 18, "risk_rules.md / 司法与舆情 / 环保合规事项");
+      if (c.shareholderChange) add("主体资质", "法定代表人或股东频繁变更", "主体稳定性和实际控制关系需要核验。", "高", 15, "risk_rules.md / 主体资质 / 法定代表人或股东频繁变更");
+      if (c.shortDebt) add("财务质量", "短期债务压力上升", "短期借款明显增加或再融资压力上升。", "中", 10, "risk_rules.md / 财务质量 / 短期借款明显增加");
+      if (c.industryDownturn) add("行业与授信用途", "行业景气度下行", "行业周期或地产链等外部环境影响经营稳定性。", "中", 8, "risk_rules.md / 行业与区域 / 行业周期下行");
+
+      const baseScore = signals.reduce((sum, item) => sum + item.score, 0);
+      let score = baseScore;
+      const floorRules = [];
+      if (c.insufficientData) {
+        score = Math.max(score, 21);
+        floorRules.push({ name: "资料严重不足最低 L2", source: "SKILL.md 必要输入 + risk_rules.md 等级选择指引", score: 21 });
+      }
+      if (c.creditType === "首次授信") {
+        score = Math.max(score, 21);
+        floorRules.push({ name: "首次授信最低 L2", source: "业务专家定标口径", score: 21 });
+      }
+      if (signals.some(s => s.dimension === "关联关系")) {
+        score = Math.max(score, 21);
+        floorRules.push({ name: "关联交易最低 L2", source: "业务专家定标口径 + risk_rules.md 关联关系", score: 21 });
+      }
+      score = Math.min(score, 100);
+      return { baseScore, score, level: levelForScore(score), signals, floorRules };
+    }
+
+    function questionsFor(c, signals) {
+      const names = signals.map(s => s.name).join("；");
+      const questions = [
+        ["本次授信资金的具体支付对象、付款节奏和对应合同是什么？", "企业负责人", "核验授信用途真实性和合理性"],
+        ["近 12 个月主要客户回款周期是否延长，是否存在逾期未回款客户？", "财务负责人", "核验应收账款质量和现金流压力"],
+        ["企业当前主要订单是否稳定，未来 3-6 个月收入来源是否明确？", "销售负责人", "核验经营稳定性"],
+      ];
+      if (names.includes("交易真实性")) questions.push(["大额交易是否具备合同、发票、物流、仓储、验收和回款闭环？", "运营负责人/财务负责人", "核验贸易或供应链真实性"]);
+      if (names.includes("关联")) questions.push(["关联交易定价依据是什么，是否存在资金回流或代垫资金？", "企业负责人/财务负责人", "核验关联交易合理性"]);
+      if (names.includes("被执行") || names.includes("舆情") || names.includes("环保")) questions.push(["司法、舆情或整改事项的最新进展是什么，是否影响经营和现金流？", "企业负责人", "核验重大风险是否持续"]);
+      if (names.includes("股东")) questions.push(["近一年股权或法定代表人变更的原因是什么，实际控制人是否变化？", "企业负责人", "核验主体稳定性"]);
+      return questions;
+    }
+
+    function materialsFor(signals) {
+      const names = signals.map(s => s.name).join("；");
+      const materials = ["近 2-3 年审计报告或财务报表", "近 12 个月主要银行账户流水", "本次授信用途对应的合同、付款计划或资金使用说明"];
+      if (names.includes("应收") || names.includes("客户集中")) materials.push("主要客户合同、订单、发票、验收单和回款凭证", "应收账款明细、账龄表和坏账计提说明");
+      if (names.includes("交易真实性")) materials.push("物流、仓储、发货、验收、发票和回款闭环材料");
+      if (names.includes("关联")) materials.push("关联企业清单、关联交易明细、定价说明和资金流水");
+      if (names.includes("被执行") || names.includes("舆情") || names.includes("环保")) materials.push("诉讼、被执行、舆情或环保整改事项的最新证明材料");
+      return materials;
+    }
+
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    function openFileModal(title, content) {
+      els.fileModalTitle.textContent = title;
+      els.fileModalContent.textContent = content;
+      els.fileModal.classList.add("open");
+    }
+
+    function closeFileModal() {
+      els.fileModal.classList.remove("open");
+    }
+
+    function renderResult(result, questions, materials) {
+      syncCaseFromControls();
+      els.levelText.textContent = result.level;
+      els.levelText.className = `level level-${result.level}`;
+      els.scoreText.textContent = `关注分 ${result.score}`;
+      els.summaryTitle.textContent = `${currentCase.name}｜${currentCase.creditType} ${currentCase.amount}`;
+      const signalText = result.signals.length ? result.signals.map(s => s.name).join("；") : "暂未发现明确风险信号";
+      els.summaryText.textContent = `基于当前企业资料，走访前应重点关注：${signalText}。本结果为走访前风险关注，不构成审批结论。`;
+
+      els.riskList.innerHTML = result.signals.length ? result.signals.map(s => `
+        <div class="item">
+          <strong>${s.dimension}｜${s.name}</strong>
+          <span>${s.basis} 关注程度：${s.attention}，规则分：${s.score}</span>
+        </div>`).join("") : `<div class="empty">当前资料中暂未识别明确风险线索；如为首次授信，仍建议保持常规核验。</div>`;
+
+      els.questionList.innerHTML = questions.map(q => `
+        <div class="item">
+          <strong>${q[0]}</strong>
+          <span>询问对象：${q[1]}｜核验目的：${q[2]}</span>
+        </div>`).join("");
+
+      els.materialList.innerHTML = materials.map((m, i) => `
+        <div class="item">
+          <strong>${i + 1}. ${m}</strong>
+        </div>`).join("");
+
+      renderExecutionTrace(result, 7);
+      renderProfile();
+      lastReport = buildReport(result, questions, materials);
+    }
+
+    function renderPlaceholder(message = "等待发起 Skill 分析。") {
+      els.levelText.textContent = "--";
+      els.levelText.className = "level";
+      els.scoreText.textContent = "尚未计算";
+      els.summaryTitle.textContent = `${currentCase.name}｜${currentCase.creditType} ${currentCase.amount}`;
+      els.summaryText.textContent = message;
+      els.riskList.innerHTML = `<div class="empty">点击“生成分析”后，Skill 将识别风险线索。</div>`;
+      els.questionList.innerHTML = `<div class="empty">执行完成后生成现场走访问询清单。</div>`;
+      els.materialList.innerHTML = `<div class="empty">执行完成后生成补充材料清单。</div>`;
+      lastReport = "";
+      renderExecutionTrace(null, 0);
+      renderProfile();
+    }
+
+    function routeSteps() {
+      const routeHit = /授信|风险|企业|走访|尽调|客户/.test(els.promptInput.value);
+      return [
+        ["意图识别", routeHit ? "识别为企业授信走访前风险分析任务。" : "当前输入未明显命中授信风险场景。", routeHit ? "ok" : "warn"],
+        ["Router 路由", routeHit ? "命中 credit-visit-risk-analysis Skill。" : "建议补充企业授信、风险、走访等关键词。", routeHit ? "info" : "warn"],
+        ["加载 Skill 包", "加载 SKILL.md、risk_rules.md、report_template.md。", "info"]
+      ];
+    }
+
+    function skillSteps(result) {
+      return [
+        ["SKILL.md 第1步", "收集企业基础信息和本次授信背景。", "ok"],
+        ["SKILL.md 第2步", "检查关键资料是否完整。", "ok"],
+        ["SKILL.md 第3步", "生成企业基本画像和授信背景摘要。", "ok"],
+        ["SKILL.md 第4步", result ? `调用 risk_rules.md，命中 ${result.signals.length} 条风险规则。` : "调用 risk_rules.md，从主体、财务、经营、司法、关联等维度匹配规则。", result && result.signals.length ? "warn" : "ok"],
+        ["SKILL.md 第5步", result ? `将 ${result.score} 分映射为走访前风险关注等级 ${result.level}。` : "将规则分映射为 L1-L5 走访前风险关注等级。", result ? (result.level === "L5" || result.level === "L4" ? "danger" : result.level === "L3" ? "warn" : "ok") : "pending"],
+        ["SKILL.md 第6步", "生成现场走访问询清单。", "ok"],
+        ["SKILL.md 第7步", "生成优先级明确的补充材料清单。", "ok"],
+        ["SKILL.md 第8步", "输出数据缺口、置信度、合规边界和人工复核建议。", "ok"]
+      ];
+    }
+
+    function renderStepList(container, steps, activeCount = 0, runningIndex = -1) {
+      container.innerHTML = steps.map((s, i) => {
+        const done = i < activeCount;
+        const isRunning = i === runningIndex;
+        const cls = isRunning ? "running" : done ? "" : "pending";
+        const tagClass = isRunning ? "info" : done ? s[2] : "pending";
+        const tagText = isRunning ? "执行中" : done ? (s[2] === "ok" ? "完成" : s[2] === "warn" ? "关注" : s[2] === "danger" ? "高关注" : "执行") : "等待";
+        return `
+        <div class="step ${cls}">
+          <div class="step-num">${i + 1}</div>
+          <div>
+            <div class="step-title">${s[0]}</div>
+            <div class="step-text">${s[1]}</div>
+          </div>
+          <span class="tag ${tagClass}">${tagText}</span>
+        </div>`;
+      }).join("");
+    }
+
+    function renderRuleHits(result, active = false) {
+      if (!result) {
+        els.causeTrace.innerHTML = `<div class="trace-card"><strong>等待调用</strong><span>执行到 SKILL.md 第4步后，将调用 risk_rules.md 开始规则匹配。</span></div>`;
+        els.scoreBreakdown.innerHTML = "";
+        els.ruleHits.innerHTML = `<div class="empty">等待风险计算。执行到 SKILL.md 第4步后，将展示 risk_rules.md 命中的具体规则。</div>`;
+        return;
+      }
+      const scoreText = result.baseScore === result.score
+        ? `规则分合计 ${result.baseScore} 分`
+        : `规则分合计 ${result.baseScore} 分，底线规则修正为 ${result.score} 分`;
+      els.causeTrace.innerHTML = `
+        <div class="trace-card">
+          <strong>调用因果链</strong>
+          <span>SKILL.md 第4步“提取风险线索” → 调用 risk_rules.md → 命中 ${result.signals.length} 条风险规则 → ${scoreText} → SKILL.md 第5步映射为 ${result.level}。</span>
+        </div>
+      `;
+      const signalRows = result.signals.map(s => `
+        <tr>
+          <td>${s.dimension}</td>
+          <td>${s.name}</td>
+          <td>${s.score}</td>
+        </tr>
+      `).join("");
+      const floorRows = result.floorRules.map(r => `
+        <tr>
+          <td>底线规则</td>
+          <td>${r.name}</td>
+          <td>最低 ${r.score}</td>
+        </tr>
+      `).join("");
+      els.scoreBreakdown.innerHTML = `
+        <div class="section-title" style="margin-top:10px;">评分构成</div>
+        <table class="score-table">
+          <thead><tr><th>来源</th><th>规则/信号</th><th>分值</th></tr></thead>
+          <tbody>
+            ${signalRows || `<tr><td>规则命中</td><td>无明确风险信号</td><td>0</td></tr>`}
+            ${floorRows}
+            <tr><td><strong>等级映射</strong></td><td><strong>${result.score} 分 → ${result.level}</strong></td><td><strong>${result.score}</strong></td></tr>
+          </tbody>
+        </table>
+      `;
+      if (!result.signals.length) {
+        els.ruleHits.innerHTML = `<div class="empty">未命中明确风险规则；若为首次授信或资料缺口，仍按基础口径进入常规核验。</div>`;
+        return;
+      }
+      els.ruleHits.innerHTML = result.signals.map(s => `
+        <div class="rule-hit">
+          <strong>${s.rule}｜+${s.score}</strong>
+          <span>${s.name}：${s.basis}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderExecutionTrace(result, skillActiveCount = 0, skillRunningIndex = -1, routeActiveCount = 0, routeRunningIndex = -1) {
+      renderStepList(els.routerPipeline, routeSteps(), routeActiveCount || (skillActiveCount ? 3 : 0), routeRunningIndex);
+      renderStepList(els.skillPipeline, skillSteps(result), skillActiveCount, skillRunningIndex);
+      renderRuleHits(result);
+    }
+
+    function addLog(text) {
+      const stamp = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+      logLines.push([stamp, text]);
+      els.logBox.innerHTML = logLines.slice(-8).map(line => `
+        <div class="log-line"><span class="log-time">${line[0]}</span><span>${line[1]}</span></div>
+      `).join("");
+    }
+
+    function setDirty(message = "资料已变更，等待重新发起 Skill 分析。") {
+      if (running) return;
+      hasRun = false;
+      lastResult = null;
+      els.runStatus.textContent = message;
+      els.runStatus.className = "run-status dirty";
+      renderPlaceholder(message);
+    }
+
+    async function runAnalysis() {
+      if (running) return;
+      running = true;
+      els.runBtn.disabled = true;
+      els.copyBtn.disabled = true;
+      logLines = [];
+      els.logBox.innerHTML = "";
+      els.runStatus.textContent = "正在执行 Skill，请稍候...";
+      els.runStatus.className = "run-status running";
+      renderPlaceholder("Skill 正在执行，报告将在完成后生成。");
+
+      const routeLogs = [
+        "平台入口收到信贷经理问题。",
+        "Router 识别为授信走访前风险分析任务。",
+        "命中并加载 credit-visit-risk-analysis Skill 包。"
+      ];
+      for (let i = 0; i < routeLogs.length; i += 1) {
+        renderExecutionTrace(null, 0, -1, i, i);
+        addLog(routeLogs[i]);
+        await sleep(420);
+      }
+
+      syncCaseFromControls();
+      let result = null;
+      const skillLogs = [
+        `SKILL.md 第1步：收集企业资料：${currentCase.name}，${currentCase.creditType}，${currentCase.amount}。`,
+        "SKILL.md 第2步：检查资料完整性和授信背景。",
+        "SKILL.md 第3步：生成企业画像和授信背景摘要。",
+        "SKILL.md 第4步：进入 risk_rules.md，开始抽取风险线索。",
+        "SKILL.md 第5步：汇总规则分并映射 L1-L5。",
+        "SKILL.md 第6步：生成现场走访问询清单。",
+        "SKILL.md 第7步：生成补充材料清单。",
+        "SKILL.md 第8步：补充合规边界和人工复核提示。"
+      ];
+      for (let i = 0; i < skillLogs.length; i += 1) {
+        if (i === 3) {
+          result = evaluate(currentCase);
+          renderExecutionTrace(result, i, i, 3, -1);
+          addLog(skillLogs[i]);
+          if (result.signals.length) {
+            result.signals.forEach(s => addLog(`${s.rule} 命中：${s.name}，+${s.score}`));
+          } else {
+            addLog("risk_rules.md 未命中明确风险规则。");
+          }
+        } else if (i === 4 && result) {
+          renderExecutionTrace(result, i, i, 3, -1);
+          addLog(`${skillLogs[i]} 当前关注分 ${result.score}，等级 ${result.level}。`);
+        } else {
+          renderExecutionTrace(result, i, i, 3, -1);
+          addLog(skillLogs[i]);
+        }
+        await sleep(i === 3 ? 680 : 420);
+      }
+
+      if (!result) {
+        result = evaluate(currentCase);
+      }
+      const questions = questionsFor(currentCase, result.signals);
+      const materials = materialsFor(result.signals);
+      lastResult = result;
+      hasRun = true;
+      renderResult(result, questions, materials);
+      addLog(`完成：输出 ${result.level}，识别 ${result.signals.length} 条风险线索。`);
+      els.runStatus.textContent = "分析完成。右侧数据若发生变化，需要重新生成分析。";
+      els.runStatus.className = "run-status";
+      els.runBtn.disabled = false;
+      els.copyBtn.disabled = false;
+      running = false;
+    }
+
+    function renderProfile() {
+      els.profileBox.innerHTML = `
+        <div class="kv"><b>企业名称</b><span>${currentCase.name}</span></div>
+        <div class="kv"><b>行业</b><span>${currentCase.industry}</span></div>
+        <div class="kv"><b>地区</b><span>${currentCase.region}</span></div>
+        <div class="kv"><b>申请金额</b><span>${currentCase.amount}</span></div>
+        <div class="kv"><b>授信用途</b><span>${currentCase.useOfFunds}</span></div>
+        <div class="kv"><b>已知背景</b><span>${currentCase.background}</span></div>
+      `;
+    }
+
+    function buildReport(result, questions, materials) {
+      return [
+        `# 授信走访前风险分析报告`,
+        ``,
+        `企业：${currentCase.name}`,
+        `授信类型：${currentCase.creditType}`,
+        `申请金额：${currentCase.amount}`,
+        `走访前风险关注等级：${result.level}`,
+        `风险关注分：${result.score}`,
+        ``,
+        `## 关键风险线索`,
+        ...(result.signals.length ? result.signals.map(s => `- ${s.dimension}：${s.name}。依据：${s.basis}`) : ["- 暂未发现明确风险线索。"]),
+        ``,
+        `## 现场走访问询清单`,
+        ...questions.map(q => `- ${q[0]}（询问对象：${q[1]}；目的：${q[2]}）`),
+        ``,
+        `## 补充材料清单`,
+        ...materials.map(m => `- ${m}`),
+        ``,
+        `合规提示：本报告仅用于授信走访前准备，不构成最终授信审批意见。`
+      ].join("\n");
+    }
+
+    function syncControlsFromCase() {
+      els.creditType.value = currentCase.creditType;
+      els.cashFlow.value = currentCase.cashFlowNegative ? "negative" : "positive";
+      els.receivables.value = currentCase.receivables;
+      els.receivablesValue.value = currentCase.receivables;
+      els.liability.value = currentCase.liability;
+      els.liabilityValue.value = currentCase.liability;
+      els.customerConcentration.checked = currentCase.customerConcentration;
+      els.missingProof.checked = currentCase.missingProof;
+      els.relatedParty.checked = currentCase.relatedParty;
+      els.legalIssue.checked = currentCase.legalIssue;
+      els.negativeSentiment.checked = currentCase.negativeSentiment || currentCase.environmentalIssue;
+      els.shareholderChange.checked = currentCase.shareholderChange;
+      els.shortDebt.checked = currentCase.shortDebt;
+    }
+
+    function syncCaseFromControls() {
+      currentCase.creditType = els.creditType.value;
+      currentCase.cashFlowNegative = els.cashFlow.value === "negative";
+      currentCase.receivables = Number(els.receivablesValue.value);
+      currentCase.liability = Number(els.liabilityValue.value);
+      currentCase.customerConcentration = els.customerConcentration.checked;
+      currentCase.missingProof = els.missingProof.checked;
+      currentCase.relatedParty = els.relatedParty.checked;
+      currentCase.legalIssue = els.legalIssue.checked;
+      currentCase.negativeSentiment = els.negativeSentiment.checked;
+      currentCase.environmentalIssue = currentCase.industry.includes("化工") && els.negativeSentiment.checked;
+      currentCase.shareholderChange = els.shareholderChange.checked;
+      currentCase.shortDebt = els.shortDebt.checked;
+    }
+
+    function selectEnterprise(index) {
+      baseCase = structuredClone(enterprises[index]);
+      currentCase = structuredClone(baseCase);
+      syncControlsFromCase();
+      setDirty("企业资料已加载，等待发起 Skill 分析。");
+    }
+
+    function applyPreset(type) {
+      if (type === "improve") {
+        currentCase.cashFlowNegative = false;
+        currentCase.receivables = Math.min(currentCase.receivables, 25);
+        currentCase.legalIssue = false;
+        currentCase.negativeSentiment = false;
+        currentCase.environmentalIssue = false;
+        currentCase.shareholderChange = false;
+        currentCase.shortDebt = false;
+      }
+      if (type === "enforcement") {
+        currentCase.legalIssue = true;
+      }
+      if (type === "tradeProof") {
+        currentCase.missingProof = true;
+        currentCase.cashFlowNegative = true;
+        if (/贸易|供应链/.test(currentCase.industry)) currentCase.liability = Math.max(currentCase.liability, 72);
+      }
+      if (type === "severe") {
+        currentCase.cashFlowNegative = true;
+        currentCase.legalIssue = true;
+        currentCase.negativeSentiment = true;
+        currentCase.shareholderChange = true;
+        currentCase.shortDebt = true;
+      }
+      syncControlsFromCase();
+      setDirty("情景数据已应用，等待重新发起 Skill 分析。");
+    }
+
+    function init() {
+      els.enterpriseSelect.innerHTML = enterprises.map((e, i) => `<option value="${i}">${e.id}｜${e.name}｜${e.industry}</option>`).join("");
+      els.enterpriseSelect.addEventListener("change", e => selectEnterprise(Number(e.target.value)));
+      els.runBtn.addEventListener("click", runAnalysis);
+      els.resetBtn.addEventListener("click", () => selectEnterprise(Number(els.enterpriseSelect.value)));
+      els.viewSkillBtn.addEventListener("click", () => openFileModal("SKILL.md", skillMdContent));
+      els.viewRulesBtn.addEventListener("click", () => openFileModal("risk_rules.md", riskRulesMdContent));
+      els.closeModalBtn.addEventListener("click", closeFileModal);
+      els.fileModal.addEventListener("click", event => {
+        if (event.target === els.fileModal) closeFileModal();
+      });
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") closeFileModal();
+      });
+      els.copyBtn.addEventListener("click", async () => {
+        if (!lastReport) {
+          els.copyStatus.textContent = "请先点击“生成分析”，待报告生成后再复制。";
+          setTimeout(() => els.copyStatus.textContent = "", 2400);
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(lastReport);
+          els.copyStatus.textContent = "报告已复制。";
+        } catch {
+          els.copyStatus.textContent = "浏览器未允许复制，可手动选择页面内容。";
+        }
+        setTimeout(() => els.copyStatus.textContent = "", 2400);
+      });
+      [els.creditType, els.cashFlow, els.customerConcentration, els.missingProof, els.relatedParty, els.legalIssue, els.negativeSentiment, els.shareholderChange, els.shortDebt].forEach(el => el.addEventListener("change", () => setDirty()));
+      [[els.receivables, els.receivablesValue], [els.liability, els.liabilityValue]].forEach(([range, number]) => {
+        range.addEventListener("input", () => { number.value = range.value; setDirty(); });
+        number.addEventListener("input", () => { range.value = number.value; setDirty(); });
+      });
+      document.querySelectorAll("[data-preset]").forEach(btn => btn.addEventListener("click", () => applyPreset(btn.dataset.preset)));
+      selectEnterprise(0);
+    }
+
+    init();
+  </script>
+</body>
+</html>

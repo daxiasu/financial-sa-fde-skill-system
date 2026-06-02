@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>金融 SA-FDE Skill 展示中心</title>
+  <style>
+    :root {
+      --bg: #f6f7f8;
+      --panel: #ffffff;
+      --line: #d9dde3;
+      --text: #17202a;
+      --muted: #5d6875;
+      --blue: #1f6feb;
+      --teal: #0f8b8d;
+      --green: #16833a;
+      --amber: #b7791f;
+      --red: #b42318;
+      --ink: #27313d;
+      --shadow: 0 12px 30px rgba(23, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      height: 68px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border: 1px solid #aeb7c2;
+      background: #f9fafb;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-weight: 800;
+      border-radius: 6px;
+      flex: 0 0 auto;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+      font-weight: 750;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .status-pill {
+      border: 1px solid #b8c7d9;
+      color: #24486f;
+      background: #f3f8fd;
+      padding: 6px 9px;
+      border-radius: 6px;
+      font-weight: 650;
+    }
+
+    .guide-button {
+      border: 1px solid #a8b6c7;
+      background: #ffffff;
+      color: var(--ink);
+      min-height: 34px;
+      padding: 7px 12px;
+      border-radius: 6px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .guide-button:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: #f7fbff;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px;
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .sidebar,
+    .main {
+      min-width: 0;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .nav-section {
+      padding: 14px;
+    }
+
+    .nav-title {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .nav-item {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--ink);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+    }
+
+    .nav-item.active {
+      border-color: #a9c7ea;
+      background: #eff6ff;
+      color: #1456a8;
+      font-weight: 750;
+    }
+
+    .nav-item[disabled] {
+      cursor: not-allowed;
+      color: #8b96a3;
+    }
+
+    .count {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .main h2 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+
+    .main p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .main {
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .matrix-head {
+      padding: 18px 18px 16px;
+    }
+
+    .levels {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .level {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 580px;
+      overflow: hidden;
+    }
+
+    .level-header {
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid var(--line);
+      min-height: 100px;
+    }
+
+    .level-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 28px;
+      border-radius: 5px;
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .l1 .level-code {
+      background: var(--teal);
+    }
+
+    .l2 .level-code {
+      background: var(--blue);
+    }
+
+    .l3 .level-code {
+      background: var(--amber);
+    }
+
+    .level-header h3 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .level-header p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .skill-list {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .skill-card {
+      width: 100%;
+      min-height: 96px;
+      background: #fff;
+      border: 1px solid #d7dce4;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      color: inherit;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    }
+
+    .skill-card:hover,
+    .skill-card.active {
+      border-color: #73a4e8;
+      box-shadow: 0 8px 20px rgba(31, 111, 235, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .skill-card h4 {
+      margin: 0;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .skill-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #44515f;
+      background: #f2f4f7;
+      border: 1px solid #dde2e8;
+    }
+
+    .tag.ready {
+      color: var(--green);
+      background: #f0f9f3;
+      border-color: #bfe5ca;
+    }
+
+    .tag.plan {
+      color: #59606b;
+      background: #f6f7f9;
+      border-color: #d7dce4;
+    }
+
+    .tag.exp {
+      color: var(--amber);
+      background: #fff8eb;
+      border-color: #ead5a8;
+    }
+
+    .guide-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(23, 32, 42, 0.42);
+    }
+
+    .guide-backdrop[hidden] {
+      display: none;
+    }
+
+    .guide-modal {
+      width: min(920px, 100%);
+      max-height: min(760px, calc(100vh - 48px));
+      overflow: auto;
+      background: #ffffff;
+      border: 1px solid #cfd6df;
+      border-radius: 8px;
+      box-shadow: 0 24px 70px rgba(23, 32, 42, 0.28);
+    }
+
+    .guide-header {
+      min-height: 58px;
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .guide-header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .close-button {
+      width: 34px;
+      height: 34px;
+      border: 1px solid #b8c1cc;
+      background: #fff;
+      color: var(--ink);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .guide-content {
+      padding: 18px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .guide-graph {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr) 42px minmax(0, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .guide-node {
+      border: 1px solid #d4dae2;
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfcfd;
+      min-height: 150px;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+    }
+
+    .guide-node strong {
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .guide-node span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .guide-node.l1 {
+      border-top: 4px solid var(--teal);
+    }
+
+    .guide-node.l2 {
+      border-top: 4px solid var(--blue);
+    }
+
+    .guide-node.l3 {
+      border-top: 4px solid var(--amber);
+    }
+
+    .guide-arrow {
+      display: grid;
+      place-items: center;
+      color: #708090;
+      font-weight: 850;
+      font-size: 18px;
+    }
+
+    .guide-cycle {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .cycle-step {
+      border: 1px solid #d8dde5;
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 98px;
+    }
+
+    .cycle-step strong {
+      display: block;
+      font-size: 13px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .cycle-step span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1180px) {
+      .layout {
+        grid-template-columns: 190px minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 860px) {
+      .topbar {
+        height: auto;
+        padding: 14px;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .meta {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+        padding: 12px;
+      }
+
+      .levels {
+        grid-template-columns: 1fr;
+      }
+
+      .level {
+        min-height: auto;
+      }
+
+      .matrix-head {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-graph,
+      .guide-cycle {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-arrow {
+        min-height: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">SA</div>
+        <div>
+          <h1>金融 SA-FDE Skill 展示中心</h1>
+          <p>银行域首版矩阵：用 L1 能力积木支撑 L2 场景 Skill，并预留 L3 高级编排。</p>
+        </div>
+      </div>
+      <div class="meta">
+        <span>Author: daxiasu</span>
+        <button class="guide-button" id="openGuide" type="button">说明</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <section class="section nav-section">
+          <p class="nav-title">行业域</p>
+          <button class="nav-item active" type="button">
+            <span>银行</span>
+            <span class="count">首版</span>
+          </button>
+          <button class="nav-item" type="button" disabled>
+            <span>证券</span>
+            <span class="count">规划</span>
+          </button>
+          <button class="nav-item" type="button" disabled>
+            <span>保险</span>
+            <span class="count">规划</span>
+          </button>
+        </section>
+      </aside>
+
+      <section class="main">
+        <section class="section matrix-head">
+          <div>
+            <h2>银行 Skill 矩阵</h2>
+          </div>
+        </section>
+
+        <section class="levels" aria-label="Skill levels">
+          <div class="level l1">
+            <div class="level-header">
+              <span class="level-code">L1</span>
+              <h3>原子 Skill</h3>
+              <p>大家共用的底层能力，更多由技术团队和业务专家共同建设。</p>
+            </div>
+            <div class="skill-list">
+              <button class="skill-card" type="button" data-skill="profile">
+                <div class="tags"><span class="tag ready">第一批</span><span class="tag">共用</span></div>
+                <h4>企业基础画像生成</h4>
+                <p>抽取工商、行业、经营、授信基础信息，形成企业一页画像。</p>
+              </button>
+              <button class="skill-card" type="button" data-skill="materials">
+                <div class="tags"><span class="tag ready">第一批</span><span class="tag">共用</span></div>
+                <h4>材料完整性检查</h4>
+                <p>检查尽调材料、财务报表、合同票据、流水凭证是否齐备。</p>
+              </button>
+              <button class="skill-card" type="button" data-skill="finance">
+                <div class="tags"><span class="tag ready">第一批</span><span class="tag">共用</span></div>
+                <h4>财务异常指标识别</h4>
+                <p>识别收入、毛利、现金流、负债、应收账款等异常信号。</p>
+              </button>
+              <button class="skill-card" type="button" data-skill="truth">
+                <div class="tags"><span class="tag ready">第一批</span><span class="tag">共用</span></div>
+                <h4>经营真实性核验</h4>
+                <p>结合订单、合同、发票、物流、回款，判断交易真实性佐证强弱。</p>
+              </button>
+              <button class="skill-card" type="button" data-skill="relation">
+                <div class="tags"><span class="tag ready">第一批</span><span class="tag">共用</span></div>
+                <h4>关联关系与交易识别</h4>
+                <p>识别关联主体、关联交易规模、异常资金往来和潜在利益输送。</p>
+              </button>
+              <button class="skill-card" type="button" data-skill="public">
+                <div class="tags"><span class="tag plan">后续</span><span class="tag">公共数据</span></div>
+                <h4>司法舆情与公开风险检索</h4>
+                <p>从公开信息中提取司法、舆情、监管处罚、重大负面线索。</p>
+              </button>
+            </div>
+          </div>
+
+          <div class="level l2">
+            <div class="level-header">
+              <span class="level-code">L2</span>
+              <h3>场景 Skill</h3>
+              <p>基于员工当前业务场景沉淀，适合售前演示、客户交流和资产复用。</p>
+            </div>
+            <div class="skill-list">
+              <a class="skill-card active" href="presales-skill-matrix/ground-zero-credit-risk-analysis/%E6%8E%88%E4%BF%A1%E9%A3%8E%E9%99%A9%E5%88%86%E6%9E%90%E5%B7%A5%E4%BD%9C%E5%8F%B0Demo.html" data-skill="credit">
+                <div class="tags"><span class="tag ready">可演示</span><span class="tag">独立任务</span></div>
+                <h4>授信走访前穿透式风险分析</h4>
+                <p>面向银行对公信贷经理，输出走访前风险关注等级、风险线索和询问清单。</p>
+              </a>
+              <a class="skill-card" href="presales-skill-matrix/post-loan-risk-monitoring/%E8%B4%B7%E5%90%8E%E9%A3%8E%E9%99%A9%E7%9B%91%E6%B5%8B%E5%B7%A5%E4%BD%9C%E5%8F%B0Demo.html" data-skill="postloan">
+                <div class="tags"><span class="tag ready">可演示</span><span class="tag">L1 调用</span></div>
+                <h4>贷后风险监测报告生成</h4>
+                <p>将财务、舆情、还款、经营变化整合为贷后风险监测报告。</p>
+              </a>
+              <button class="skill-card" type="button" data-skill="kyc">
+                <div class="tags"><span class="tag plan">待规划</span><span class="tag">客户经营</span></div>
+                <h4>金融客户 KYC 画像生成</h4>
+                <p>面向客户经理，形成客户资产、风险偏好、产品适配的一页画像。</p>
+              </button>
+              <button class="skill-card" type="button" data-skill="policy">
+                <div class="tags"><span class="tag plan">待规划</span><span class="tag">合规</span></div>
+                <h4>金融政策解读与影响分析</h4>
+                <p>解读监管政策、行内制度变化，输出业务影响和行动建议。</p>
+              </button>
+            </div>
+          </div>
+
+          <div class="level l3">
+            <div class="level-header">
+              <span class="level-code">L3</span>
+              <h3>高级编排 Skill</h3>
+              <p>高级骨干员工创建的复杂任务能力，适合非标业务、专项任务和现场创新。</p>
+            </div>
+            <div class="skill-list">
+              <button class="skill-card" type="button" data-skill="planner">
+                <div class="tags"><span class="tag exp">实验区</span><span class="tag">智能体编排</span></div>
+                <h4>银行信贷任务 Planner</h4>
+                <p>根据自然语言任务，判断要调用哪个 L2、哪些 L1、哪些数据和接口。</p>
+              </button>
+              <button class="skill-card" type="button" data-skill="sme">
+                <div class="tags"><span class="tag exp">实验区</span><span class="tag">非标专项</span></div>
+                <h4>小微贷专项尽调助手</h4>
+                <p>围绕小微企业批量筛选、走访、授信建议形成专项任务工作台。</p>
+              </button>
+              <button class="skill-card" type="button" data-skill="industry">
+                <div class="tags"><span class="tag exp">实验区</span><span class="tag">产业链</span></div>
+                <h4>区域产业链专项授信排查</h4>
+                <p>针对某区域、某产业链、某类风险事件，临时编排多 Skill 进行排查。</p>
+              </button>
+              <button class="skill-card" type="button" data-skill="regulatory">
+                <div class="tags"><span class="tag exp">实验区</span><span class="tag">临时任务</span></div>
+                <h4>临时监管口径影响评估</h4>
+                <p>在监管政策突发变化时，快速生成受影响业务、客户和行动清单。</p>
+              </button>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div class="guide-backdrop" id="guideModal" hidden>
+      <section class="guide-modal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+        <header class="guide-header">
+          <h2 id="guideTitle">Skill 体系说明</h2>
+          <button class="close-button" id="closeGuide" type="button" aria-label="关闭">×</button>
+        </header>
+        <div class="guide-content">
+          <div class="guide-graph" aria-label="L1 L2 L3 relationship">
+            <div class="guide-node l1">
+              <strong>L1 原子 Skill</strong>
+              <span>公共基础能力，由技术团队和业务专家共同建设。</span>
+              <span>例如：企业画像、材料检查、财务异常、关联关系识别。</span>
+            </div>
+            <div class="guide-arrow">→</div>
+            <div class="guide-node l2">
+              <strong>L2 场景 Skill</strong>
+              <span>员工围绕当前业务场景沉淀，可演示、可复用、可交付。</span>
+              <span>例如：授信走访前风险分析、贷后风险监测报告。</span>
+            </div>
+            <div class="guide-arrow">→</div>
+            <div class="guide-node l3">
+              <strong>L3 高级编排 Skill</strong>
+              <span>面向非标业务、专项任务和现场创新，调度多个 L1/L2。</span>
+              <span>例如：信贷任务 Planner、小微贷专项尽调助手。</span>
+            </div>
+          </div>
+
+          <div class="guide-cycle" aria-label="Skill asset loop">
+            <div class="cycle-step">
+              <strong>客户现场任务</strong>
+              <span>发现真实业务痛点，但不带出客户数据。</span>
+            </div>
+            <div class="cycle-step">
+              <strong>L3 快速编排</strong>
+              <span>先处理非标场景，验证是否有业务价值。</span>
+            </div>
+            <div class="cycle-step">
+              <strong>L2 场景沉淀</strong>
+              <span>把多次验证后的流程固化为标准场景 Skill。</span>
+            </div>
+            <div class="cycle-step">
+              <strong>L1 能力抽象</strong>
+              <span>把高频共性能力沉淀为公共原子 Skill。</span>
+            </div>
+            <div class="cycle-step">
+              <strong>售前矩阵复用</strong>
+              <span>用模拟数据和通用规则形成可展示资产。</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const guideModal = document.getElementById("guideModal");
+    const openGuide = document.getElementById("openGuide");
+    const closeGuide = document.getElementById("closeGuide");
+    const cards = Array.from(document.querySelectorAll("button.skill-card"));
+
+    openGuide.addEventListener("click", () => {
+      guideModal.hidden = false;
+    });
+
+    closeGuide.addEventListener("click", () => {
+      guideModal.hidden = true;
+    });
+
+    guideModal.addEventListener("click", (event) => {
+      if (event.target === guideModal) {
+        guideModal.hidden = true;
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        guideModal.hidden = true;
+      }
+    });
+
+    cards.forEach((card) => {
+      card.addEventListener("click", () => {
+        document.querySelectorAll(".skill-card").forEach((item) => item.classList.remove("active"));
+        card.classList.add("active");
+      });
+    });
+  </script>
+</body>
+</html>
