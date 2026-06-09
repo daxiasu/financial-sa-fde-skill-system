@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>金融 SA-FDE Skill 展示中心</title>
+  <title>金融场景 FDE 共创工作台</title>
   <style>
     :root {
-      --bg: #f6f7f8;
+      --bg: #f5f6f8;
       --panel: #ffffff;
-      --line: #d9dde3;
+      --panel-soft: #fafbfc;
+      --line: #d8dde5;
       --text: #17202a;
       --muted: #5d6875;
       --blue: #1f6feb;
-      --teal: #0f8b8d;
+      --teal: #0f766e;
       --green: #16833a;
       --amber: #b7791f;
-      --red: #b42318;
-      --ink: #27313d;
-      --shadow: 0 12px 30px rgba(23, 32, 42, 0.08);
+      --violet: #7c3aed;
+      --slate: #475569;
+      --shadow: 0 10px 26px rgba(23, 32, 42, 0.07);
     }
 
     * {
@@ -26,15 +27,20 @@
 
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       background: var(--bg);
       color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       letter-spacing: 0;
     }
 
     a {
       color: inherit;
       text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
     }
 
     .app {
@@ -44,16 +50,17 @@
     }
 
     .topbar {
-      height: 68px;
-      padding: 0 28px;
+      min-height: 72px;
+      padding: 12px 26px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--panel);
-      border-bottom: 1px solid var(--line);
+      gap: 18px;
       position: sticky;
       top: 0;
-      z-index: 5;
+      z-index: 10;
     }
 
     .brand {
@@ -66,13 +73,13 @@
     .brand-mark {
       width: 38px;
       height: 38px;
+      border-radius: 6px;
       border: 1px solid #aeb7c2;
       background: #f9fafb;
+      color: var(--blue);
       display: grid;
       place-items: center;
-      color: var(--blue);
-      font-weight: 800;
-      border-radius: 6px;
+      font-weight: 850;
       flex: 0 0 auto;
     }
 
@@ -80,60 +87,49 @@
       margin: 0;
       font-size: 20px;
       line-height: 1.2;
-      font-weight: 750;
+      font-weight: 800;
     }
 
     .brand p {
       margin: 4px 0 0;
       color: var(--muted);
       font-size: 13px;
+      line-height: 1.35;
     }
 
-    .meta {
+    .top-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       color: var(--muted);
       font-size: 13px;
       white-space: nowrap;
     }
 
-    .status-pill {
-      border: 1px solid #b8c7d9;
-      color: #24486f;
-      background: #f3f8fd;
-      padding: 6px 9px;
-      border-radius: 6px;
-      font-weight: 650;
-    }
-
-    .guide-button {
-      border: 1px solid #a8b6c7;
-      background: #ffffff;
-      color: var(--ink);
+    .outline-button {
+      border: 1px solid #b8c1cc;
+      background: #fff;
       min-height: 34px;
       padding: 7px 12px;
       border-radius: 6px;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 700;
       cursor: pointer;
+      color: var(--text);
+      font-weight: 700;
     }
 
-    .guide-button:hover {
+    .outline-button:hover {
       border-color: var(--blue);
       color: var(--blue);
       background: #f7fbff;
     }
 
     .layout {
-      display: grid;
-      grid-template-columns: 220px minmax(0, 1fr);
-      gap: 18px;
-      padding: 18px;
-      max-width: 1320px;
-      width: 100%;
+      width: min(1480px, 100%);
       margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 18px;
     }
 
     .sidebar,
@@ -141,73 +137,70 @@
       min-width: 0;
     }
 
-    .section {
+    .sidebar {
+      display: grid;
+      align-content: start;
+      gap: 14px;
+    }
+
+    .panel {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
       box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
-    .sidebar {
-      display: grid;
-      gap: 14px;
-      align-content: start;
-    }
-
-    .nav-section {
+    .side-panel {
       padding: 14px;
     }
 
-    .nav-title {
+    .side-panel[hidden] {
+      display: none;
+    }
+
+    .side-title {
       margin: 0 0 10px;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 750;
+      font-weight: 800;
     }
 
-    .nav-item {
+    .domain-row,
+    .filter-row,
+    .view-row {
       width: 100%;
       border: 1px solid transparent;
       background: transparent;
-      color: var(--ink);
+      color: var(--text);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
       padding: 10px 9px;
       border-radius: 6px;
-      cursor: pointer;
-      font: inherit;
       text-align: left;
+      cursor: pointer;
     }
 
-    .nav-item.active {
+    .domain-row.active,
+    .filter-row.active,
+    .view-row.active {
       border-color: #a9c7ea;
       background: #eff6ff;
       color: #1456a8;
-      font-weight: 750;
+      font-weight: 760;
     }
 
-    .nav-item[disabled] {
-      cursor: not-allowed;
+    .domain-row[disabled] {
       color: #8b96a3;
+      cursor: not-allowed;
     }
 
     .count {
       color: var(--muted);
       font-size: 12px;
-    }
-
-    .main h2 {
-      margin: 0;
-      font-size: 17px;
-      line-height: 1.35;
-    }
-
-    .main p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
+      font-weight: 650;
     }
 
     .main {
@@ -216,129 +209,248 @@
       align-content: start;
     }
 
-    .matrix-head {
-      padding: 18px 18px 16px;
-    }
-
-    .levels {
+    .summary-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
     }
 
-    .level {
+    .summary-cell {
+      padding: 14px;
+      min-height: 82px;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      min-height: 580px;
-      overflow: hidden;
+      box-shadow: var(--shadow);
     }
 
-    .level-header {
-      padding: 14px 14px 12px;
+    .summary-cell strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .summary-cell span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .architecture-panel {
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .section-head {
+      min-height: 62px;
+      padding: 14px 16px;
       border-bottom: 1px solid var(--line);
-      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
     }
 
     .level-code {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 42px;
-      height: 28px;
+      min-width: 36px;
+      height: 26px;
+      padding: 0 8px;
       border-radius: 5px;
+      display: inline-grid;
+      place-items: center;
       color: #fff;
-      font-weight: 800;
-      font-size: 13px;
-      margin-bottom: 10px;
+      font-weight: 850;
+      font-size: 12px;
+      flex: 0 0 auto;
     }
 
-    .l1 .level-code {
-      background: var(--teal);
+    .level-code.scene {
+      background: var(--slate);
     }
 
-    .l2 .level-code {
+    .level-code.l2 {
       background: var(--blue);
     }
 
-    .l3 .level-code {
-      background: var(--amber);
+    .level-code.l1 {
+      background: var(--teal);
     }
 
-    .level-header h3 {
+    .level-code.agent {
+      background: var(--violet);
+    }
+
+    .section-title h2 {
       margin: 0;
-      font-size: 16px;
+      font-size: 17px;
       line-height: 1.3;
+      font-weight: 800;
     }
 
-    .level-header p {
-      margin: 7px 0 0;
+    .section-title p {
+      margin: 3px 0 0;
       color: var(--muted);
-      line-height: 1.5;
-      font-size: 13px;
+      font-size: 12px;
+      line-height: 1.45;
     }
 
-    .skill-list {
+    .architecture-frame {
+      border: 1px solid #c9d3df;
+      background: #fbfcfd;
+      border-radius: 8px;
+      padding: 14px;
       display: grid;
-      gap: 10px;
-      padding: 12px;
+      gap: 12px;
     }
 
-    .skill-card {
-      width: 100%;
-      min-height: 96px;
-      background: #fff;
+    .process-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr) 30px minmax(0, 1fr) 30px minmax(0, 1fr);
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .architecture-node {
       border: 1px solid #d7dce4;
+      background: #fff;
       border-radius: 8px;
       padding: 12px;
+      min-height: 94px;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+    }
+
+    .architecture-node strong {
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .architecture-node span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .flow-arrow {
+      display: grid;
+      place-items: center;
+      color: #708090;
+      font-weight: 850;
+      font-size: 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .search {
+      width: 280px;
+      min-height: 34px;
+      border: 1px solid #c8d0da;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text);
+      padding: 7px 10px;
+      outline: none;
+    }
+
+    .search:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.12);
+    }
+
+    .workspace-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(380px, 0.85fr);
+      min-height: 520px;
+    }
+
+    .item-list {
+      max-height: 700px;
+      overflow: auto;
+      border-right: 1px solid var(--line);
+    }
+
+    .item-row {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid #e6e9ee;
+      background: #fff;
+      min-height: 82px;
+      padding: 12px 14px;
       cursor: pointer;
       text-align: left;
-      font: inherit;
       display: grid;
-      gap: 8px;
-      align-content: start;
+      gap: 7px;
       color: inherit;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
     }
 
-    .skill-card:hover,
-    .skill-card.active {
-      border-color: #73a4e8;
-      box-shadow: 0 8px 20px rgba(31, 111, 235, 0.12);
-      transform: translateY(-1px);
+    .item-row:hover,
+    .item-row.active {
+      background: #f7fbff;
     }
 
-    .skill-card h4 {
+    .item-row.active {
+      box-shadow: inset 4px 0 0 var(--blue);
+    }
+
+    .row-main {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .row-main h3 {
       margin: 0;
-      color: var(--text);
       font-size: 14px;
       line-height: 1.35;
     }
 
-    .skill-card p {
+    .row-desc {
       margin: 0;
       color: var(--muted);
       font-size: 12px;
       line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .tags {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      align-items: center;
     }
 
     .tag {
-      display: inline-flex;
-      align-items: center;
       min-height: 22px;
       padding: 2px 7px;
+      display: inline-flex;
+      align-items: center;
       border-radius: 5px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #44515f;
-      background: #f2f4f7;
       border: 1px solid #dde2e8;
+      background: #f2f4f7;
+      color: #44515f;
+      font-size: 12px;
+      font-weight: 720;
+      white-space: nowrap;
     }
 
     .tag.ready {
@@ -348,15 +460,119 @@
     }
 
     .tag.plan {
-      color: #59606b;
-      background: #f6f7f9;
-      border-color: #d7dce4;
-    }
-
-    .tag.exp {
       color: var(--amber);
       background: #fff8eb;
       border-color: #ead5a8;
+    }
+
+    .tag.l1 {
+      color: var(--teal);
+      background: #effaf8;
+      border-color: #b9e2dc;
+    }
+
+    .tag.l2,
+    .tag.skill {
+      color: var(--blue);
+      background: #eff6ff;
+      border-color: #bfd7ff;
+    }
+
+    .tag.agent {
+      color: var(--violet);
+      background: #f5f0ff;
+      border-color: #d9c8ff;
+    }
+
+    .tag.type {
+      color: #8a4b0f;
+      background: #fff7ed;
+      border-color: #fed7aa;
+    }
+
+    .detail {
+      padding: 16px;
+      display: grid;
+      align-content: start;
+      gap: 14px;
+      background: var(--panel-soft);
+    }
+
+    .detail h3 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .detail-block {
+      display: grid;
+      gap: 6px;
+    }
+
+    .detail-block strong {
+      color: #2d3743;
+      font-size: 12px;
+    }
+
+    .detail-block p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .meta-box {
+      border: 1px solid #d7dce4;
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .meta-box strong {
+      color: #2d3743;
+      font-size: 12px;
+    }
+
+    .meta-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+
+    .demo-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .demo-link {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 6px;
+      border: 1px solid #b8c7d9;
+      background: #fff;
+      color: #1456a8;
+      padding: 7px 11px;
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .empty {
+      padding: 22px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .guide-backdrop {
@@ -375,9 +591,9 @@
 
     .guide-modal {
       width: min(920px, 100%);
-      max-height: min(760px, calc(100vh - 48px));
+      max-height: min(720px, calc(100vh - 48px));
       overflow: auto;
-      background: #ffffff;
+      background: #fff;
       border: 1px solid #cfd6df;
       border-radius: 8px;
       box-shadow: 0 24px 70px rgba(23, 32, 42, 0.28);
@@ -403,7 +619,7 @@
       height: 34px;
       border: 1px solid #b8c1cc;
       background: #fff;
-      color: var(--ink);
+      color: var(--text);
       border-radius: 6px;
       cursor: pointer;
       font-size: 20px;
@@ -413,12 +629,12 @@
     .guide-content {
       padding: 18px;
       display: grid;
-      gap: 18px;
+      gap: 14px;
     }
 
-    .guide-graph {
+    .guide-flow {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr) 42px minmax(0, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       align-items: stretch;
     }
@@ -426,118 +642,65 @@
     .guide-node {
       border: 1px solid #d4dae2;
       border-radius: 8px;
-      padding: 14px;
       background: #fbfcfd;
-      min-height: 150px;
-      display: grid;
-      align-content: start;
-      gap: 8px;
+      padding: 14px;
+      min-height: 140px;
     }
 
     .guide-node strong {
+      display: block;
+      margin-bottom: 8px;
       font-size: 15px;
-      color: var(--text);
     }
 
     .guide-node span {
+      display: block;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.5;
     }
 
-    .guide-node.l1 {
-      border-top: 4px solid var(--teal);
-    }
-
-    .guide-node.l2 {
-      border-top: 4px solid var(--blue);
-    }
-
-    .guide-node.l3 {
-      border-top: 4px solid var(--amber);
-    }
-
-    .guide-arrow {
-      display: grid;
-      place-items: center;
-      color: #708090;
-      font-weight: 850;
-      font-size: 18px;
-    }
-
-    .guide-cycle {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-      align-items: stretch;
-    }
-
-    .cycle-step {
-      border: 1px solid #d8dde5;
-      background: #f8fafc;
-      border-radius: 8px;
-      padding: 12px;
-      min-height: 98px;
-    }
-
-    .cycle-step strong {
-      display: block;
-      font-size: 13px;
-      color: var(--ink);
-      margin-bottom: 6px;
-    }
-
-    .cycle-step span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    @media (max-width: 1180px) {
+    @media (max-width: 1160px) {
       .layout {
-        grid-template-columns: 190px minmax(0, 1fr);
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       .topbar {
-        height: auto;
-        padding: 14px;
         align-items: flex-start;
-        gap: 12px;
-      }
-
-      .meta {
         flex-direction: column;
-        align-items: flex-end;
-        gap: 6px;
       }
 
-      .layout {
-        grid-template-columns: 1fr;
-        padding: 12px;
+      .top-actions {
+        width: 100%;
+        justify-content: space-between;
       }
 
-      .levels {
-        grid-template-columns: 1fr;
-      }
-
-      .level {
-        min-height: auto;
-      }
-
-      .matrix-head {
+      .summary-grid,
+      .process-row,
+      .workspace-body,
+      .meta-grid,
+      .guide-flow {
         grid-template-columns: 1fr;
       }
 
-      .guide-graph,
-      .guide-cycle {
-        grid-template-columns: 1fr;
+      .flow-arrow {
+        min-height: 18px;
+        transform: rotate(90deg);
       }
 
-      .guide-arrow {
-        min-height: 22px;
+      .item-list {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .search {
+        width: 100%;
       }
     }
   </style>
@@ -546,143 +709,108 @@
   <div class="app">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark">SA</div>
+        <div class="brand-mark">FDE</div>
         <div>
-          <h1>金融 SA-FDE Skill 展示中心</h1>
-          <p>银行域首版矩阵：用 L1 能力积木支撑 L2 场景 Skill，并预留 L3 高级编排。</p>
+          <h1>金融场景 FDE 共创工作台</h1>
+          <p>内部用于场景梳理、Agent / Skill 边界讨论和下一步工作计划，不作为客户售前演示页。</p>
         </div>
       </div>
-      <div class="meta">
+      <div class="top-actions">
         <span>Author: daxiasu</span>
-        <button class="guide-button" id="openGuide" type="button">说明</button>
+        <button class="outline-button" id="openGuide" type="button">说明</button>
       </div>
     </header>
 
     <main class="layout">
       <aside class="sidebar">
-        <section class="section nav-section">
-          <p class="nav-title">行业域</p>
-          <button class="nav-item active" type="button">
-            <span>银行</span>
-            <span class="count">首版</span>
-          </button>
-          <button class="nav-item" type="button" disabled>
-            <span>证券</span>
-            <span class="count">规划</span>
-          </button>
-          <button class="nav-item" type="button" disabled>
-            <span>保险</span>
-            <span class="count">规划</span>
-          </button>
+        <section class="panel side-panel">
+          <p class="side-title">行业域</p>
+          <button class="domain-row active" type="button"><span>银行</span><span class="count">当前</span></button>
+          <button class="domain-row" type="button" disabled><span>证券</span><span class="count">规划</span></button>
+          <button class="domain-row" type="button" disabled><span>保险</span><span class="count">规划</span></button>
+        </section>
+
+        <section class="panel side-panel">
+          <p class="side-title">工作视图</p>
+          <button class="view-row active" data-view="scene" type="button"><span>场景视图</span><span class="count" id="viewSceneCount">0</span></button>
+          <button class="view-row" data-view="l2" type="button"><span>L2 Skill视图</span><span class="count" id="viewL2Count">0</span></button>
+        </section>
+
+        <section class="panel side-panel" id="sceneFilterPanel">
+          <p class="side-title">场景筛选</p>
+          <button class="filter-row active" data-layer="全部" type="button"><span>全部</span><span class="count" id="countAll">0</span></button>
+          <button class="filter-row" data-layer="前台" type="button"><span>前台</span><span class="count" id="countFront">0</span></button>
+          <button class="filter-row" data-layer="中台" type="button"><span>中台</span><span class="count" id="countMiddle">0</span></button>
+          <button class="filter-row" data-layer="后台" type="button"><span>后台</span><span class="count" id="countBack">0</span></button>
+        </section>
+
+        <section class="panel side-panel" id="shapeFilterPanel" hidden>
+          <p class="side-title">实现形态</p>
+          <button class="filter-row active" data-shape="全部" type="button"><span>全部</span><span class="count" id="shapeAll">0</span></button>
+          <button class="filter-row" data-shape="独立 Skill" type="button"><span>独立 Skill</span><span class="count" id="shapeSkill">0</span></button>
+          <button class="filter-row" data-shape="主 Skill + L1" type="button"><span>主 Skill + L1</span><span class="count" id="shapeMainSkill">0</span></button>
+          <button class="filter-row" data-shape="Agent 编排" type="button"><span>Agent 编排</span><span class="count" id="shapeAgent">0</span></button>
+          <button class="filter-row" data-shape="L1 候选" type="button"><span>L1 候选</span><span class="count" id="shapeL1">0</span></button>
         </section>
       </aside>
 
       <section class="main">
-        <section class="section matrix-head">
-          <div>
-            <h2>银行 Skill 矩阵</h2>
+        <section class="summary-grid" aria-label="summary">
+          <div class="summary-cell">
+            <strong id="sceneCount">0</strong>
+            <span>业务场景，用于内部共创和需求讨论</span>
+          </div>
+          <div class="summary-cell">
+            <strong id="agentCount">0</strong>
+            <span>Agent / L3 编排候选，承接复杂业务目标</span>
+          </div>
+          <div class="summary-cell">
+            <strong id="l2Count">0</strong>
+            <span>L2 Skill，用于承接边界清晰的业务任务</span>
+          </div>
+          <div class="summary-cell">
+            <strong id="l1Count">0</strong>
+            <span>L1 原子能力，来自多个 L2 的复用沉淀</span>
           </div>
         </section>
 
-        <section class="levels" aria-label="Skill levels">
-          <div class="level l1">
-            <div class="level-header">
-              <span class="level-code">L1</span>
-              <h3>原子 Skill</h3>
-              <p>大家共用的底层能力，更多由技术团队和业务专家共同建设。</p>
-            </div>
-            <div class="skill-list">
-              <button class="skill-card" type="button" data-skill="profile">
-                <div class="tags"><span class="tag ready">第一批</span><span class="tag">共用</span></div>
-                <h4>企业基础画像生成</h4>
-                <p>抽取工商、行业、经营、授信基础信息，形成企业一页画像。</p>
-              </button>
-              <button class="skill-card" type="button" data-skill="materials">
-                <div class="tags"><span class="tag ready">第一批</span><span class="tag">共用</span></div>
-                <h4>材料完整性检查</h4>
-                <p>检查尽调材料、财务报表、合同票据、流水凭证是否齐备。</p>
-              </button>
-              <button class="skill-card" type="button" data-skill="finance">
-                <div class="tags"><span class="tag ready">第一批</span><span class="tag">共用</span></div>
-                <h4>财务异常指标识别</h4>
-                <p>识别收入、毛利、现金流、负债、应收账款等异常信号。</p>
-              </button>
-              <button class="skill-card" type="button" data-skill="truth">
-                <div class="tags"><span class="tag ready">第一批</span><span class="tag">共用</span></div>
-                <h4>经营真实性核验</h4>
-                <p>结合订单、合同、发票、物流、回款，判断交易真实性佐证强弱。</p>
-              </button>
-              <button class="skill-card" type="button" data-skill="relation">
-                <div class="tags"><span class="tag ready">第一批</span><span class="tag">共用</span></div>
-                <h4>关联关系与交易识别</h4>
-                <p>识别关联主体、关联交易规模、异常资金往来和潜在利益输送。</p>
-              </button>
-              <button class="skill-card" type="button" data-skill="public">
-                <div class="tags"><span class="tag plan">后续</span><span class="tag">公共数据</span></div>
-                <h4>司法舆情与公开风险检索</h4>
-                <p>从公开信息中提取司法、舆情、监管处罚、重大负面线索。</p>
-              </button>
+        <section class="panel architecture-panel">
+          <div class="section-title">
+            <span class="level-code agent">架构</span>
+            <div>
+              <h2>场景到落地的分层关系</h2>
+              <p>先把业务场景、Agent 编排、L2 Skill 和 L1 原子能力的边界讨论清楚。</p>
             </div>
           </div>
-
-          <div class="level l2">
-            <div class="level-header">
-              <span class="level-code">L2</span>
-              <h3>场景 Skill</h3>
-              <p>基于员工当前业务场景沉淀，适合售前演示、客户交流和资产复用。</p>
-            </div>
-            <div class="skill-list">
-              <a class="skill-card active" href="presales-skill-matrix/ground-zero-credit-risk-analysis/%E6%8E%88%E4%BF%A1%E9%A3%8E%E9%99%A9%E5%88%86%E6%9E%90%E5%B7%A5%E4%BD%9C%E5%8F%B0Demo.html" data-skill="credit">
-                <div class="tags"><span class="tag ready">可演示</span><span class="tag">独立任务</span></div>
-                <h4>授信走访前穿透式风险分析</h4>
-                <p>面向银行对公信贷经理，输出走访前风险关注等级、风险线索和询问清单。</p>
-              </a>
-              <a class="skill-card" href="presales-skill-matrix/post-loan-risk-monitoring/%E8%B4%B7%E5%90%8E%E9%A3%8E%E9%99%A9%E7%9B%91%E6%B5%8B%E5%B7%A5%E4%BD%9C%E5%8F%B0Demo.html" data-skill="postloan">
-                <div class="tags"><span class="tag ready">可演示</span><span class="tag">L1 调用</span></div>
-                <h4>贷后风险监测报告生成</h4>
-                <p>将财务、舆情、还款、经营变化整合为贷后风险监测报告。</p>
-              </a>
-              <button class="skill-card" type="button" data-skill="kyc">
-                <div class="tags"><span class="tag plan">待规划</span><span class="tag">客户经营</span></div>
-                <h4>金融客户 KYC 画像生成</h4>
-                <p>面向客户经理，形成客户资产、风险偏好、产品适配的一页画像。</p>
-              </button>
-              <button class="skill-card" type="button" data-skill="policy">
-                <div class="tags"><span class="tag plan">待规划</span><span class="tag">合规</span></div>
-                <h4>金融政策解读与影响分析</h4>
-                <p>解读监管政策、行内制度变化，输出业务影响和行动建议。</p>
-              </button>
+          <div class="architecture-frame">
+            <div class="process-row">
+              <div class="architecture-node"><strong>业务场景</strong><span>客户真实问题，是讨论入口，不等于一定要做成 Skill。</span></div>
+              <div class="flow-arrow">→</div>
+              <div class="architecture-node"><strong>Agent / L3</strong><span>当目标复杂时，负责理解、追问、拆解和调度多个能力。</span></div>
+              <div class="flow-arrow">→</div>
+              <div class="architecture-node"><strong>L2 Skill</strong><span>完成一个边界清晰的业务任务，形成可验收交付物。</span></div>
+              <div class="flow-arrow">→</div>
+              <div class="architecture-node"><strong>L1 Skill</strong><span>企业画像、检索、规则匹配、报告生成等复用能力。</span></div>
             </div>
           </div>
+        </section>
 
-          <div class="level l3">
-            <div class="level-header">
-              <span class="level-code">L3</span>
-              <h3>高级编排 Skill</h3>
-              <p>高级骨干员工创建的复杂任务能力，适合非标业务、专项任务和现场创新。</p>
+        <section class="panel">
+          <div class="section-head">
+            <div class="section-title">
+              <span class="level-code scene" id="workbenchBadge">场景</span>
+              <div>
+                <h2 id="workbenchTitle">场景视图</h2>
+                <p id="workbenchSubtitle">先按真实业务场景讨论，再判断实现形态。</p>
+              </div>
             </div>
-            <div class="skill-list">
-              <button class="skill-card" type="button" data-skill="planner">
-                <div class="tags"><span class="tag exp">实验区</span><span class="tag">智能体编排</span></div>
-                <h4>银行信贷任务 Planner</h4>
-                <p>根据自然语言任务，判断要调用哪个 L2、哪些 L1、哪些数据和接口。</p>
-              </button>
-              <button class="skill-card" type="button" data-skill="sme">
-                <div class="tags"><span class="tag exp">实验区</span><span class="tag">非标专项</span></div>
-                <h4>小微贷专项尽调助手</h4>
-                <p>围绕小微企业批量筛选、走访、授信建议形成专项任务工作台。</p>
-              </button>
-              <button class="skill-card" type="button" data-skill="industry">
-                <div class="tags"><span class="tag exp">实验区</span><span class="tag">产业链</span></div>
-                <h4>区域产业链专项授信排查</h4>
-                <p>针对某区域、某产业链、某类风险事件，临时编排多 Skill 进行排查。</p>
-              </button>
-              <button class="skill-card" type="button" data-skill="regulatory">
-                <div class="tags"><span class="tag exp">实验区</span><span class="tag">临时任务</span></div>
-                <h4>临时监管口径影响评估</h4>
-                <p>在监管政策突发变化时，快速生成受影响业务、客户和行动清单。</p>
-              </button>
+            <div class="toolbar">
+              <input class="search" id="searchBox" type="search" placeholder="搜索当前视图" />
             </div>
+          </div>
+          <div class="workspace-body">
+            <div class="item-list" id="itemList"></div>
+            <aside class="detail" id="itemDetail"></aside>
           </div>
         </section>
       </section>
@@ -691,51 +819,14 @@
     <div class="guide-backdrop" id="guideModal" hidden>
       <section class="guide-modal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
         <header class="guide-header">
-          <h2 id="guideTitle">Skill 体系说明</h2>
+          <h2 id="guideTitle">工作台说明</h2>
           <button class="close-button" id="closeGuide" type="button" aria-label="关闭">×</button>
         </header>
         <div class="guide-content">
-          <div class="guide-graph" aria-label="L1 L2 L3 relationship">
-            <div class="guide-node l1">
-              <strong>L1 原子 Skill</strong>
-              <span>公共基础能力，由技术团队和业务专家共同建设。</span>
-              <span>例如：企业画像、材料检查、财务异常、关联关系识别。</span>
-            </div>
-            <div class="guide-arrow">→</div>
-            <div class="guide-node l2">
-              <strong>L2 场景 Skill</strong>
-              <span>员工围绕当前业务场景沉淀，可演示、可复用、可交付。</span>
-              <span>例如：授信走访前风险分析、贷后风险监测报告。</span>
-            </div>
-            <div class="guide-arrow">→</div>
-            <div class="guide-node l3">
-              <strong>L3 高级编排 Skill</strong>
-              <span>面向非标业务、专项任务和现场创新，调度多个 L1/L2。</span>
-              <span>例如：信贷任务 Planner、小微贷专项尽调助手。</span>
-            </div>
-          </div>
-
-          <div class="guide-cycle" aria-label="Skill asset loop">
-            <div class="cycle-step">
-              <strong>客户现场任务</strong>
-              <span>发现真实业务痛点，但不带出客户数据。</span>
-            </div>
-            <div class="cycle-step">
-              <strong>L3 快速编排</strong>
-              <span>先处理非标场景，验证是否有业务价值。</span>
-            </div>
-            <div class="cycle-step">
-              <strong>L2 场景沉淀</strong>
-              <span>把多次验证后的流程固化为标准场景 Skill。</span>
-            </div>
-            <div class="cycle-step">
-              <strong>L1 能力抽象</strong>
-              <span>把高频共性能力沉淀为公共原子 Skill。</span>
-            </div>
-            <div class="cycle-step">
-              <strong>售前矩阵复用</strong>
-              <span>用模拟数据和通用规则形成可展示资产。</span>
-            </div>
+          <div class="guide-flow">
+            <div class="guide-node"><strong>页面定位</strong><span>内部共创工具，用于和同事讨论金融场景、实现形态和下一步 FDE 工作，不直接作为客户售前展示页。</span></div>
+            <div class="guide-node"><strong>Agent</strong><span>当用户只给出业务目标、任务需要拆解或跨多个能力调度时使用。</span></div>
+            <div class="guide-node"><strong>Skill</strong><span>当任务边界清晰、输入输出稳定、步骤相对固定时使用。</span></div>
           </div>
         </div>
       </section>
@@ -743,37 +834,392 @@
   </div>
 
   <script>
-    const guideModal = document.getElementById("guideModal");
-    const openGuide = document.getElementById("openGuide");
-    const closeGuide = document.getElementById("closeGuide");
-    const cards = Array.from(document.querySelectorAll("button.skill-card"));
+    const LEDGER = {"generatedAt":"2026-06-07","version":"v0.8-basic-rule","approach":"从真实场景出发，优先识别是否适合独立 L2、是否进入首批试点、可能复用哪些 L1；避免过早设计复杂嵌套。","basicRulePath":"shared-templates/bank_skill_basic_rule.md","scenarios":[{"场景_ID":"B-SCN-025","场景名称":"授信走访前穿透式风险分析","行业":"银行","所属层级":"中台","业务子类":"风控","业务环节":"授信审批","场景描述/可能流程":"走访前识别授信风险线索，生成风险关注等级、询问清单和补充材料清单\n可能流程：输入(企业画像、财务指标、交易佐证、关联交易、公开风险) -> 处理/分析 -> 输出(风险关注等级、风险线索、走访问询清单)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；已完成可演示样板。\n首批试点建议：首批重点打磨；适合作为银行风控方向 Ground Zero。\n对应L2：B-L2-025 授信走访前穿透式风险分析\n可能复用L1：L1-01 企业基础画像生成；L1-02 材料完整性检查；L1-03 财务异常指标识别；L1-05 公开风险线索检索；L1-06 关联关系与交易识别；L1-09 报告生成与摘要归纳\n设计备注：继续完善规则解释、数据变动导致评级变化、走访问询清单和演示故事线。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-026","场景名称":"贷后风险监测报告生成","行业":"银行","所属层级":"中台","业务子类":"风控","业务环节":"风险管理","场景描述/可能流程":"围绕存量授信客户进行贷后监测，盘点并调用 L1 能力生成重点客户名单和监测报告\n可能流程：输入(存量客户、授信、还款、财务、公开风险、关联交易) -> 处理/分析 -> 输出(重点客户名单、风险变化解释、跟进动作)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；已完成可演示样板，能体现 L1 复用。\n首批试点建议：首批重点打磨；适合作为贷后管理方向样板。\n对应L2：B-L2-026 贷后风险监测报告生成\n可能复用L1：L1-01 企业基础画像生成；L1-03 财务异常指标识别；L1-04 还款行为监测；L1-05 公开风险线索检索；L1-06 关联关系与交易识别；L1-09 报告生成与摘要归纳\n设计备注：突出存量客户监测、风险变化解释、重点客户名单和后续跟进动作。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-018","场景名称":"制度合规审核","行业":"银行","所属层级":"中台","业务子类":"风控","业务环节":"合规内控","场景描述/可能流程":"根据国家及行内政策，审核颁发制度的合规性，提供参考溯源，生成报告\n可能流程：输入(监管政策、行内制度、条款库) -> 处理/分析 -> 输出(合规审核报告、引用来源、修改建议)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；文档审核任务明确、可溯源、可验证。\n首批试点建议：建议首批试点；适合用监管制度和行内制度样例演示。\n对应L2：B-L2-018 制度合规审核\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-10 合规规则匹配\n设计备注：重点展示条款定位、冲突识别、引用来源和修改建议。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-019","场景名称":"合规知识问答","行业":"银行","所属层级":"中台","业务子类":"风控","业务环节":"合规内控","场景描述/可能流程":"根据国家及行内政策，提供参考溯源和制度合规相关问答\n可能流程：输入(监管政策、制度库、合规 FAQ) -> 处理/分析 -> 输出(合规问答、引用来源、风险提示)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；也可作为制度合规审核的支撑能力。\n首批试点建议：建议首批试点；知识库型场景成本较低、反馈快。\n对应L2：B-L2-019 合规知识问答\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-10 合规规则匹配\n设计备注：要强调引用来源和“辅助判断”，不替代合规人员最终意见。","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）"},{"场景_ID":"B-SCN-021","场景名称":"合同审核","行业":"银行","所属层级":"后台","业务子类":"办公","业务环节":"组织协同","场景描述/可能流程":"审核合同文本中的关键条款、缺失条款和潜在风险点，生成修改建议和审核意见\n可能流程：输入(合同文本、条款库、审核规则) -> 处理/分析 -> 输出(合同审核意见、风险条款、修改建议)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；合同审核边界清晰。\n首批试点建议：建议首批试点；适合复用合规规则和文档检索能力。\n对应L2：B-L2-021 合同审核\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-10 合规规则匹配\n设计备注：可作为制度合规审核之外的通用文档审核样板。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-023","场景名称":"招投标审核","行业":"银行","所属层级":"后台","业务子类":"办公","业务环节":"组织协同","场景描述/可能流程":"投标文件自检、客观评分初评、主观评分详评、横向对比评分等，生成最终评分和排序\n可能流程：输入(招投标文件、评分规则、评审模板) -> 处理/分析 -> 输出(评分表、排序、评审报告)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；输入、评分规则和输出较清晰。\n首批试点建议：建议首批试点；适合做办公/采购类横向演示。\n对应L2：B-L2-023 招投标审核\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-10 合规规则匹配；L1-11 评分/排序与推荐\n设计备注：重点是文件自检、评分解释、横向对比和人工确认。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-010","场景名称":"订单与客服对话总结","行业":"银行","所属层级":"前台","业务子类":"客服","业务环节":"关系管理","场景描述/可能流程":"分析客服多轮对话，识别客户意图及工单业务类型，根据业务模板总结并填充对话内容\n可能流程：输入(客服对话、工单模板、业务类型字典) -> 处理/分析 -> 输出(对话总结、工单字段、服务记录)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；客服对话总结输入输出清晰。\n首批试点建议：建议首批试点；适合用模拟通话文本快速验证。\n对应L2：B-L2-010 订单与客服对话总结\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-12 流程节点分类与路由\n设计备注：可重点展示意图识别、摘要归纳、工单字段自动填充。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-014","场景名称":"客服对话质检","行业":"银行","所属层级":"前台","业务子类":"客服","业务环节":"财富服务","场景描述/可能流程":"根据业务设定评价规则，对客服通话内容进行质检，T+1 批量质检，结果入仓\n可能流程：输入(通话文本、质检规则、合规口径) -> 处理/分析 -> 输出(质检结果、扣分原因、整改建议)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；质检规则和输出结果较易标准化。\n首批试点建议：建议首批试点；适合展示规则型 Skill 与大模型摘要结合。\n对应L2：B-L2-014 客服对话质检\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-10 合规规则匹配\n设计备注：可采用规则命中、证据引用、整改建议三段式输出。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-002","场景名称":"财富管理知识问答","行业":"银行","所属层级":"前台","业务子类":"营销","业务环节":"获客洞察","场景描述/可能流程":"构建债券、理财、保险等问答能力，通过 AI 大模型驱动实时问答和日报生成\n可能流程：输入(产品知识库、制度文档、市场信息) -> 处理/分析 -> 输出(问答回复、知识引用、日报摘要)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；知识库问答边界清晰，输入输出容易验证。\n首批试点建议：建议首批试点；适合用制度、产品说明和公开材料构建低风险演示。\n对应L2：B-L2-002 财富管理知识问答\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-10 合规规则匹配\n设计备注：重点是答案可溯源、引用清晰、不能越权给投资承诺。","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）"},{"场景_ID":"B-SCN-005","场景名称":"财富产品对比分析","行业":"银行","所属层级":"前台","业务子类":"投资","业务环节":"信息审核","场景描述/可能流程":"实时分析同类产品，生成多维度对比报告，辅助理财经理快速定位产品差异\n可能流程：输入(产品库、收益风险指标、费用条款) -> 处理/分析 -> 输出(产品对比报告、差异摘要)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；产品对比任务边界清晰，交付物明确。\n首批试点建议：建议首批试点；适合做售前演示和客户共创。\n对应L2：B-L2-005 财富产品对比分析\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-11 评分/排序与推荐\n设计备注：重点验证产品字段标准化、风险收益解释和差异摘要质量。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-011","场景名称":"客服 FAQ 挖掘扩写","行业":"银行","所属层级":"前台","业务子类":"客服","业务环节":"财富服务","场景描述/可能流程":"分析历史对话数据和知识文档，挖掘业务 FAQ，生成扩展语料，提升事实性问题覆盖率\n可能流程：输入(历史对话、知识库、FAQ 文档) -> 处理/分析 -> 输出(FAQ 条目、扩展语料、覆盖率说明)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；适合沉淀客服知识库建设能力。\n首批试点建议：建议首批或第二批试点；取决于是否有历史问答样本。\n对应L2：B-L2-011 客服 FAQ 挖掘扩写\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-12 流程节点分类与路由\n设计备注：更偏运营提效，适合和坐席问答、质检场景联动。","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）"},{"场景_ID":"B-SCN-013","场景名称":"电话人工业务分类","行业":"银行","所属层级":"前台","业务子类":"客服","业务环节":"财富服务","场景描述/可能流程":"根据客服多轮对话实现工单业务分类、工单派单路径、实时拨派点等分类\n可能流程：输入(通话文本、工单类型、派单规则) -> 处理/分析 -> 输出(业务分类、派单建议、质检标签)","Skill设计":"独立L2判断：建议作为独立 L2 Skill；分类和路由目标明确。\n首批试点建议：建议首批或第二批试点；适合批量文本样本验证。\n对应L2：B-L2-013 电话人工业务分类\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-12 流程节点分类与路由\n设计备注：重点验证分类准确率、派单解释和人工复核机制。","Skill分类":"规则型 Skill（if-then+阈值）"},{"场景_ID":"B-SCN-003","场景名称":"营销话术生成","行业":"银行","所属层级":"前台","业务子类":"营销","业务环节":"获客洞察","场景描述/可能流程":"结合客户画像、产品信息和沟通上下文，生成合规、审慎、可人工复核的营销话术\n可能流程：输入(客户画像、产品说明、沟通记录) -> 处理/分析 -> 输出(营销话术、客户触达建议)","Skill设计":"独立L2判断：可以作为独立 L2 Skill；但需明确营销合规和适当性边界。\n首批试点建议：第二批试点；可与财富产品推荐或客户经营场景组合展示。\n对应L2：B-L2-003 营销话术生成\n可能复用L1：L1-01 企业基础画像生成；L1-09 报告生成与摘要归纳；L1-11 评分/排序与推荐\n设计备注：适合展示大模型生成能力，但必须加入禁语、风险提示和人工审核。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-012","场景名称":"营销/客服坐席问答","行业":"银行","所属层级":"前台","业务子类":"客服","业务环节":"财富服务","场景描述/可能流程":"集成实时知识推荐、话术推荐、知识文档问答、文档总结问答和全文搜索辅助客服\n可能流程：输入(客服知识库、产品文档、对话上下文) -> 处理/分析 -> 输出(坐席问答、话术推荐、知识引用)","Skill设计":"独立L2判断：可以作为独立 L2 Skill；坐席问答是高频场景。\n首批试点建议：第二批试点；需准备知识库、话术库和答案引用规则。\n对应L2：B-L2-012 营销/客服坐席问答\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-12 流程节点分类与路由\n设计备注：建议先做知识推荐和问答，不急于做完整坐席工作台。","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）"},{"场景_ID":"B-SCN-015","场景名称":"反洗钱分析报告生成","行业":"银行","所属层级":"中台","业务子类":"风控","业务环节":"风险管理","场景描述/可能流程":"从复杂金融交易数据中提取关键信息，检测洗钱活动迹象，判断洗钱风险，完成报告生成\n可能流程：输入(交易流水、客户信息、规则库、黑名单/名单库) -> 处理/分析 -> 输出(可疑交易线索、风险解释、分析报告)","Skill设计":"独立L2判断：可以作为独立 L2 Skill；业务价值高，但数据和合规门槛较高。\n首批试点建议：第二批试点；需先准备脱敏交易样本和可疑交易规则口径。\n对应L2：B-L2-015 反洗钱分析报告生成\n可能复用L1：L1-05 公开风险线索检索；L1-06 关联关系与交易识别；L1-09 报告生成与摘要归纳；L1-11 评分/排序与推荐\n设计备注：适合作为高价值风控候选，不宜在没有数据口径时过早承诺效果。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-017","场景名称":"异常交易反欺诈预测","行业":"银行","所属层级":"中台","业务子类":"风控","业务环节":"风险管理","场景描述/可能流程":"挖掘交易数据中的异常特征，识别潜在欺诈行为，保障银行和客户资金安全\n可能流程：输入(交易数据、行为特征、规则/模型结果) -> 处理/分析 -> 输出(异常交易名单、原因解释、处置建议)","Skill设计":"独立L2判断：可以作为独立 L2 Skill；但偏数据建模和特征工程。\n首批试点建议：第二批或专项试点；需明确欺诈标签、样本数据和评价指标。\n对应L2：B-L2-017 异常交易反欺诈预测\n可能复用L1：L1-05 公开风险线索检索；L1-06 关联关系与交易识别；L1-09 报告生成与摘要归纳；L1-11 评分/排序与推荐\n设计备注：大模型更适合做解释、线索归纳和处置建议，模型识别部分需结合数据模型。","Skill分类":"特征工程型 Skill（衍生变量+决策树）"},{"场景_ID":"B-SCN-016","场景名称":"信贷风险审核","行业":"银行","所属层级":"中台","业务子类":"风控","业务环节":"授信审批","场景描述/可能流程":"自动解析财务报表、银行流水、信用报告等多源数据，实现多维信贷风险评估\n可能流程：输入(财报、流水、征信、公开风险、关联关系) -> 处理/分析 -> 输出(信贷风险评估、关注点、补充材料)","Skill设计":"独立L2判断：范围偏大；不建议首批直接做成一个全量 L2。\n首批试点建议：暂缓；建议先用已完成的授信走访前风险分析作为窄口径样板。\n对应L2：B-L2-016 信贷风险审核\n可能复用L1：L1-01 企业基础画像生成；L1-03 财务异常指标识别；L1-04 还款行为监测；L1-05 公开风险线索检索；L1-06 关联关系与交易识别；L1-09 报告生成与摘要归纳\n设计备注：后续可拆为财报解析、流水异常、公开风险、关联交易、材料补正等子任务。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-001","场景名称":"财富产品推荐","行业":"银行","所属层级":"前台","业务子类":"营销","业务环节":"获客洞察","场景描述/可能流程":"与客户多轮对话抽取客户画像，解读理财/保险产品关键要素，推荐适合产品\n可能流程：输入(客户画像、产品库、风险偏好、理财/保险产品说明) -> 处理/分析 -> 输出(推荐清单、推荐理由、客户沟通话术)","Skill设计":"独立L2判断：暂不建议首批直接做成一个笼统独立 L2；更适合作为综合营销场景讨论。\n首批试点建议：暂缓；建议先明确适当性、产品库、客户画像和营销合规口径。\n对应L2：B-L2-001 财富产品推荐\n可能复用L1：L1-01 企业基础画像生成；L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-11 评分/排序与推荐\n设计备注：可先拆出产品对比、知识问答、营销话术等边界清晰能力，等客户规则明确后再合并为综合推荐。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-004","场景名称":"客户标签挖掘","行业":"银行","所属层级":"前台","业务子类":"营销","业务环节":"获客洞察","场景描述/可能流程":"利用大模型根据非结构化文本数据自动提取客户标签，为运营和产品推荐提供画像\n可能流程：输入(客户日志、交易行为、互动记录) -> 处理/分析 -> 输出(客户标签、画像摘要、营销分群)","Skill设计":"独立L2判断：边界介于 L1 与 L2 之间；如果只做标签抽取，更像可复用基础能力。\n首批试点建议：暂缓作为独立 L2；可先作为财富推荐、客户经营类场景的支撑能力。\n对应L2：B-L2-004 客户标签挖掘\n可能复用L1：L1-01 企业基础画像生成；L1-09 报告生成与摘要归纳；L1-11 评分/排序与推荐\n设计备注：建议在多个营销场景复用后，再决定沉淀为 L1 画像能力还是 L2 标签挖掘任务。","Skill分类":"特征工程型 Skill（衍生变量+决策树）"},{"场景_ID":"B-SCN-006","场景名称":"理财经理智能待办","行业":"银行","所属层级":"前台","业务子类":"投资","业务环节":"信息审核","场景描述/可能流程":"根据客户画像和访问内容生成电话邀约及 AUM 行为节点，形成营销活动闭环\n可能流程：输入(客户画像、访问记录、AUM 变化、营销规则) -> 处理/分析 -> 输出(待办清单、邀约建议、活动闭环记录)","Skill设计":"独立L2判断：可以作为独立 L2 Skill；但较依赖客户经营策略和内部任务系统。\n首批试点建议：第二批试点；适合在客户画像和产品推荐能力成熟后推进。\n对应L2：B-L2-006 理财经理智能待办\n可能复用L1：L1-01 企业基础画像生成；L1-09 报告生成与摘要归纳；L1-11 评分/排序与推荐；L1-12 流程节点分类与路由\n设计备注：可作为财富营销闭环的后续动作，不建议一开始做成复杂自动调度。","Skill分类":"特征工程型 Skill（衍生变量+决策树）"},{"场景_ID":"B-SCN-009","场景名称":"交易机器人智能问答","行业":"银行","所属层级":"前台","业务子类":"投资","业务环节":"投资交易","场景描述/可能流程":"协助查询产品信息及问题回复，支持指定信息提醒推送，提升交易问题处理效率和准确性\n可能流程：输入(产品信息、交易规则、问题库) -> 处理/分析 -> 输出(交易问答、提醒推送、处理建议)","Skill设计":"独立L2判断：可以作为独立 L2 Skill；偏交易知识问答和提醒。\n首批试点建议：第二批试点；适合先做知识问答轻量版。\n对应L2：B-L2-009 交易机器人智能问答\n可能复用L1：L1-07 知识问答与文档检索；L1-08 交易指令/意图识别；L1-09 报告生成与摘要归纳\n设计备注：避免直接输出交易决策，可定位为信息查询和操作辅助。","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）"},{"场景_ID":"B-SCN-008","场景名称":"交易机器人智能询价","行业":"银行","所属层级":"前台","业务子类":"投资","业务环节":"投资交易","场景描述/可能流程":"基于设定规则自动询报价、价格筛选谈判，生成询价指令，代替人工促进交易成交\n可能流程：输入(询价规则、报价数据、交易上下文) -> 处理/分析 -> 输出(询价指令、报价比较、成交建议)","Skill设计":"独立L2判断：可以设计为独立 L2，但真实价值依赖报价数据和交易规则接入。\n首批试点建议：暂缓首批；先保留为投资交易专项候选。\n对应L2：B-L2-008 交易机器人智能询价\n可能复用L1：L1-08 交易指令/意图识别；L1-09 报告生成与摘要归纳；L1-10 合规规则匹配；L1-11 评分/排序与推荐\n设计备注：演示时可用模拟报价数据，但落地必须明确权限、留痕和人工确认。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-007","场景名称":"交易机器人智能捞单","行业":"银行","所属层级":"前台","业务子类":"投资","业务环节":"投资交易","场景描述/可能流程":"在常用办公聊天工具中实时抓取交易指令信息，自动识别市场类型、指令内容、下发交易指令\n可能流程：输入(聊天记录、交易规则、市场类型、权限信息) -> 处理/分析 -> 输出(交易指令草稿、确认清单、路由结果)","Skill设计":"独立L2判断：不建议首批作为独立 L2；交易系统接入、权限和合规要求较高。\n首批试点建议：暂缓；可先做离线指令识别演示，不做真实交易自动化承诺。\n对应L2：B-L2-007 交易机器人智能捞单\n可能复用L1：L1-08 交易指令/意图识别；L1-10 合规规则匹配；L1-12 流程节点分类与路由\n设计备注：更适合作为后续高价值专项，需产研、合规、交易系统共同参与。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-022","场景名称":"智能培训通关","行业":"银行","所属层级":"后台","业务子类":"办公","业务环节":"组织协同","场景描述/可能流程":"通过 AI 驱动的交互式培训流程，提升员工在复杂场景中的能力，并生成综合评估分析和改进建议\n可能流程：输入(培训材料、题库、评分规则、互动记录) -> 处理/分析 -> 输出(通关结果、评分分析、改进建议)","Skill设计":"独立L2判断：可以作为独立 L2 Skill；偏内部赋能和培训评估。\n首批试点建议：第二批试点；适合 SA-FDE 内部培训或客户培训服务。\n对应L2：B-L2-022 智能培训通关\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-11 评分/排序与推荐\n设计备注：可与大模型人才培训、岗位通关、知识测评结合。","Skill分类":"混合型 Skill（规则+LLM+人工校验）"},{"场景_ID":"B-SCN-024","场景名称":"办公知识问答","行业":"银行","所属层级":"后台","业务子类":"办公","业务环节":"组织协同","场景描述/可能流程":"财务、行政、IT、人力、流程等不同方向的办公助手，嵌入内部 OA 系统\n可能流程：输入(OA 知识库、流程制度、FAQ) -> 处理/分析 -> 输出(办公问答、流程指引、办理建议)","Skill设计":"独立L2判断：可以作为独立 L2 Skill；但银行行业特色相对弱。\n首批试点建议：暂缓首批；可作为内部办公助手或通用知识库能力补充。\n对应L2：B-L2-024 办公知识问答\n可能复用L1：L1-07 知识问答与文档检索；L1-09 报告生成与摘要归纳；L1-12 流程节点分类与路由\n设计备注：如果客户有 OA/流程知识库需求，可作为快速切入点。","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）"},{"场景_ID":"B-SCN-020","场景名称":"智能风控建模","行业":"银行","所属层级":"后台","业务子类":"科技","业务环节":"组织协同","场景描述/可能流程":"自动解析业务需求，调度数据分析、特征工程、模型训练与评估等工具任务，生成建模报告\n可能流程：输入(建模需求、数据分析结果、模型评估指标) -> 处理/分析 -> 输出(建模报告、特征说明、评估结果)","Skill设计":"独立L2判断：不建议按普通 L2 处理；更像 L3 高级编排或数据科学工作流。\n首批试点建议：暂缓；待 L1/L2 能力成熟后作为高级编排方向。\n对应L2：B-L2-020 智能风控建模\n可能复用L1：L1-09 报告生成与摘要归纳；L1-11 评分/排序与推荐；L1-12 流程节点分类与路由\n设计备注：涉及数据分析、特征工程、训练评估等多工具协同，不适合放入首批场景 Skill。","Skill分类":"特征工程型 Skill（衍生变量+决策树）"}],"l2Skills":[{"L2_ID":"B-L2-025","L2 Skill名称":"授信走访前穿透式风险分析","所属层级":"中台","业务子类":"风控","业务环节":"授信审批","能力说明":"走访前识别授信风险线索，生成风险关注等级、询问清单和补充材料清单","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"建议作为独立 L2 Skill；已完成可演示样板。","首批试点建议":"首批重点打磨；适合作为银行风控方向 Ground Zero。","建议复用L1":"L1-01,L1-02,L1-03,L1-05,L1-06,L1-09","关联场景":"B-SCN-025 授信走访前穿透式风险分析","关键输入":"企业画像、财务指标、交易佐证、关联交易、公开风险","关键输出":"风险关注等级、风险线索、走访问询清单","建设状态":"已开发","Demo状态":"已开发Demo-独立任务","备注":"当前 Ground Zero Skill"},{"L2_ID":"B-L2-026","L2 Skill名称":"贷后风险监测报告生成","所属层级":"中台","业务子类":"风控","业务环节":"风险管理","能力说明":"围绕存量授信客户进行贷后监测，盘点并调用 L1 能力生成重点客户名单和监测报告","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"建议作为独立 L2 Skill；已完成可演示样板，能体现 L1 复用。","首批试点建议":"首批重点打磨；适合作为贷后管理方向样板。","建议复用L1":"L1-01,L1-03,L1-04,L1-05,L1-06,L1-09","关联场景":"B-SCN-026 贷后风险监测报告生成","关键输入":"存量客户、授信、还款、财务、公开风险、关联交易","关键输出":"重点客户名单、风险变化解释、跟进动作","建设状态":"已开发","Demo状态":"已开发Demo-调用L1","备注":"当前第二个 L2 Skill"},{"L2_ID":"B-L2-018","L2 Skill名称":"制度合规审核","所属层级":"中台","业务子类":"风控","业务环节":"合规内控","能力说明":"根据国家及行内政策，审核颁发制度的合规性，提供参考溯源，生成报告","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"建议作为独立 L2 Skill；文档审核任务明确、可溯源、可验证。","首批试点建议":"建议首批试点；适合用监管制度和行内制度样例演示。","建议复用L1":"L1-07,L1-09,L1-10","关联场景":"B-SCN-018 制度合规审核","关键输入":"监管政策、行内制度、条款库","关键输出":"合规审核报告、引用来源、修改建议","建设状态":"规划","Demo状态":"未开发","备注":"适合文档型 Skill"},{"L2_ID":"B-L2-019","L2 Skill名称":"合规知识问答","所属层级":"中台","业务子类":"风控","业务环节":"合规内控","能力说明":"根据国家及行内政策，提供参考溯源和制度合规相关问答","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）","独立L2判断":"建议作为独立 L2 Skill；也可作为制度合规审核的支撑能力。","首批试点建议":"建议首批试点；知识库型场景成本较低、反馈快。","建议复用L1":"L1-07,L1-09,L1-10","关联场景":"B-SCN-019 合规知识问答","关键输入":"监管政策、制度库、合规 FAQ","关键输出":"合规问答、引用来源、风险提示","建设状态":"规划","Demo状态":"未开发","备注":"可与制度审核形成组合"},{"L2_ID":"B-L2-021","L2 Skill名称":"合同审核","所属层级":"后台","业务子类":"办公","业务环节":"组织协同","能力说明":"审核合同文本中的关键条款、缺失条款和潜在风险点，生成修改建议和审核意见","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"建议作为独立 L2 Skill；合同审核边界清晰。","首批试点建议":"建议首批试点；适合复用合规规则和文档检索能力。","建议复用L1":"L1-07,L1-09,L1-10","关联场景":"B-SCN-021 合同审核","关键输入":"合同文本、条款库、审核规则","关键输出":"合同审核意见、风险条款、修改建议","建设状态":"规划","Demo状态":"未开发","备注":"适合文档审核类演示；需结合条款库、审核规则和人工复核机制"},{"L2_ID":"B-L2-023","L2 Skill名称":"招投标审核","所属层级":"后台","业务子类":"办公","业务环节":"组织协同","能力说明":"投标文件自检、客观评分初评、主观评分详评、横向对比评分等，生成最终评分和排序","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"建议作为独立 L2 Skill；输入、评分规则和输出较清晰。","首批试点建议":"建议首批试点；适合做办公/采购类横向演示。","建议复用L1":"L1-07,L1-09,L1-10,L1-11","关联场景":"B-SCN-023 招投标审核","关键输入":"招投标文件、评分规则、评审模板","关键输出":"评分表、排序、评审报告","建设状态":"规划","Demo状态":"未开发","备注":"适合办公场景演示"},{"L2_ID":"B-L2-010","L2 Skill名称":"订单与客服对话总结","所属层级":"前台","业务子类":"客服","业务环节":"关系管理","能力说明":"分析客服多轮对话，识别客户意图及工单业务类型，根据业务模板总结并填充对话内容","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"建议作为独立 L2 Skill；客服对话总结输入输出清晰。","首批试点建议":"建议首批试点；适合用模拟通话文本快速验证。","建议复用L1":"L1-07,L1-09,L1-12","关联场景":"B-SCN-010 订单与客服对话总结","关键输入":"客服对话、工单模板、业务类型字典","关键输出":"对话总结、工单字段、服务记录","建设状态":"规划","Demo状态":"未开发","备注":"适合体现流程自动化"},{"L2_ID":"B-L2-014","L2 Skill名称":"客服对话质检","所属层级":"前台","业务子类":"客服","业务环节":"财富服务","能力说明":"根据业务设定评价规则，对客服通话内容进行质检，T+1 批量质检，结果入仓","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"建议作为独立 L2 Skill；质检规则和输出结果较易标准化。","首批试点建议":"建议首批试点；适合展示规则型 Skill 与大模型摘要结合。","建议复用L1":"L1-07,L1-09,L1-10","关联场景":"B-SCN-014 客服对话质检","关键输入":"通话文本、质检规则、合规口径","关键输出":"质检结果、扣分原因、整改建议","建设状态":"规划","Demo状态":"未开发","备注":"偏运营管理"},{"L2_ID":"B-L2-002","L2 Skill名称":"财富管理知识问答","所属层级":"前台","业务子类":"营销","业务环节":"获客洞察","能力说明":"构建债券、理财、保险等问答能力，通过 AI 大模型驱动实时问答和日报生成","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）","独立L2判断":"建议作为独立 L2 Skill；知识库问答边界清晰，输入输出容易验证。","首批试点建议":"建议首批试点；适合用制度、产品说明和公开材料构建低风险演示。","建议复用L1":"L1-07,L1-09,L1-10","关联场景":"B-SCN-002 财富管理知识问答","关键输入":"产品知识库、制度文档、市场信息","关键输出":"问答回复、知识引用、日报摘要","建设状态":"规划","Demo状态":"未开发","备注":"适合先做知识库型演示"},{"L2_ID":"B-L2-005","L2 Skill名称":"财富产品对比分析","所属层级":"前台","业务子类":"投资","业务环节":"信息审核","能力说明":"实时分析同类产品，生成多维度对比报告，辅助理财经理快速定位产品差异","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"建议作为独立 L2 Skill；产品对比任务边界清晰，交付物明确。","首批试点建议":"建议首批试点；适合做售前演示和客户共创。","建议复用L1":"L1-07,L1-09,L1-11","关联场景":"B-SCN-005 财富产品对比分析","关键输入":"产品库、收益风险指标、费用条款","关键输出":"产品对比报告、差异摘要","建设状态":"规划","Demo状态":"未开发","备注":"适合售前展示"},{"L2_ID":"B-L2-011","L2 Skill名称":"客服 FAQ 挖掘扩写","所属层级":"前台","业务子类":"客服","业务环节":"财富服务","能力说明":"分析历史对话数据和知识文档，挖掘业务 FAQ，生成扩展语料，提升事实性问题覆盖率","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）","独立L2判断":"建议作为独立 L2 Skill；适合沉淀客服知识库建设能力。","首批试点建议":"建议首批或第二批试点；取决于是否有历史问答样本。","建议复用L1":"L1-07,L1-09,L1-12","关联场景":"B-SCN-011 客服 FAQ 挖掘扩写","关键输入":"历史对话、知识库、FAQ 文档","关键输出":"FAQ 条目、扩展语料、覆盖率说明","建设状态":"规划","Demo状态":"未开发","备注":"可服务客服知识库建设"},{"L2_ID":"B-L2-013","L2 Skill名称":"电话人工业务分类","所属层级":"前台","业务子类":"客服","业务环节":"财富服务","能力说明":"根据客服多轮对话实现工单业务分类、工单派单路径、实时拨派点等分类","Skill分类":"规则型 Skill（if-then+阈值）","独立L2判断":"建议作为独立 L2 Skill；分类和路由目标明确。","首批试点建议":"建议首批或第二批试点；适合批量文本样本验证。","建议复用L1":"L1-07,L1-09,L1-12","关联场景":"B-SCN-013 电话人工业务分类","关键输入":"通话文本、工单类型、派单规则","关键输出":"业务分类、派单建议、质检标签","建设状态":"规划","Demo状态":"未开发","备注":"可与工单总结合并"},{"L2_ID":"B-L2-003","L2 Skill名称":"营销话术生成","所属层级":"前台","业务子类":"营销","业务环节":"获客洞察","能力说明":"结合客户画像、产品信息和沟通上下文，生成合规、审慎、可人工复核的营销话术","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"可以作为独立 L2 Skill；但需明确营销合规和适当性边界。","首批试点建议":"第二批试点；可与财富产品推荐或客户经营场景组合展示。","建议复用L1":"L1-01,L1-09,L1-11","关联场景":"B-SCN-003 营销话术生成","关键输入":"客户画像、产品说明、沟通记录","关键输出":"营销话术、客户触达建议","建设状态":"规划","Demo状态":"未开发","备注":"与财富产品推荐可合并或作为子 Skill"},{"L2_ID":"B-L2-012","L2 Skill名称":"营销/客服坐席问答","所属层级":"前台","业务子类":"客服","业务环节":"财富服务","能力说明":"集成实时知识推荐、话术推荐、知识文档问答、文档总结问答和全文搜索辅助客服","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）","独立L2判断":"可以作为独立 L2 Skill；坐席问答是高频场景。","首批试点建议":"第二批试点；需准备知识库、话术库和答案引用规则。","建议复用L1":"L1-07,L1-09,L1-12","关联场景":"B-SCN-012 营销/客服坐席问答","关键输入":"客服知识库、产品文档、对话上下文","关键输出":"坐席问答、话术推荐、知识引用","建设状态":"规划","Demo状态":"未开发","备注":"适合与客服场景联动"},{"L2_ID":"B-L2-015","L2 Skill名称":"反洗钱分析报告生成","所属层级":"中台","业务子类":"风控","业务环节":"风险管理","能力说明":"从复杂金融交易数据中提取关键信息，检测洗钱活动迹象，判断洗钱风险，完成报告生成","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"可以作为独立 L2 Skill；业务价值高，但数据和合规门槛较高。","首批试点建议":"第二批试点；需先准备脱敏交易样本和可疑交易规则口径。","建议复用L1":"L1-05,L1-06,L1-09,L1-11","关联场景":"B-SCN-015 反洗钱分析报告生成","关键输入":"交易流水、客户信息、规则库、黑名单/名单库","关键输出":"可疑交易线索、风险解释、分析报告","建设状态":"规划","Demo状态":"未开发","备注":"高价值，真实落地需数据源和合规确认"},{"L2_ID":"B-L2-017","L2 Skill名称":"异常交易反欺诈预测","所属层级":"中台","业务子类":"风控","业务环节":"风险管理","能力说明":"挖掘交易数据中的异常特征，识别潜在欺诈行为，保障银行和客户资金安全","Skill分类":"特征工程型 Skill（衍生变量+决策树）","独立L2判断":"可以作为独立 L2 Skill；但偏数据建模和特征工程。","首批试点建议":"第二批或专项试点；需明确欺诈标签、样本数据和评价指标。","建议复用L1":"L1-05,L1-06,L1-09,L1-11","关联场景":"B-SCN-017 异常交易反欺诈预测","关键输入":"交易数据、行为特征、规则/模型结果","关键输出":"异常交易名单、原因解释、处置建议","建设状态":"规划","Demo状态":"未开发","备注":"偏模型和数据工程"},{"L2_ID":"B-L2-016","L2 Skill名称":"信贷风险审核","所属层级":"中台","业务子类":"风控","业务环节":"授信审批","能力说明":"自动解析财务报表、银行流水、信用报告等多源数据，实现多维信贷风险评估","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"范围偏大；不建议首批直接做成一个全量 L2。","首批试点建议":"暂缓；建议先用已完成的授信走访前风险分析作为窄口径样板。","建议复用L1":"L1-01,L1-03,L1-04,L1-05,L1-06,L1-09","关联场景":"B-SCN-016 信贷风险审核","关键输入":"财报、流水、征信、公开风险、关联关系","关键输出":"信贷风险评估、关注点、补充材料","建设状态":"规划","Demo状态":"未开发","备注":"与已完成授信走访前风险分析强相关"},{"L2_ID":"B-L2-001","L2 Skill名称":"财富产品推荐","所属层级":"前台","业务子类":"营销","业务环节":"获客洞察","能力说明":"与客户多轮对话抽取客户画像，解读理财/保险产品关键要素，推荐适合产品","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"暂不建议首批直接做成一个笼统独立 L2；更适合作为综合营销场景讨论。","首批试点建议":"暂缓；建议先明确适当性、产品库、客户画像和营销合规口径。","建议复用L1":"L1-01,L1-07,L1-09,L1-11","关联场景":"B-SCN-001 财富产品推荐","关键输入":"客户画像、产品库、风险偏好、保险/理财产品说明","关键输出":"推荐清单、推荐理由、客户沟通话术","建设状态":"规划","Demo状态":"未开发","备注":"适合作为营销类 L2 Skill；需注意适当性和合规边界"},{"L2_ID":"B-L2-004","L2 Skill名称":"客户标签挖掘","所属层级":"前台","业务子类":"营销","业务环节":"获客洞察","能力说明":"利用大模型根据非结构化文本数据自动提取客户标签，为运营和产品推荐提供画像","Skill分类":"特征工程型 Skill（衍生变量+决策树）","独立L2判断":"边界介于 L1 与 L2 之间；如果只做标签抽取，更像可复用基础能力。","首批试点建议":"暂缓作为独立 L2；可先作为财富推荐、客户经营类场景的支撑能力。","建议复用L1":"L1-01,L1-09,L1-11","关联场景":"B-SCN-004 客户标签挖掘","关键输入":"客户日志、交易行为、互动记录","关键输出":"客户标签、画像摘要、营销分群","建设状态":"规划","Demo状态":"未开发","备注":"适合作为 L1/L2 边界讨论样例"},{"L2_ID":"B-L2-006","L2 Skill名称":"理财经理智能待办","所属层级":"前台","业务子类":"投资","业务环节":"信息审核","能力说明":"根据客户画像和访问内容生成电话邀约及 AUM 行为节点，形成营销活动闭环","Skill分类":"特征工程型 Skill（衍生变量+决策树）","独立L2判断":"可以作为独立 L2 Skill；但较依赖客户经营策略和内部任务系统。","首批试点建议":"第二批试点；适合在客户画像和产品推荐能力成熟后推进。","建议复用L1":"L1-01,L1-09,L1-11,L1-12","关联场景":"B-SCN-006 理财经理智能待办","关键输入":"客户画像、访问记录、AUM 变化、营销规则","关键输出":"待办清单、邀约建议、活动闭环记录","建设状态":"规划","Demo状态":"未开发","备注":"偏客户经营"},{"L2_ID":"B-L2-009","L2 Skill名称":"交易机器人智能问答","所属层级":"前台","业务子类":"投资","业务环节":"投资交易","能力说明":"协助查询产品信息及问题回复，支持指定信息提醒推送，提升交易问题处理效率和准确性","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）","独立L2判断":"可以作为独立 L2 Skill；偏交易知识问答和提醒。","首批试点建议":"第二批试点；适合先做知识问答轻量版。","建议复用L1":"L1-07,L1-08,L1-09","关联场景":"B-SCN-009 交易机器人智能问答","关键输入":"产品信息、交易规则、问题库","关键输出":"交易问答、提醒推送、处理建议","建设状态":"规划","Demo状态":"未开发","备注":"可先做轻量版"},{"L2_ID":"B-L2-008","L2 Skill名称":"交易机器人智能询价","所属层级":"前台","业务子类":"投资","业务环节":"投资交易","能力说明":"基于设定规则自动询报价、价格筛选谈判，生成询价指令，代替人工促进交易成交","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"可以设计为独立 L2，但真实价值依赖报价数据和交易规则接入。","首批试点建议":"暂缓首批；先保留为投资交易专项候选。","建议复用L1":"L1-08,L1-09,L1-10,L1-11","关联场景":"B-SCN-008 交易机器人智能询价","关键输入":"询价规则、报价数据、交易上下文","关键输出":"询价指令、报价比较、成交建议","建设状态":"规划","Demo状态":"未开发","备注":"高价值但合规和系统接入要求较高"},{"L2_ID":"B-L2-007","L2 Skill名称":"交易机器人智能捞单","所属层级":"前台","业务子类":"投资","业务环节":"投资交易","能力说明":"在常用办公聊天工具中实时抓取交易指令信息，自动识别市场类型、指令内容、下发交易指令","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"不建议首批作为独立 L2；交易系统接入、权限和合规要求较高。","首批试点建议":"暂缓；可先做离线指令识别演示，不做真实交易自动化承诺。","建议复用L1":"L1-08,L1-10,L1-12","关联场景":"B-SCN-007 交易机器人智能捞单","关键输入":"聊天记录、交易规则、市场类型、权限信息","关键输出":"交易指令草稿、确认清单、路由结果","建设状态":"规划","Demo状态":"未开发","备注":"需谨慎处理权限和合规边界"},{"L2_ID":"B-L2-022","L2 Skill名称":"智能培训通关","所属层级":"后台","业务子类":"办公","业务环节":"组织协同","能力说明":"通过 AI 驱动的交互式培训流程，提升员工在复杂场景中的能力，并生成综合评估分析和改进建议","Skill分类":"混合型 Skill（规则+LLM+人工校验）","独立L2判断":"可以作为独立 L2 Skill；偏内部赋能和培训评估。","首批试点建议":"第二批试点；适合 SA-FDE 内部培训或客户培训服务。","建议复用L1":"L1-07,L1-09,L1-11","关联场景":"B-SCN-022 智能培训通关","关键输入":"培训材料、题库、评分规则、互动记录","关键输出":"通关结果、评分分析、改进建议","建设状态":"规划","Demo状态":"未开发","备注":"适合内部赋能"},{"L2_ID":"B-L2-024","L2 Skill名称":"办公知识问答","所属层级":"后台","业务子类":"办公","业务环节":"组织协同","能力说明":"财务、行政、IT、人力、流程等不同方向的办公助手，嵌入内部 OA 系统","Skill分类":"LLM+图谱型 Skill（知识/关系图谱+自然语言解释）","独立L2判断":"可以作为独立 L2 Skill；但银行行业特色相对弱。","首批试点建议":"暂缓首批；可作为内部办公助手或通用知识库能力补充。","建议复用L1":"L1-07,L1-09,L1-12","关联场景":"B-SCN-024 办公知识问答","关键输入":"OA 知识库、流程制度、FAQ","关键输出":"办公问答、流程指引、办理建议","建设状态":"规划","Demo状态":"未开发","备注":"通用办公助手"},{"L2_ID":"B-L2-020","L2 Skill名称":"智能风控建模","所属层级":"后台","业务子类":"科技","业务环节":"组织协同","能力说明":"自动解析业务需求，调度数据分析、特征工程、模型训练与评估等工具任务，生成建模报告","Skill分类":"特征工程型 Skill（衍生变量+决策树）","独立L2判断":"不建议按普通 L2 处理；更像 L3 高级编排或数据科学工作流。","首批试点建议":"暂缓；待 L1/L2 能力成熟后作为高级编排方向。","建议复用L1":"L1-09,L1-11,L1-12","关联场景":"B-SCN-020 智能风控建模","关键输入":"建模需求、数据分析结果、模型评估指标","关键输出":"建模报告、特征说明、评估结果","建设状态":"L3候选","Demo状态":"未开发","备注":"更像 L3/高级编排候选"}],"l1Skills":[{"L1_ID":"L1-01","L1 Skill名称":"企业基础画像生成","能力类别":"客户/企业画像","能力说明":"抽取企业/客户基础信息、行业、经营、授信关系，形成一页画像","适用范围":"通用","关联L2":"B-L2-025 授信走访前穿透式风险分析\nB-L2-026 贷后风险监测报告生成\nB-L2-003 营销话术生成\nB-L2-016 信贷风险审核\nB-L2-001 财富产品推荐\nB-L2-004 客户标签挖掘\nB-L2-006 理财经理智能待办","关联场景":"B-SCN-025 授信走访前穿透式风险分析\nB-SCN-026 贷后风险监测报告生成\nB-SCN-003 营销话术生成\nB-SCN-016 信贷风险审核\nB-SCN-001 财富产品推荐\nB-SCN-004 客户标签挖掘\nB-SCN-006 理财经理智能待办","状态":"已定义","备注":""},{"L1_ID":"L1-02","L1 Skill名称":"材料完整性检查","能力类别":"资料/流程","能力说明":"检查尽调、贷后、合同、报表等材料是否齐备","适用范围":"银行/保险/办公","关联L2":"B-L2-025 授信走访前穿透式风险分析","关联场景":"B-SCN-025 授信走访前穿透式风险分析","状态":"候选","备注":""},{"L1_ID":"L1-03","L1 Skill名称":"财务异常指标识别","能力类别":"财务/风险","能力说明":"识别收入、现金流、负债、应收、存货等异常信号","适用范围":"银行/风控","关联L2":"B-L2-025 授信走访前穿透式风险分析\nB-L2-026 贷后风险监测报告生成\nB-L2-016 信贷风险审核","关联场景":"B-SCN-025 授信走访前穿透式风险分析\nB-SCN-026 贷后风险监测报告生成\nB-SCN-016 信贷风险审核","状态":"已定义","备注":""},{"L1_ID":"L1-04","L1 Skill名称":"还款行为监测","能力类别":"信贷/贷后","能力说明":"检查逾期、展期、借新还旧、还款来源异常","适用范围":"银行/贷后","关联L2":"B-L2-026 贷后风险监测报告生成\nB-L2-016 信贷风险审核","关联场景":"B-SCN-026 贷后风险监测报告生成\nB-SCN-016 信贷风险审核","状态":"已定义","备注":""},{"L1_ID":"L1-05","L1 Skill名称":"公开风险线索检索","能力类别":"公开数据/风控","能力说明":"提取司法、舆情、监管处罚、经营异常、重大负面线索","适用范围":"通用","关联L2":"B-L2-025 授信走访前穿透式风险分析\nB-L2-026 贷后风险监测报告生成\nB-L2-015 反洗钱分析报告生成\nB-L2-017 异常交易反欺诈预测\nB-L2-016 信贷风险审核","关联场景":"B-SCN-025 授信走访前穿透式风险分析\nB-SCN-026 贷后风险监测报告生成\nB-SCN-015 反洗钱分析报告生成\nB-SCN-017 异常交易反欺诈预测\nB-SCN-016 信贷风险审核","状态":"已定义","备注":""},{"L1_ID":"L1-06","L1 Skill名称":"关联关系与交易识别","能力类别":"关系/交易","能力说明":"识别关联主体、关联交易、异常资金往来与风险传导","适用范围":"银行/风控","关联L2":"B-L2-025 授信走访前穿透式风险分析\nB-L2-026 贷后风险监测报告生成\nB-L2-015 反洗钱分析报告生成\nB-L2-017 异常交易反欺诈预测\nB-L2-016 信贷风险审核","关联场景":"B-SCN-025 授信走访前穿透式风险分析\nB-SCN-026 贷后风险监测报告生成\nB-SCN-015 反洗钱分析报告生成\nB-SCN-017 异常交易反欺诈预测\nB-SCN-016 信贷风险审核","状态":"已定义","备注":""},{"L1_ID":"L1-07","L1 Skill名称":"知识问答与文档检索","能力类别":"知识库/RAG","能力说明":"基于制度、产品、FAQ、流程文档进行问答和引用","适用范围":"通用","关联L2":"B-L2-018 制度合规审核\nB-L2-019 合规知识问答\nB-L2-021 合同审核\nB-L2-023 招投标审核\nB-L2-010 订单与客服对话总结\nB-L2-014 客服对话质检\nB-L2-002 财富管理知识问答\nB-L2-005 财富产品对比分析\nB-L2-011 客服 FAQ 挖掘扩写\nB-L2-013 电话人工业务分类\nB-L2-012 营销/客服坐席问答\nB-L2-001 财富产品推荐\nB-L2-009 交易机器人智能问答\nB-L2-022 智能培训通关\nB-L2-024 办公知识问答","关联场景":"B-SCN-018 制度合规审核\nB-SCN-019 合规知识问答\nB-SCN-021 合同审核\nB-SCN-023 招投标审核\nB-SCN-010 订单与客服对话总结\nB-SCN-014 客服对话质检\nB-SCN-002 财富管理知识问答\nB-SCN-005 财富产品对比分析\nB-SCN-011 客服 FAQ 挖掘扩写\nB-SCN-013 电话人工业务分类\nB-SCN-012 营销/客服坐席问答\nB-SCN-001 财富产品推荐\nB-SCN-009 交易机器人智能问答\nB-SCN-022 智能培训通关\nB-SCN-024 办公知识问答","状态":"候选","备注":""},{"L1_ID":"L1-08","L1 Skill名称":"交易指令/意图识别","能力类别":"机器人/交易","能力说明":"识别自然语言交易指令、意图、参数和上下文","适用范围":"投资交易/运营","关联L2":"B-L2-009 交易机器人智能问答\nB-L2-008 交易机器人智能询价\nB-L2-007 交易机器人智能捞单","关联场景":"B-SCN-009 交易机器人智能问答\nB-SCN-008 交易机器人智能询价\nB-SCN-007 交易机器人智能捞单","状态":"候选","备注":""},{"L1_ID":"L1-09","L1 Skill名称":"报告生成与摘要归纳","能力类别":"生成/报告","能力说明":"将多源信息汇总为摘要、报告、清单、话术","适用范围":"通用","关联L2":"B-L2-025 授信走访前穿透式风险分析\nB-L2-026 贷后风险监测报告生成\nB-L2-018 制度合规审核\nB-L2-019 合规知识问答\nB-L2-021 合同审核\nB-L2-023 招投标审核\nB-L2-010 订单与客服对话总结\nB-L2-014 客服对话质检\nB-L2-002 财富管理知识问答\nB-L2-005 财富产品对比分析\nB-L2-011 客服 FAQ 挖掘扩写\nB-L2-013 电话人工业务分类\nB-L2-003 营销话术生成\nB-L2-012 营销/客服坐席问答\nB-L2-015 反洗钱分析报告生成\nB-L2-017 异常交易反欺诈预测\nB-L2-016 信贷风险审核\nB-L2-001 财富产品推荐\nB-L2-004 客户标签挖掘\nB-L2-006 理财经理智能待办\nB-L2-009 交易机器人智能问答\nB-L2-008 交易机器人智能询价\nB-L2-022 智能培训通关\nB-L2-024 办公知识问答\nB-L2-020 智能风控建模","关联场景":"B-SCN-025 授信走访前穿透式风险分析\nB-SCN-026 贷后风险监测报告生成\nB-SCN-018 制度合规审核\nB-SCN-019 合规知识问答\nB-SCN-021 合同审核\nB-SCN-023 招投标审核\nB-SCN-010 订单与客服对话总结\nB-SCN-014 客服对话质检\nB-SCN-002 财富管理知识问答\nB-SCN-005 财富产品对比分析\nB-SCN-011 客服 FAQ 挖掘扩写\nB-SCN-013 电话人工业务分类\nB-SCN-003 营销话术生成\nB-SCN-012 营销/客服坐席问答\nB-SCN-015 反洗钱分析报告生成\nB-SCN-017 异常交易反欺诈预测\nB-SCN-016 信贷风险审核\nB-SCN-001 财富产品推荐\nB-SCN-004 客户标签挖掘\nB-SCN-006 理财经理智能待办\nB-SCN-009 交易机器人智能问答\nB-SCN-008 交易机器人智能询价\nB-SCN-022 智能培训通关\nB-SCN-024 办公知识问答\nB-SCN-020 智能风控建模","状态":"候选","备注":""},{"L1_ID":"L1-10","L1 Skill名称":"合规规则匹配","能力类别":"合规/规则","能力说明":"根据政策、制度和监管规则进行匹配和提示","适用范围":"合规/风控","关联L2":"B-L2-018 制度合规审核\nB-L2-019 合规知识问答\nB-L2-021 合同审核\nB-L2-023 招投标审核\nB-L2-014 客服对话质检\nB-L2-002 财富管理知识问答\nB-L2-008 交易机器人智能询价\nB-L2-007 交易机器人智能捞单","关联场景":"B-SCN-018 制度合规审核\nB-SCN-019 合规知识问答\nB-SCN-021 合同审核\nB-SCN-023 招投标审核\nB-SCN-014 客服对话质检\nB-SCN-002 财富管理知识问答\nB-SCN-008 交易机器人智能询价\nB-SCN-007 交易机器人智能捞单","状态":"候选","备注":""},{"L1_ID":"L1-11","L1 Skill名称":"评分/排序与推荐","能力类别":"决策辅助","能力说明":"根据规则和权重进行评分、排序、推荐和解释","适用范围":"通用","关联L2":"B-L2-023 招投标审核\nB-L2-005 财富产品对比分析\nB-L2-003 营销话术生成\nB-L2-015 反洗钱分析报告生成\nB-L2-017 异常交易反欺诈预测\nB-L2-001 财富产品推荐\nB-L2-004 客户标签挖掘\nB-L2-006 理财经理智能待办\nB-L2-008 交易机器人智能询价\nB-L2-022 智能培训通关\nB-L2-020 智能风控建模","关联场景":"B-SCN-023 招投标审核\nB-SCN-005 财富产品对比分析\nB-SCN-003 营销话术生成\nB-SCN-015 反洗钱分析报告生成\nB-SCN-017 异常交易反欺诈预测\nB-SCN-001 财富产品推荐\nB-SCN-004 客户标签挖掘\nB-SCN-006 理财经理智能待办\nB-SCN-008 交易机器人智能询价\nB-SCN-022 智能培训通关\nB-SCN-020 智能风控建模","状态":"候选","备注":""},{"L1_ID":"L1-12","L1 Skill名称":"流程节点分类与路由","能力类别":"流程/工单","能力说明":"识别工单、流程、任务类型并路由到下一步处理","适用范围":"客服/运营/办公","关联L2":"B-L2-010 订单与客服对话总结\nB-L2-011 客服 FAQ 挖掘扩写\nB-L2-013 电话人工业务分类\nB-L2-012 营销/客服坐席问答\nB-L2-006 理财经理智能待办\nB-L2-007 交易机器人智能捞单\nB-L2-024 办公知识问答\nB-L2-020 智能风控建模","关联场景":"B-SCN-010 订单与客服对话总结\nB-SCN-011 客服 FAQ 挖掘扩写\nB-SCN-013 电话人工业务分类\nB-SCN-012 营销/客服坐席问答\nB-SCN-006 理财经理智能待办\nB-SCN-007 交易机器人智能捞单\nB-SCN-024 办公知识问答\nB-SCN-020 智能风控建模","状态":"候选","备注":""}]};
+    const demoLinks = {
+      "B-L2-025": "presales-skill-matrix/ground-zero-credit-risk-analysis/%E6%8E%88%E4%BF%A1%E9%A3%8E%E9%99%A9%E5%88%86%E6%9E%90%E5%B7%A5%E4%BD%9C%E5%8F%B0Demo.html",
+      "B-L2-026": "presales-skill-matrix/post-loan-risk-monitoring/%E8%B4%B7%E5%90%8E%E9%A3%8E%E9%99%A9%E7%9B%91%E6%B5%8B%E5%B7%A5%E4%BD%9C%E5%8F%B0Demo.html"
+    };
 
-    openGuide.addEventListener("click", () => {
-      guideModal.hidden = false;
+    const state = {
+      view: "scene",
+      layer: "全部",
+      shape: "全部",
+      query: "",
+      selectedSceneId: LEDGER.scenarios[0]?.["场景_ID"] || "",
+      selectedL2Id: LEDGER.l2Skills[0]?.["L2_ID"] || ""
+    };
+
+    const els = {
+      itemList: document.getElementById("itemList"),
+      itemDetail: document.getElementById("itemDetail"),
+      searchBox: document.getElementById("searchBox"),
+      workbenchBadge: document.getElementById("workbenchBadge"),
+      workbenchTitle: document.getElementById("workbenchTitle"),
+      workbenchSubtitle: document.getElementById("workbenchSubtitle"),
+      viewRows: Array.from(document.querySelectorAll("[data-view]")),
+      layerRows: Array.from(document.querySelectorAll("[data-layer]")),
+      shapeRows: Array.from(document.querySelectorAll("[data-shape]")),
+      sceneFilterPanel: document.getElementById("sceneFilterPanel"),
+      shapeFilterPanel: document.getElementById("shapeFilterPanel"),
+      guideModal: document.getElementById("guideModal"),
+      openGuide: document.getElementById("openGuide"),
+      closeGuide: document.getElementById("closeGuide")
+    };
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function idsFrom(value, prefix) {
+      const pattern = prefix === "L1" ? /L1-\d{2}/g : /B-L2-\d{3}/g;
+      return Array.from(new Set(String(value || "").match(pattern) || []));
+    }
+
+    function tag(label, className = "") {
+      return '<span class="tag ' + className + '">' + escapeHtml(label) + '</span>';
+    }
+
+    function sceneIdFromL2Id(id) {
+      const suffix = String(id || "").match(/\d{3}$/)?.[0];
+      return suffix ? "B-SCN-" + suffix : "";
+    }
+
+    function sceneForL2(skill) {
+      const fromRelation = String(skill?.["关联场景"] || "").match(/B-SCN-\d{3}/)?.[0];
+      const id = fromRelation || sceneIdFromL2Id(skill?.["L2_ID"]);
+      return LEDGER.scenarios.find((item) => item["场景_ID"] === id);
+    }
+
+    function implementationProfile(scene) {
+      const id = scene?.["场景_ID"] || "";
+      const textBlock = [
+        scene?.["场景名称"],
+        scene?.["场景描述/可能流程"],
+        scene?.["Skill设计"],
+        scene?.["Skill分类"]
+      ].join("\n");
+
+      if (["B-SCN-001", "B-SCN-007", "B-SCN-008", "B-SCN-020"].includes(id)) {
+        return {
+          shape: "Agent 编排",
+          className: "agent",
+          platform: "Agent 路由、任务拆解、多 Skill 调度、记忆穿透、权限确认",
+          next: "先拆清楚可复用 L2/L1，再判断是否需要进入客户现场专项验证。",
+          fde: "先定义业务目标和边界，再拆成可调用的 L2/L1；不要把复杂跨系统流程强行写成一个 Skill。"
+        };
+      }
+
+      if (id === "B-SCN-004") {
+        return {
+          shape: "L1 候选",
+          className: "l1",
+          platform: "可作为多个营销类 Skill 的画像/标签能力复用",
+          next: "观察它在财富推荐、客户经营、营销话术等场景中的复用频次。",
+          fde: "先观察复用频次；若多个场景都需要，再沉淀为 L1 原子能力。"
+        };
+      }
+
+      if (["B-SCN-025", "B-SCN-026", "B-SCN-016", "B-SCN-015", "B-SCN-017", "B-SCN-006"].includes(id)) {
+        return {
+          shape: "主 Skill + L1",
+          className: "skill",
+          platform: "L2 Skill 承接主任务，复用企业画像、风险检索、规则匹配、报告生成等 L1",
+          next: "优先补齐样例数据、规则说明、报告模板、人工复核点和测试用例。",
+          fde: "重点定义输入字段、规则证据、人工复核点和输出模板，形成可验收的业务交付物。"
+        };
+      }
+
+      return {
+        shape: "独立 Skill",
+        className: "skill",
+        platform: "一个边界清晰的 L2 Skill 即可承接，必要时复用少量 L1",
+        next: "适合进入首批标准包建设，形成 SKILL.md、规则、样例、模板和测试。",
+        fde: "适合首批标准包建设：补齐样例数据、业务规则、输出模板和测试用例。"
+      };
+    }
+
+    function relatedIds(scene) {
+      const suggestion = [scene?.["Skill设计"], scene?.["Skill编排"], scene?.["Skill实现建议"]].join("\n");
+      return {
+        l2: idsFrom(suggestion, "L2"),
+        l1: idsFrom(suggestion, "L1")
+      };
+    }
+
+    function selectedScene() {
+      return LEDGER.scenarios.find((item) => item["场景_ID"] === state.selectedSceneId) || LEDGER.scenarios[0];
+    }
+
+    function selectedL2() {
+      return LEDGER.l2Skills.find((item) => item["L2_ID"] === state.selectedL2Id) || LEDGER.l2Skills[0];
+    }
+
+    function matchesQuery(fields) {
+      const query = state.query.trim().toLowerCase();
+      if (!query) {
+        return true;
+      }
+      return fields.join(" ").toLowerCase().includes(query);
+    }
+
+    function filteredScenes() {
+      return LEDGER.scenarios.filter((scene) => {
+        const profile = implementationProfile(scene);
+        const byLayer = state.layer === "全部" || scene["所属层级"] === state.layer;
+        return byLayer && matchesQuery([
+          scene["场景_ID"],
+          scene["场景名称"],
+          scene["所属层级"],
+          scene["业务子类"],
+          scene["业务环节"],
+          scene["场景描述/可能流程"],
+          scene["Skill设计"],
+          scene["Skill分类"],
+          profile.shape
+        ]);
+      });
+    }
+
+    function filteredL2() {
+      return LEDGER.l2Skills.filter((skill) => {
+        const scene = sceneForL2(skill);
+        const profile = implementationProfile(scene);
+        const byShape = state.shape === "全部" || profile.shape === state.shape;
+        return byShape && matchesQuery([
+          skill["L2_ID"],
+          skill["L2 Skill名称"],
+          skill["业务子类"],
+          skill["业务环节"],
+          skill["能力说明"],
+          skill["Skill分类"],
+          skill["关键输入"],
+          skill["关键输出"],
+          profile.shape
+        ]);
+      });
+    }
+
+    function renderCounts() {
+      document.getElementById("sceneCount").textContent = LEDGER.scenarios.length;
+      document.getElementById("agentCount").textContent = LEDGER.scenarios.filter((item) => implementationProfile(item).shape === "Agent 编排").length;
+      document.getElementById("l2Count").textContent = LEDGER.l2Skills.length;
+      document.getElementById("l1Count").textContent = LEDGER.l1Skills.length;
+      document.getElementById("viewSceneCount").textContent = LEDGER.scenarios.length;
+      document.getElementById("viewL2Count").textContent = LEDGER.l2Skills.length;
+      document.getElementById("countAll").textContent = LEDGER.scenarios.length;
+      document.getElementById("countFront").textContent = LEDGER.scenarios.filter((item) => item["所属层级"] === "前台").length;
+      document.getElementById("countMiddle").textContent = LEDGER.scenarios.filter((item) => item["所属层级"] === "中台").length;
+      document.getElementById("countBack").textContent = LEDGER.scenarios.filter((item) => item["所属层级"] === "后台").length;
+      document.getElementById("shapeAll").textContent = LEDGER.l2Skills.length;
+      document.getElementById("shapeSkill").textContent = LEDGER.l2Skills.filter((item) => implementationProfile(sceneForL2(item)).shape === "独立 Skill").length;
+      document.getElementById("shapeMainSkill").textContent = LEDGER.l2Skills.filter((item) => implementationProfile(sceneForL2(item)).shape === "主 Skill + L1").length;
+      document.getElementById("shapeAgent").textContent = LEDGER.l2Skills.filter((item) => implementationProfile(sceneForL2(item)).shape === "Agent 编排").length;
+      document.getElementById("shapeL1").textContent = LEDGER.l2Skills.filter((item) => implementationProfile(sceneForL2(item)).shape === "L1 候选").length;
+    }
+
+    function renderSceneList() {
+      const list = filteredScenes();
+      if (!list.some((item) => item["场景_ID"] === state.selectedSceneId) && list[0]) {
+        state.selectedSceneId = list[0]["场景_ID"];
+      }
+      els.itemList.innerHTML = list.length
+        ? list.map((scene) => {
+          const profile = implementationProfile(scene);
+          const active = scene["场景_ID"] === state.selectedSceneId ? " active" : "";
+          return '<button class="item-row' + active + '" type="button" data-scene-id="' + escapeHtml(scene["场景_ID"]) + '">' +
+            '<div class="row-main"><h3>' + escapeHtml(scene["场景名称"]) + '</h3><span class="tag">' + escapeHtml(scene["场景_ID"]) + '</span></div>' +
+            '<div class="tags">' + tag(profile.shape, profile.className) + tag(scene["Skill分类"] || "待分类", "type") + tag(scene["所属层级"]) + tag(scene["业务子类"]) + tag(scene["业务环节"]) + '</div>' +
+            '<p class="row-desc">' + escapeHtml(scene["场景描述/可能流程"]) + '</p>' +
+          '</button>';
+        }).join("")
+        : '<div class="empty">没有匹配的场景。</div>';
+
+      Array.from(els.itemList.querySelectorAll("[data-scene-id]")).forEach((button) => {
+        button.addEventListener("click", () => {
+          state.selectedSceneId = button.dataset.sceneId;
+          render();
+        });
+      });
+    }
+
+    function renderSceneDetail() {
+      const scene = selectedScene();
+      if (!scene) {
+        els.itemDetail.innerHTML = '<div class="empty">暂无场景。</div>';
+        return;
+      }
+      const profile = implementationProfile(scene);
+      const ids = relatedIds(scene);
+      const demo = ids.l2.find((id) => demoLinks[id]);
+      els.itemDetail.innerHTML =
+        '<div class="tags">' + tag(profile.shape, profile.className) + tag(scene["Skill分类"] || "待分类", "type") + tag(scene["所属层级"]) + tag(scene["业务子类"]) + tag(scene["业务环节"]) + '</div>' +
+        '<h3>' + escapeHtml(scene["场景名称"]) + '</h3>' +
+        '<div class="detail-block"><strong>场景描述/可能流程</strong><p>' + escapeHtml(scene["场景描述/可能流程"]) + '</p></div>' +
+        '<div class="meta-grid">' +
+          '<div class="meta-box"><strong>实现形态</strong><p>' + escapeHtml(profile.shape) + '</p></div>' +
+          '<div class="meta-box"><strong>平台依赖</strong><p>' + escapeHtml(profile.platform) + '</p></div>' +
+          '<div class="meta-box"><strong>后续工作</strong><p>' + escapeHtml(profile.next) + '</p></div>' +
+          '<div class="meta-box"><strong>FDE 工作重点</strong><p>' + escapeHtml(profile.fde) + '</p></div>' +
+        '</div>' +
+        '<div class="detail-block"><strong>Skill设计</strong><p>' + escapeHtml(scene["Skill设计"] || scene["Skill实现建议"]) + '</p></div>' +
+        '<div class="detail-block"><strong>关联 L2</strong><div class="tags">' + (ids.l2.length ? ids.l2.map((id) => tag(id + " " + (LEDGER.l2Skills.find((item) => item["L2_ID"] === id)?.["L2 Skill名称"] || ""), "l2")).join("") : tag("待定")) + '</div></div>' +
+        '<div class="detail-block"><strong>关联 L1</strong><div class="tags">' + (ids.l1.length ? ids.l1.map((id) => tag(id + " " + (LEDGER.l1Skills.find((item) => item["L1_ID"] === id)?.["L1 Skill名称"] || ""), "l1")).join("") : tag("待定")) + '</div></div>' +
+        (demo ? '<div class="demo-links"><a class="demo-link" href="' + demoLinks[demo] + '">打开已完成 Demo</a></div>' : '');
+    }
+
+    function renderL2List() {
+      const list = filteredL2();
+      if (!list.some((item) => item["L2_ID"] === state.selectedL2Id) && list[0]) {
+        state.selectedL2Id = list[0]["L2_ID"];
+      }
+      els.itemList.innerHTML = list.length
+        ? list.map((skill) => {
+          const scene = sceneForL2(skill);
+          const profile = implementationProfile(scene);
+          const active = skill["L2_ID"] === state.selectedL2Id ? " active" : "";
+          const statusClass = skill["建设状态"] === "已开发" ? "ready" : "plan";
+          return '<button class="item-row' + active + '" type="button" data-l2-id="' + escapeHtml(skill["L2_ID"]) + '">' +
+            '<div class="row-main"><h3>' + escapeHtml(skill["L2 Skill名称"]) + '</h3><span class="tag l2">' + escapeHtml(skill["L2_ID"]) + '</span></div>' +
+            '<div class="tags">' + tag(profile.shape, profile.className) + tag(skill["建设状态"], statusClass) + tag(skill["Skill分类"] || "待分类", "type") + tag(skill["业务子类"] || "未分类") + '</div>' +
+            '<p class="row-desc">' + escapeHtml(skill["能力说明"]) + '</p>' +
+          '</button>';
+        }).join("")
+        : '<div class="empty">没有匹配的 L2 Skill。</div>';
+
+      Array.from(els.itemList.querySelectorAll("[data-l2-id]")).forEach((button) => {
+        button.addEventListener("click", () => {
+          state.selectedL2Id = button.dataset.l2Id;
+          render();
+        });
+      });
+    }
+
+    function renderL2Detail() {
+      const skill = selectedL2();
+      if (!skill) {
+        els.itemDetail.innerHTML = '<div class="empty">暂无 L2 Skill。</div>';
+        return;
+      }
+      const scene = sceneForL2(skill);
+      const profile = implementationProfile(scene);
+      const l1Ids = idsFrom(skill["建议复用L1"], "L1");
+      const link = demoLinks[skill["L2_ID"]];
+      const statusClass = skill["建设状态"] === "已开发" ? "ready" : "plan";
+      els.itemDetail.innerHTML =
+        '<div class="tags">' + tag(skill["L2_ID"], "l2") + tag(profile.shape, profile.className) + tag(skill["建设状态"], statusClass) + tag(skill["Skill分类"] || "待分类", "type") + '</div>' +
+        '<h3>' + escapeHtml(skill["L2 Skill名称"]) + '</h3>' +
+        '<div class="detail-block"><strong>能力说明</strong><p>' + escapeHtml(skill["能力说明"]) + '</p></div>' +
+        '<div class="meta-grid">' +
+          '<div class="meta-box"><strong>关联场景</strong><p>' + escapeHtml(skill["关联场景"] || scene?.["场景名称"] || "待确认") + '</p></div>' +
+          '<div class="meta-box"><strong>实现形态</strong><p>' + escapeHtml(profile.shape) + '</p></div>' +
+          '<div class="meta-box"><strong>关键输入</strong><p>' + escapeHtml(skill["关键输入"]) + '</p></div>' +
+          '<div class="meta-box"><strong>关键输出</strong><p>' + escapeHtml(skill["关键输出"]) + '</p></div>' +
+          '<div class="meta-box"><strong>后续工作</strong><p>' + escapeHtml(profile.next) + '</p></div>' +
+          '<div class="meta-box"><strong>FDE 工作重点</strong><p>' + escapeHtml(profile.fde) + '</p></div>' +
+        '</div>' +
+        '<div class="detail-block"><strong>独立L2判断</strong><p>' + escapeHtml(skill["独立L2判断"] || "待讨论") + '</p></div>' +
+        '<div class="detail-block"><strong>首批试点建议</strong><p>' + escapeHtml(skill["首批试点建议"] || "待讨论") + '</p></div>' +
+        '<div class="detail-block"><strong>建议复用 L1</strong><div class="tags">' + (l1Ids.length ? l1Ids.map((id) => tag(id + " " + (LEDGER.l1Skills.find((item) => item["L1_ID"] === id)?.["L1 Skill名称"] || ""), "l1")).join("") : tag("待定")) + '</div></div>' +
+        (link ? '<div class="demo-links"><a class="demo-link" href="' + link + '">打开 Demo</a></div>' : '');
+    }
+
+    function renderWorkbenchHeader() {
+      if (state.view === "scene") {
+        els.workbenchBadge.textContent = "场景";
+        els.workbenchBadge.className = "level-code scene";
+        els.workbenchTitle.textContent = "场景视图";
+        els.workbenchSubtitle.textContent = "先看真实业务场景，再判断它适合 Agent 编排、独立 Skill 还是 L1 能力沉淀。";
+        els.searchBox.placeholder = "搜索场景、子类、环节、分类";
+      } else {
+        els.workbenchBadge.textContent = "L2";
+        els.workbenchBadge.className = "level-code l2";
+        els.workbenchTitle.textContent = "L2 Skill视图";
+        els.workbenchSubtitle.textContent = "聚焦可落地的场景级 Skill，查看输入输出、复用 L1 和 FDE 工作重点。";
+        els.searchBox.placeholder = "搜索 L2 Skill、输入输出、分类";
+      }
+    }
+
+    function renderFilters() {
+      els.viewRows.forEach((button) => {
+        button.classList.toggle("active", button.dataset.view === state.view);
+      });
+      els.layerRows.forEach((button) => {
+        button.classList.toggle("active", button.dataset.layer === state.layer);
+      });
+      els.shapeRows.forEach((button) => {
+        button.classList.toggle("active", button.dataset.shape === state.shape);
+      });
+      els.sceneFilterPanel.hidden = state.view !== "scene";
+      els.shapeFilterPanel.hidden = state.view !== "l2";
+    }
+
+    function render() {
+      renderCounts();
+      renderFilters();
+      renderWorkbenchHeader();
+      if (state.view === "scene") {
+        renderSceneList();
+        renderSceneDetail();
+      } else {
+        renderL2List();
+        renderL2Detail();
+      }
+    }
+
+    els.searchBox.addEventListener("input", (event) => {
+      state.query = event.target.value;
+      render();
     });
 
-    closeGuide.addEventListener("click", () => {
-      guideModal.hidden = true;
+    els.viewRows.forEach((button) => {
+      button.addEventListener("click", () => {
+        state.view = button.dataset.view;
+        state.query = "";
+        els.searchBox.value = "";
+        render();
+      });
     });
 
-    guideModal.addEventListener("click", (event) => {
-      if (event.target === guideModal) {
-        guideModal.hidden = true;
+    els.layerRows.forEach((button) => {
+      button.addEventListener("click", () => {
+        state.layer = button.dataset.layer;
+        render();
+      });
+    });
+
+    els.shapeRows.forEach((button) => {
+      button.addEventListener("click", () => {
+        state.shape = button.dataset.shape;
+        render();
+      });
+    });
+
+    els.openGuide.addEventListener("click", () => {
+      els.guideModal.hidden = false;
+    });
+
+    els.closeGuide.addEventListener("click", () => {
+      els.guideModal.hidden = true;
+    });
+
+    els.guideModal.addEventListener("click", (event) => {
+      if (event.target === els.guideModal) {
+        els.guideModal.hidden = true;
       }
     });
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
-        guideModal.hidden = true;
+        els.guideModal.hidden = true;
       }
     });
 
-    cards.forEach((card) => {
-      card.addEventListener("click", () => {
-        document.querySelectorAll(".skill-card").forEach((item) => item.classList.remove("active"));
-        card.classList.add("active");
-      });
-    });
+    render();
   </script>
 </body>
 </html>
