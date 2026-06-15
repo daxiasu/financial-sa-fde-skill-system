@@ -100,3 +100,32 @@ L1 原子 Skill
 `index.html`
 
 首页用于展示银行场景清单、L2 场景技能和 L1 原子技能，并围绕每个场景展示是否适合独立 L2、是否建议首批试点、可能复用哪些 L1。
+
+## Excel 驱动的团队 Skill 登记
+
+团队新增 Skill 时，优先维护：
+
+`shared-templates/team_skill_register.xlsx`
+
+其中的 `已制作Skill登记` sheet 是网页新增内容的数据源。
+
+推荐字段：
+
+- `场景大类`：`客户金融场景` 或 `SA-AI内化场景`
+- `展示状态`：`catalog` / `skill` / `demo`
+- `来源平台`：例如 `Dumate`、`Dodo`、`通用`
+- `迁移建议`：说明是否保留平台实现、迁移为平台中立 Skill、补网页 Demo
+- `Skill文件路径`：有真实 `SKILL.md` 时填写
+- `Demo页面路径`：有演示页面时填写
+
+网页不直接读取 `.xlsx`，而是读取：
+
+`data/team_skill_register.json`
+
+更新流程：
+
+```bash
+python3 scripts/excel_to_team_skill_json.py shared-templates/team_skill_register.xlsx data/team_skill_register.json
+```
+
+发布时 `publish.sh` 会自动尝试执行这一步。这样 Excel 是源数据，JSON 是网页读取的数据文件。

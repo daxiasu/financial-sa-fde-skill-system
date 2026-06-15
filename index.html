@@ -373,6 +373,78 @@
       box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.12);
     }
 
+    .workbench-filters {
+      padding: 10px 16px 12px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfd;
+      display: grid;
+      gap: 8px;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .filter-label {
+      flex: 0 0 56px;
+      padding-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .filter-chips {
+      min-width: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .filter-chip {
+      min-height: 28px;
+      max-width: 240px;
+      padding: 4px 8px;
+      border: 1px solid #d4dae2;
+      border-radius: 5px;
+      background: #fff;
+      color: #44515f;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 720;
+      line-height: 1.25;
+      cursor: pointer;
+    }
+
+    .filter-chip span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .filter-chip.active {
+      border-color: #8db7e6;
+      background: #eff6ff;
+      color: #1456a8;
+      box-shadow: inset 0 0 0 1px rgba(31, 111, 235, 0.08);
+    }
+
+    .filter-chip:disabled {
+      opacity: 0.46;
+      cursor: not-allowed;
+    }
+
+    .filter-chip .count {
+      flex: 0 0 auto;
+      color: inherit;
+      opacity: 0.72;
+    }
+
     .workspace-body {
       display: grid;
       grid-template-columns: minmax(0, 1.15fr) minmax(380px, 0.85fr);
@@ -457,6 +529,30 @@
       color: var(--green);
       background: #f0f9f3;
       border-color: #bfe5ca;
+    }
+
+    .tag.demo {
+      color: #0b6f5c;
+      background: #ecfdf5;
+      border-color: #a7f3d0;
+    }
+
+    .tag.catalog {
+      color: #475569;
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .tag.internal {
+      color: #7c2d12;
+      background: #fff7ed;
+      border-color: #fdba74;
+    }
+
+    .tag.source {
+      color: #334155;
+      background: #eef2ff;
+      border-color: #c7d2fe;
     }
 
     .tag.plan {
@@ -724,10 +820,9 @@
     <main class="layout">
       <aside class="sidebar">
         <section class="panel side-panel">
-          <p class="side-title">行业域</p>
-          <button class="domain-row active" type="button"><span>银行</span><span class="count">当前</span></button>
-          <button class="domain-row" type="button" disabled><span>证券</span><span class="count">规划</span></button>
-          <button class="domain-row" type="button" disabled><span>保险</span><span class="count">规划</span></button>
+          <p class="side-title">场景大类</p>
+          <button class="domain-row active" data-scenario-type="客户金融场景" type="button"><span>客户金融场景</span><span class="count" id="scenarioTypeCustomer">0</span></button>
+          <button class="domain-row" data-scenario-type="SA-AI内化场景" type="button"><span>SA-AI内化场景</span><span class="count" id="scenarioTypeInternal">0</span></button>
         </section>
 
         <section class="panel side-panel">
@@ -736,22 +831,6 @@
           <button class="view-row" data-view="l2" type="button"><span>L2 Skill视图</span><span class="count" id="viewL2Count">0</span></button>
         </section>
 
-        <section class="panel side-panel" id="sceneFilterPanel">
-          <p class="side-title">场景筛选</p>
-          <button class="filter-row active" data-layer="全部" type="button"><span>全部</span><span class="count" id="countAll">0</span></button>
-          <button class="filter-row" data-layer="前台" type="button"><span>前台</span><span class="count" id="countFront">0</span></button>
-          <button class="filter-row" data-layer="中台" type="button"><span>中台</span><span class="count" id="countMiddle">0</span></button>
-          <button class="filter-row" data-layer="后台" type="button"><span>后台</span><span class="count" id="countBack">0</span></button>
-        </section>
-
-        <section class="panel side-panel" id="shapeFilterPanel" hidden>
-          <p class="side-title">实现形态</p>
-          <button class="filter-row active" data-shape="全部" type="button"><span>全部</span><span class="count" id="shapeAll">0</span></button>
-          <button class="filter-row" data-shape="独立 Skill" type="button"><span>独立 Skill</span><span class="count" id="shapeSkill">0</span></button>
-          <button class="filter-row" data-shape="主 Skill + L1" type="button"><span>主 Skill + L1</span><span class="count" id="shapeMainSkill">0</span></button>
-          <button class="filter-row" data-shape="Agent 编排" type="button"><span>Agent 编排</span><span class="count" id="shapeAgent">0</span></button>
-          <button class="filter-row" data-shape="L1 候选" type="button"><span>L1 候选</span><span class="count" id="shapeL1">0</span></button>
-        </section>
       </aside>
 
       <section class="main">
@@ -771,6 +850,10 @@
           <div class="summary-cell">
             <strong id="l1Count">0</strong>
             <span>L1 原子能力，来自多个 L2 的复用沉淀</span>
+          </div>
+          <div class="summary-cell">
+            <strong id="demoSkillCount">0</strong>
+            <span>已制作 Demo Skill，可作为同事提交样例</span>
           </div>
         </section>
 
@@ -808,6 +891,7 @@
               <input class="search" id="searchBox" type="search" placeholder="搜索当前视图" />
             </div>
           </div>
+          <div class="workbench-filters" id="workbenchFilters"></div>
           <div class="workspace-body">
             <div class="item-list" id="itemList"></div>
             <aside class="detail" id="itemDetail"></aside>
@@ -842,8 +926,12 @@
 
     const state = {
       view: "scene",
+      scenarioType: "客户金融场景",
+      source: "全部",
       layer: "全部",
+      business: "全部",
       shape: "全部",
+      skillType: "全部",
       query: "",
       selectedSceneId: LEDGER.scenarios[0]?.["场景_ID"] || "",
       selectedL2Id: LEDGER.l2Skills[0]?.["L2_ID"] || ""
@@ -853,14 +941,12 @@
       itemList: document.getElementById("itemList"),
       itemDetail: document.getElementById("itemDetail"),
       searchBox: document.getElementById("searchBox"),
+      workbenchFilters: document.getElementById("workbenchFilters"),
       workbenchBadge: document.getElementById("workbenchBadge"),
       workbenchTitle: document.getElementById("workbenchTitle"),
       workbenchSubtitle: document.getElementById("workbenchSubtitle"),
+      scenarioTypeRows: Array.from(document.querySelectorAll("[data-scenario-type]")),
       viewRows: Array.from(document.querySelectorAll("[data-view]")),
-      layerRows: Array.from(document.querySelectorAll("[data-layer]")),
-      shapeRows: Array.from(document.querySelectorAll("[data-shape]")),
-      sceneFilterPanel: document.getElementById("sceneFilterPanel"),
-      shapeFilterPanel: document.getElementById("shapeFilterPanel"),
       guideModal: document.getElementById("guideModal"),
       openGuide: document.getElementById("openGuide"),
       closeGuide: document.getElementById("closeGuide")
@@ -882,6 +968,182 @@
 
     function tag(label, className = "") {
       return '<span class="tag ' + className + '">' + escapeHtml(label) + '</span>';
+    }
+
+    function demoInfo(skillOrId) {
+      const id = typeof skillOrId === "string" ? skillOrId : skillOrId?.["L2_ID"];
+      const skill = typeof skillOrId === "string" ? LEDGER.l2Skills.find((item) => item["L2_ID"] === id) : skillOrId;
+      const link = demoLinks[id];
+      const demoStatus = skill?.["Demo状态"] || "";
+      const displayStatus = skill?.["展示状态"] || "";
+      const buildStatus = skill?.["建设状态"] || "";
+      const hasSkillFile = Boolean(skill?.["Skill文件路径"] || skill?.["skillFile"]);
+      const hasDemo = Boolean(link || demoStatus.includes("已开发") || demoStatus.includes("已制作"));
+      const hasMadeSkill = !hasDemo && (displayStatus === "skill" || buildStatus.includes("已制作") || hasSkillFile);
+      const label = hasDemo ? "已制作 Demo" : (hasMadeSkill ? "已制作 Skill" : "Skill 目录");
+      const className = hasDemo ? "demo" : (hasMadeSkill ? "ready" : "catalog");
+      const typeValue = hasDemo ? "已制作Demo" : (hasMadeSkill ? "已制作Skill" : "目录项");
+      return {
+        hasDemo,
+        hasMadeSkill,
+        link,
+        label,
+        className,
+        typeValue,
+        status: demoStatus || displayStatus || (hasDemo ? "已制作 Demo" : (hasMadeSkill ? "已制作 Skill" : "目录规划"))
+      };
+    }
+
+    function sceneSkillType(scene) {
+      const ids = relatedIds(scene);
+      const relatedSkills = ids.l2
+        .map((id) => LEDGER.l2Skills.find((item) => item["L2_ID"] === id))
+        .filter(Boolean);
+      const directSkill = LEDGER.l2Skills.find((item) => item["关联场景"]?.includes(scene?.["场景_ID"]));
+      if (directSkill && !relatedSkills.some((item) => item["L2_ID"] === directSkill["L2_ID"])) {
+        relatedSkills.push(directSkill);
+      }
+      const sceneInfo = demoInfo({
+        "L2_ID": ids.l2[0] || scene?.["场景_ID"],
+        "展示状态": scene?.["展示状态"],
+        "建设状态": scene?.["建设状态"],
+        "Demo状态": scene?.["Demo状态"],
+        "Skill文件路径": scene?.["Skill文件路径"],
+        "Demo页面路径": scene?.["Demo页面路径"]
+      });
+      const skillInfos = relatedSkills.map((skill) => demoInfo(skill));
+      const hasDemo = Boolean(sceneInfo.hasDemo || scene?.["Demo页面路径"] || skillInfos.some((item) => item.hasDemo));
+      const hasMadeSkill = Boolean(!hasDemo && (sceneInfo.hasMadeSkill || skillInfos.some((item) => item.hasMadeSkill)));
+      if (hasDemo) {
+        return { label: "已制作 Demo", className: "demo", typeValue: "已制作Demo" };
+      }
+      if (hasMadeSkill) {
+        return { label: "已制作 Skill", className: "ready", typeValue: "已制作Skill" };
+      }
+      return { label: "Skill 目录", className: "catalog", typeValue: "目录项" };
+    }
+
+    function scenarioTypeOf(item) {
+      const text = [
+        item?.["场景大类"],
+        item?.["行业"],
+        item?.["业务子类"],
+        item?.["备注"],
+        item?.["标签"]
+      ].join(" ");
+
+      if (text.includes("SA-AI内化场景") || text.includes("SA内部")) {
+        return "SA-AI内化场景";
+      }
+
+      return "客户金融场景";
+    }
+
+    function scenarioTypeTag(type) {
+      return tag(type, type === "SA-AI内化场景" ? "internal" : "catalog");
+    }
+
+    function sourceInfo(item) {
+      const id = item?.["L2_ID"] || item?.["Skill_ID"] || item?.["场景_ID"] || "";
+      const sourcePlatform = item?.["来源平台"] || "";
+      const author = item?.["作者"] || "";
+      const note = item?.["备注"] || "";
+      const text = [id, sourcePlatform, author, note].join(" ");
+
+      if (text.includes("Dumate") || text.includes("Dodo") || id.startsWith("dumate-") || id.includes("TEAM-SCN-dumate-")) {
+        return {
+          label: "Dumate PDF导入",
+          detail: sourcePlatform || "Dumate场景积累-2026.05.29.pdf"
+        };
+      }
+
+      return {
+        label: "原始规划",
+        detail: "银行场景 Skill 化台账"
+      };
+    }
+
+    function sourceTag(item) {
+      const source = sourceInfo(item);
+      return tag(source.label, "source");
+    }
+
+    function normalizeTeamSkillItem(item) {
+      const id = item["L2_ID"] || item["Skill_ID"];
+      const name = item["L2 Skill名称"] || item["Skill名称"];
+      const sceneId = item["场景_ID"] || ("TEAM-SCN-" + id);
+      const relation = sceneId + " " + name;
+
+      return {
+        scene: {
+          "场景_ID": sceneId,
+          "场景名称": name,
+          "场景大类": item["场景大类"] || "客户金融场景",
+          "行业": item["行业"] || "未分类",
+          "所属层级": item["所属层级"] || "未分类",
+          "业务子类": item["业务子类"] || "未分类",
+          "业务环节": item["业务环节"] || "未分类",
+          "场景描述/可能流程": item["能力说明"] || item["备注"] || "待补充场景说明。",
+          "Skill设计": [
+            item["迁移建议"] ? "迁移建议：" + item["迁移建议"] : "",
+            "对应L2：" + id + " " + name,
+            item["来源平台"] ? "来源平台：" + item["来源平台"] : "",
+            item["备注"] ? "备注：" + item["备注"] : ""
+          ].filter(Boolean).join("\n"),
+          "Skill分类": item["Skill分类"] || "待分类",
+          "来源平台": item["来源平台"] || "",
+          "迁移建议": item["迁移建议"] || "",
+          "展示状态": item["展示状态"] || "",
+          "Skill文件路径": item["Skill文件路径"] || "",
+          "Demo页面路径": item["Demo页面路径"] || "",
+          "标签": item["标签"] || ""
+        },
+        skill: {
+          ...item,
+          "L2_ID": id,
+          "L2 Skill名称": name,
+          "关联场景": relation,
+          "建议复用L1": item["建议复用L1"] || "",
+          "独立L2判断": item["迁移建议"] || "待补充独立 L2 判断。",
+          "首批试点建议": item["备注"] || "待补充试点建议。",
+          "建设状态": item["建设状态"] || "规划",
+          "Demo状态": item["Demo状态"] || "",
+          "备注": item["备注"] || ""
+        }
+      };
+    }
+
+    function mergeTeamSkillRegister(items) {
+      const sceneIds = new Set(LEDGER.scenarios.map((item) => item["场景_ID"]));
+      const skillIds = new Set(LEDGER.l2Skills.map((item) => item["L2_ID"]));
+
+      items.forEach((item) => {
+        const normalized = normalizeTeamSkillItem(item);
+        if (normalized.skill["Demo页面路径"]) {
+          demoLinks[normalized.skill["L2_ID"]] = normalized.skill["Demo页面路径"];
+        }
+        if (!sceneIds.has(normalized.scene["场景_ID"])) {
+          LEDGER.scenarios.push(normalized.scene);
+          sceneIds.add(normalized.scene["场景_ID"]);
+        }
+        if (!skillIds.has(normalized.skill["L2_ID"])) {
+          LEDGER.l2Skills.push(normalized.skill);
+          skillIds.add(normalized.skill["L2_ID"]);
+        }
+      });
+    }
+
+    async function loadTeamSkillRegister() {
+      try {
+        const response = await fetch("data/team_skill_register.json", { cache: "no-store" });
+        if (!response.ok) {
+          return;
+        }
+        const payload = await response.json();
+        mergeTeamSkillRegister(Array.isArray(payload.items) ? payload.items : []);
+      } catch (error) {
+        // Local file previews may block fetch; the built-in data still renders.
+      }
     }
 
     function sceneIdFromL2Id(id) {
@@ -967,20 +1229,76 @@
       return fields.join(" ").toLowerCase().includes(query);
     }
 
+    function skillScenarioType(skill) {
+      const scene = sceneForL2(skill);
+      return scenarioTypeOf(skill?.["场景大类"] ? skill : scene);
+    }
+
+    function skillLayer(skill) {
+      return skill?.["所属层级"] || sceneForL2(skill)?.["所属层级"] || "未分类";
+    }
+
+    function skillBusiness(skill) {
+      return skill?.["业务子类"] || sceneForL2(skill)?.["业务子类"] || "未分类";
+    }
+
+    function baseScenes() {
+      return LEDGER.scenarios.filter((scene) => state.scenarioType === "全部" || scenarioTypeOf(scene) === state.scenarioType);
+    }
+
+    function baseL2() {
+      return LEDGER.l2Skills.filter((skill) => state.scenarioType === "全部" || skillScenarioType(skill) === state.scenarioType);
+    }
+
+    function itemFilterValue(item, group) {
+      if (group === "source") {
+        return sourceInfo(item).label;
+      }
+      if (group === "layer") {
+        return state.view === "scene" ? item["所属层级"] : skillLayer(item);
+      }
+      if (group === "business") {
+        return state.view === "scene" ? item["业务子类"] : skillBusiness(item);
+      }
+      if (group === "shape") {
+        return state.view === "scene" ? implementationProfile(item).shape : implementationProfile(sceneForL2(item)).shape;
+      }
+      if (group === "skillType") {
+        return state.view === "scene" ? sceneSkillType(item).typeValue : demoInfo(item).typeValue;
+      }
+      return "";
+    }
+
+    function itemMatchesActiveFilters(item, ignoreGroup = "") {
+      return ["source", "layer", "business", "shape", "skillType"].every((group) => {
+        if (group === ignoreGroup) {
+          return true;
+        }
+        const selected = state[group];
+        return selected === "全部" || itemFilterValue(item, group) === selected;
+      });
+    }
+
     function filteredScenes() {
       return LEDGER.scenarios.filter((scene) => {
         const profile = implementationProfile(scene);
-        const byLayer = state.layer === "全部" || scene["所属层级"] === state.layer;
-        return byLayer && matchesQuery([
+        const type = sceneSkillType(scene);
+        const scenarioType = scenarioTypeOf(scene);
+        const source = sourceInfo(scene).label;
+        const byScenarioType = state.scenarioType === "全部" || scenarioType === state.scenarioType;
+        return byScenarioType && itemMatchesActiveFilters(scene) && matchesQuery([
           scene["场景_ID"],
           scene["场景名称"],
+          scenarioType,
+          source,
           scene["所属层级"],
           scene["业务子类"],
           scene["业务环节"],
           scene["场景描述/可能流程"],
           scene["Skill设计"],
           scene["Skill分类"],
-          profile.shape
+          profile.shape,
+          type.label
         ]);
       });
     }
@@ -989,37 +1307,128 @@
       return LEDGER.l2Skills.filter((skill) => {
         const scene = sceneForL2(skill);
         const profile = implementationProfile(scene);
-        const byShape = state.shape === "全部" || profile.shape === state.shape;
-        return byShape && matchesQuery([
+        const type = demoInfo(skill);
+        const scenarioType = skillScenarioType(skill);
+        const source = sourceInfo(skill).label;
+        const byScenarioType = state.scenarioType === "全部" || scenarioType === state.scenarioType;
+        return byScenarioType && itemMatchesActiveFilters(skill) && matchesQuery([
           skill["L2_ID"],
           skill["L2 Skill名称"],
+          scenarioType,
+          source,
+          skillLayer(skill),
           skill["业务子类"],
           skill["业务环节"],
           skill["能力说明"],
           skill["Skill分类"],
+          skill["Demo状态"],
           skill["关键输入"],
           skill["关键输出"],
-          profile.shape
+          profile.shape,
+          type.label
         ]);
       });
     }
 
     function renderCounts() {
+      const demoSkills = LEDGER.l2Skills.filter((item) => demoInfo(item).hasDemo);
+      const customerScenes = LEDGER.scenarios.filter((item) => scenarioTypeOf(item) === "客户金融场景");
+      const internalScenes = LEDGER.scenarios.filter((item) => scenarioTypeOf(item) === "SA-AI内化场景");
+      const currentScenes = baseScenes();
+      const currentL2 = baseL2();
       document.getElementById("sceneCount").textContent = LEDGER.scenarios.length;
       document.getElementById("agentCount").textContent = LEDGER.scenarios.filter((item) => implementationProfile(item).shape === "Agent 编排").length;
       document.getElementById("l2Count").textContent = LEDGER.l2Skills.length;
       document.getElementById("l1Count").textContent = LEDGER.l1Skills.length;
-      document.getElementById("viewSceneCount").textContent = LEDGER.scenarios.length;
-      document.getElementById("viewL2Count").textContent = LEDGER.l2Skills.length;
-      document.getElementById("countAll").textContent = LEDGER.scenarios.length;
-      document.getElementById("countFront").textContent = LEDGER.scenarios.filter((item) => item["所属层级"] === "前台").length;
-      document.getElementById("countMiddle").textContent = LEDGER.scenarios.filter((item) => item["所属层级"] === "中台").length;
-      document.getElementById("countBack").textContent = LEDGER.scenarios.filter((item) => item["所属层级"] === "后台").length;
-      document.getElementById("shapeAll").textContent = LEDGER.l2Skills.length;
-      document.getElementById("shapeSkill").textContent = LEDGER.l2Skills.filter((item) => implementationProfile(sceneForL2(item)).shape === "独立 Skill").length;
-      document.getElementById("shapeMainSkill").textContent = LEDGER.l2Skills.filter((item) => implementationProfile(sceneForL2(item)).shape === "主 Skill + L1").length;
-      document.getElementById("shapeAgent").textContent = LEDGER.l2Skills.filter((item) => implementationProfile(sceneForL2(item)).shape === "Agent 编排").length;
-      document.getElementById("shapeL1").textContent = LEDGER.l2Skills.filter((item) => implementationProfile(sceneForL2(item)).shape === "L1 候选").length;
+      document.getElementById("demoSkillCount").textContent = demoSkills.length;
+      document.getElementById("scenarioTypeCustomer").textContent = customerScenes.length;
+      document.getElementById("scenarioTypeInternal").textContent = internalScenes.length;
+      document.getElementById("viewSceneCount").textContent = currentScenes.length;
+      document.getElementById("viewL2Count").textContent = currentL2.length;
+    }
+
+    function countBy(items, getter) {
+      return items.reduce((acc, item) => {
+        const value = getter(item) || "未分类";
+        acc[value] = (acc[value] || 0) + 1;
+        return acc;
+      }, {});
+    }
+
+    function filterChip(group, value, label, count) {
+      const key = group === "source" ? "source" : group === "layer" ? "layer" : group === "business" ? "business" : group === "shape" ? "shape" : "skillType";
+      const active = state[key] === value ? " active" : "";
+      const disabled = count === 0 && value !== "全部" ? " disabled" : "";
+      return '<button class="filter-chip' + active + '" type="button" data-filter-group="' + group + '" data-filter-value="' + escapeHtml(value) + '"' + disabled + '>' +
+        '<span>' + escapeHtml(label) + '</span><span class="count">' + count + '</span>' +
+      '</button>';
+    }
+
+    function filterGroup(title, group, options) {
+      return '<div class="filter-group"><span class="filter-label">' + escapeHtml(title) + '</span><div class="filter-chips">' +
+        options.map((option) => filterChip(group, option.value, option.label || option.value, option.count)).join("") +
+      '</div></div>';
+    }
+
+    function optionsFromCounts(counts, preferred = []) {
+      const values = [
+        ...preferred.filter((value) => counts[value]),
+        ...Object.keys(counts).filter((value) => !preferred.includes(value)).sort((a, b) => a.localeCompare(b, "zh-Hans-CN"))
+      ];
+      return values.map((value) => ({ value, count: counts[value] }));
+    }
+
+    function renderWorkbenchFilters() {
+      const baseItems = state.view === "scene" ? baseScenes() : baseL2();
+      const itemsFor = (group) => baseItems.filter((item) => itemMatchesActiveFilters(item, group));
+      const sourceBase = itemsFor("source");
+      const layerBase = itemsFor("layer");
+      const businessBase = itemsFor("business");
+      const shapeBase = itemsFor("shape");
+      const skillTypeBase = itemsFor("skillType");
+      const sourceCounts = countBy(sourceBase, (item) => itemFilterValue(item, "source"));
+      const layerCounts = countBy(layerBase, (item) => itemFilterValue(item, "layer"));
+      const businessCounts = countBy(businessBase, (item) => itemFilterValue(item, "business"));
+      const shapeCounts = countBy(shapeBase, (item) => itemFilterValue(item, "shape"));
+      const skillTypeCounts = countBy(skillTypeBase, (item) => itemFilterValue(item, "skillType"));
+
+      els.workbenchFilters.innerHTML = [
+        filterGroup("来源", "source", [
+          { value: "全部", label: "全部来源", count: sourceBase.length },
+          ...optionsFromCounts(sourceCounts, ["原始规划", "Dumate PDF导入"])
+        ]),
+        filterGroup("层级", "layer", [
+          { value: "全部", count: layerBase.length },
+          ...optionsFromCounts(layerCounts, ["前台", "中台", "后台", "未分类"])
+        ]),
+        filterGroup("子类", "business", [
+          { value: "全部", count: businessBase.length },
+          ...optionsFromCounts(businessCounts)
+        ]),
+        filterGroup("形态", "shape", [
+          { value: "全部", count: shapeBase.length },
+          ...optionsFromCounts(shapeCounts, ["独立 Skill", "主 Skill + L1", "Agent 编排", "L1 候选"])
+        ]),
+        filterGroup("状态", "skillType", [
+          { value: "全部", count: skillTypeBase.length },
+          { value: "目录项", label: "Skill 目录", count: skillTypeCounts["目录项"] || 0 },
+          { value: "已制作Skill", label: "已制作 Skill", count: skillTypeCounts["已制作Skill"] || 0 },
+          { value: "已制作Demo", label: "已制作 Demo", count: skillTypeCounts["已制作Demo"] || 0 }
+        ])
+      ].join("");
+
+      Array.from(els.workbenchFilters.querySelectorAll("[data-filter-group]")).forEach((button) => {
+        button.addEventListener("click", () => {
+          const group = button.dataset.filterGroup;
+          const value = button.dataset.filterValue;
+          if (group === "source") state.source = value;
+          if (group === "layer") state.layer = value;
+          if (group === "business") state.business = value;
+          if (group === "shape") state.shape = value;
+          if (group === "skillType") state.skillType = value;
+          render();
+        });
+      });
     }
 
     function renderSceneList() {
@@ -1030,10 +1439,12 @@
       els.itemList.innerHTML = list.length
         ? list.map((scene) => {
           const profile = implementationProfile(scene);
+          const type = sceneSkillType(scene);
+          const scenarioType = scenarioTypeOf(scene);
           const active = scene["场景_ID"] === state.selectedSceneId ? " active" : "";
           return '<button class="item-row' + active + '" type="button" data-scene-id="' + escapeHtml(scene["场景_ID"]) + '">' +
             '<div class="row-main"><h3>' + escapeHtml(scene["场景名称"]) + '</h3><span class="tag">' + escapeHtml(scene["场景_ID"]) + '</span></div>' +
-            '<div class="tags">' + tag(profile.shape, profile.className) + tag(scene["Skill分类"] || "待分类", "type") + tag(scene["所属层级"]) + tag(scene["业务子类"]) + tag(scene["业务环节"]) + '</div>' +
+            '<div class="tags">' + sourceTag(scene) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(scene["Skill分类"] || "待分类", "type") + tag(scene["所属层级"]) + tag(scene["业务子类"]) + tag(scene["业务环节"]) + '</div>' +
             '<p class="row-desc">' + escapeHtml(scene["场景描述/可能流程"]) + '</p>' +
           '</button>';
         }).join("")
@@ -1056,11 +1467,15 @@
       const profile = implementationProfile(scene);
       const ids = relatedIds(scene);
       const demo = ids.l2.find((id) => demoLinks[id]);
+      const type = sceneSkillType(scene);
+      const scenarioType = scenarioTypeOf(scene);
+      const source = sourceInfo(scene);
       els.itemDetail.innerHTML =
-        '<div class="tags">' + tag(profile.shape, profile.className) + tag(scene["Skill分类"] || "待分类", "type") + tag(scene["所属层级"]) + tag(scene["业务子类"]) + tag(scene["业务环节"]) + '</div>' +
+        '<div class="tags">' + sourceTag(scene) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(scene["Skill分类"] || "待分类", "type") + tag(scene["所属层级"]) + tag(scene["业务子类"]) + tag(scene["业务环节"]) + '</div>' +
         '<h3>' + escapeHtml(scene["场景名称"]) + '</h3>' +
         '<div class="detail-block"><strong>场景描述/可能流程</strong><p>' + escapeHtml(scene["场景描述/可能流程"]) + '</p></div>' +
         '<div class="meta-grid">' +
+          '<div class="meta-box"><strong>来源</strong><p>' + escapeHtml(source.detail) + '</p></div>' +
           '<div class="meta-box"><strong>实现形态</strong><p>' + escapeHtml(profile.shape) + '</p></div>' +
           '<div class="meta-box"><strong>平台依赖</strong><p>' + escapeHtml(profile.platform) + '</p></div>' +
           '<div class="meta-box"><strong>后续工作</strong><p>' + escapeHtml(profile.next) + '</p></div>' +
@@ -1081,11 +1496,13 @@
         ? list.map((skill) => {
           const scene = sceneForL2(skill);
           const profile = implementationProfile(scene);
+          const type = demoInfo(skill);
+          const scenarioType = scenarioTypeOf(skill["场景大类"] ? skill : scene);
           const active = skill["L2_ID"] === state.selectedL2Id ? " active" : "";
           const statusClass = skill["建设状态"] === "已开发" ? "ready" : "plan";
           return '<button class="item-row' + active + '" type="button" data-l2-id="' + escapeHtml(skill["L2_ID"]) + '">' +
             '<div class="row-main"><h3>' + escapeHtml(skill["L2 Skill名称"]) + '</h3><span class="tag l2">' + escapeHtml(skill["L2_ID"]) + '</span></div>' +
-            '<div class="tags">' + tag(profile.shape, profile.className) + tag(skill["建设状态"], statusClass) + tag(skill["Skill分类"] || "待分类", "type") + tag(skill["业务子类"] || "未分类") + '</div>' +
+            '<div class="tags">' + sourceTag(skill) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(skill["建设状态"], statusClass) + tag(skill["Skill分类"] || "待分类", "type") + tag(skill["业务子类"] || "未分类") + '</div>' +
             '<p class="row-desc">' + escapeHtml(skill["能力说明"]) + '</p>' +
           '</button>';
         }).join("")
@@ -1108,14 +1525,20 @@
       const scene = sceneForL2(skill);
       const profile = implementationProfile(scene);
       const l1Ids = idsFrom(skill["建议复用L1"], "L1");
-      const link = demoLinks[skill["L2_ID"]];
+      const type = demoInfo(skill);
+      const scenarioType = scenarioTypeOf(skill["场景大类"] ? skill : scene);
+      const source = sourceInfo(skill);
+      const link = type.link;
       const statusClass = skill["建设状态"] === "已开发" ? "ready" : "plan";
       els.itemDetail.innerHTML =
-        '<div class="tags">' + tag(skill["L2_ID"], "l2") + tag(profile.shape, profile.className) + tag(skill["建设状态"], statusClass) + tag(skill["Skill分类"] || "待分类", "type") + '</div>' +
+        '<div class="tags">' + tag(skill["L2_ID"], "l2") + sourceTag(skill) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(skill["建设状态"], statusClass) + tag(skill["Skill分类"] || "待分类", "type") + '</div>' +
         '<h3>' + escapeHtml(skill["L2 Skill名称"]) + '</h3>' +
         '<div class="detail-block"><strong>能力说明</strong><p>' + escapeHtml(skill["能力说明"]) + '</p></div>' +
         '<div class="meta-grid">' +
+          '<div class="meta-box"><strong>来源</strong><p>' + escapeHtml(source.detail) + '</p></div>' +
+          '<div class="meta-box"><strong>场景大类</strong><p>' + escapeHtml(scenarioType) + '</p></div>' +
           '<div class="meta-box"><strong>关联场景</strong><p>' + escapeHtml(skill["关联场景"] || scene?.["场景名称"] || "待确认") + '</p></div>' +
+          '<div class="meta-box"><strong>Skill 类型</strong><p>' + escapeHtml(type.status) + '</p></div>' +
           '<div class="meta-box"><strong>实现形态</strong><p>' + escapeHtml(profile.shape) + '</p></div>' +
           '<div class="meta-box"><strong>关键输入</strong><p>' + escapeHtml(skill["关键输入"]) + '</p></div>' +
           '<div class="meta-box"><strong>关键输出</strong><p>' + escapeHtml(skill["关键输出"]) + '</p></div>' +
@@ -1133,29 +1556,33 @@
         els.workbenchBadge.textContent = "场景";
         els.workbenchBadge.className = "level-code scene";
         els.workbenchTitle.textContent = "场景视图";
-        els.workbenchSubtitle.textContent = "先看真实业务场景，再判断它适合 Agent 编排、独立 Skill 还是 L1 能力沉淀。";
+        els.workbenchSubtitle.textContent = state.scenarioType === "SA-AI内化场景" ? "沉淀 SA 自身提效、售前、方案、POC 和交付复盘中的可复用 AI 工作流。" : "先看真实业务场景，再判断它适合 Agent 编排、独立 Skill 还是 L1 能力沉淀。";
         els.searchBox.placeholder = "搜索场景、子类、环节、分类";
       } else {
         els.workbenchBadge.textContent = "L2";
         els.workbenchBadge.className = "level-code l2";
         els.workbenchTitle.textContent = "L2 Skill视图";
-        els.workbenchSubtitle.textContent = "聚焦可落地的场景级 Skill，查看输入输出、复用 L1 和 FDE 工作重点。";
+        els.workbenchSubtitle.textContent = state.scenarioType === "SA-AI内化场景" ? "聚焦 SA 内部可复用 Skill，区分已有 SKILL.md 和可演示 Demo。" : "聚焦可落地的场景级 Skill，查看输入输出、复用 L1 和 FDE 工作重点。";
         els.searchBox.placeholder = "搜索 L2 Skill、输入输出、分类";
       }
     }
 
     function renderFilters() {
+      els.scenarioTypeRows.forEach((button) => {
+        button.classList.toggle("active", button.dataset.scenarioType === state.scenarioType);
+      });
       els.viewRows.forEach((button) => {
         button.classList.toggle("active", button.dataset.view === state.view);
       });
-      els.layerRows.forEach((button) => {
-        button.classList.toggle("active", button.dataset.layer === state.layer);
-      });
-      els.shapeRows.forEach((button) => {
-        button.classList.toggle("active", button.dataset.shape === state.shape);
-      });
-      els.sceneFilterPanel.hidden = state.view !== "scene";
-      els.shapeFilterPanel.hidden = state.view !== "l2";
+      renderWorkbenchFilters();
+    }
+
+    function resetWorkbenchFilters() {
+      state.source = "全部";
+      state.layer = "全部";
+      state.business = "全部";
+      state.shape = "全部";
+      state.skillType = "全部";
     }
 
     function render() {
@@ -1179,22 +1606,19 @@
     els.viewRows.forEach((button) => {
       button.addEventListener("click", () => {
         state.view = button.dataset.view;
+        resetWorkbenchFilters();
         state.query = "";
         els.searchBox.value = "";
         render();
       });
     });
 
-    els.layerRows.forEach((button) => {
+    els.scenarioTypeRows.forEach((button) => {
       button.addEventListener("click", () => {
-        state.layer = button.dataset.layer;
-        render();
-      });
-    });
-
-    els.shapeRows.forEach((button) => {
-      button.addEventListener("click", () => {
-        state.shape = button.dataset.shape;
+        state.scenarioType = button.dataset.scenarioType;
+        resetWorkbenchFilters();
+        state.query = "";
+        els.searchBox.value = "";
         render();
       });
     });
@@ -1219,7 +1643,7 @@
       }
     });
 
-    render();
+    loadTeamSkillRegister().finally(render);
   </script>
 </body>
 </html>
