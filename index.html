@@ -618,6 +618,137 @@
       white-space: pre-line;
     }
 
+    .package-card {
+      border: 1px solid #cfd8e3;
+      background: #fff;
+      border-radius: 8px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .package-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .package-head strong {
+      display: block;
+      color: #25313d;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .package-head span,
+    .package-path,
+    .file-note {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .package-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .file-link,
+    .package-link {
+      color: #1456a8;
+      font-weight: 760;
+      text-decoration: none;
+    }
+
+    .file-link {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .package-link {
+      min-height: 28px;
+      padding: 5px 8px;
+      border: 1px solid #b8d2ef;
+      border-radius: 5px;
+      background: #eff6ff;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .file-tree {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border: 1px solid #e1e6ee;
+      border-radius: 7px;
+      overflow: hidden;
+      background: #fbfcfd;
+    }
+
+    .file-tree ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .file-section {
+      display: grid;
+      gap: 6px;
+    }
+
+    .file-section-title {
+      color: #334155;
+      font-size: 12px;
+      font-weight: 820;
+      line-height: 1.35;
+    }
+
+    .file-line {
+      min-height: 30px;
+      padding: 6px 10px;
+      border-top: 1px solid #edf0f4;
+      display: grid;
+      grid-template-columns: minmax(180px, 0.9fr) minmax(0, 1.1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .file-tree > li:first-child > .file-line {
+      border-top: 0;
+    }
+
+    .file-name {
+      min-width: 0;
+      color: #2d3743;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      font-weight: 760;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-depth-1 .file-name {
+      padding-left: 18px;
+    }
+
+    .file-depth-2 .file-name {
+      padding-left: 36px;
+    }
+
+    .file-depth-3 .file-name {
+      padding-left: 54px;
+    }
+
     .meta-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -754,6 +885,34 @@
       color: var(--muted);
       font-size: 13px;
       line-height: 1.5;
+    }
+
+    .file-modal {
+      width: min(920px, calc(100vw - 32px));
+      max-height: calc(100vh - 56px);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.32);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .file-modal-body {
+      padding: 0;
+      overflow: auto;
+      background: #fbfcfd;
+    }
+
+    .file-preview {
+      margin: 0;
+      padding: 16px;
+      color: #25313d;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     @media (max-width: 1160px) {
@@ -915,6 +1074,18 @@
         </div>
       </section>
     </div>
+
+    <div class="guide-backdrop" id="fileModal" hidden>
+      <section class="file-modal" role="dialog" aria-modal="true" aria-labelledby="fileTitle">
+        <header class="guide-header">
+          <h2 id="fileTitle">文件预览</h2>
+          <button class="close-button" id="closeFile" type="button" aria-label="关闭">×</button>
+        </header>
+        <div class="file-modal-body">
+          <pre class="file-preview" id="filePreview">加载中...</pre>
+        </div>
+      </section>
+    </div>
   </div>
 
   <script>
@@ -923,6 +1094,8 @@
       "B-L2-025": "presales-skill-matrix/ground-zero-credit-risk-analysis/%E6%8E%88%E4%BF%A1%E9%A3%8E%E9%99%A9%E5%88%86%E6%9E%90%E5%B7%A5%E4%BD%9C%E5%8F%B0Demo.html",
       "B-L2-026": "presales-skill-matrix/post-loan-risk-monitoring/%E8%B4%B7%E5%90%8E%E9%A3%8E%E9%99%A9%E7%9B%91%E6%B5%8B%E5%B7%A5%E4%BD%9C%E5%8F%B0Demo.html"
     };
+
+    let skillPackages = {};
 
     const state = {
       view: "scene",
@@ -948,8 +1121,12 @@
       scenarioTypeRows: Array.from(document.querySelectorAll("[data-scenario-type]")),
       viewRows: Array.from(document.querySelectorAll("[data-view]")),
       guideModal: document.getElementById("guideModal"),
+      fileModal: document.getElementById("fileModal"),
+      fileTitle: document.getElementById("fileTitle"),
+      filePreview: document.getElementById("filePreview"),
       openGuide: document.getElementById("openGuide"),
-      closeGuide: document.getElementById("closeGuide")
+      closeGuide: document.getElementById("closeGuide"),
+      closeFile: document.getElementById("closeFile")
     };
 
     function escapeHtml(value) {
@@ -968,6 +1145,14 @@
 
     function tag(label, className = "") {
       return '<span class="tag ' + className + '">' + escapeHtml(label) + '</span>';
+    }
+
+    function pathHref(path) {
+      return String(path || "")
+        .split("/")
+        .map((part) => encodeURIComponent(part))
+        .join("/")
+        .replaceAll("%3A", ":");
     }
 
     function demoInfo(skillOrId) {
@@ -1068,6 +1253,111 @@
       return tag(source.label, "source");
     }
 
+    function packageForSkill(skillOrId) {
+      const id = typeof skillOrId === "string" ? skillOrId : skillOrId?.["L2_ID"];
+      const skill = typeof skillOrId === "string" ? LEDGER.l2Skills.find((item) => item["L2_ID"] === id) : skillOrId;
+      const direct = skillPackages[id];
+      if (direct) {
+        return direct;
+      }
+      const skillPath = skill?.["Skill文件路径"] || "";
+      if (!skillPath) {
+        return null;
+      }
+      const root = skillPath.replace(/SKILL\.md$/, "").replace(/\/?$/, "/");
+      return {
+        root,
+        name: root.split("/").filter(Boolean).pop() || skill?.["L2 Skill名称"] || id,
+        summary: "该 Skill 已登记 SKILL.md 路径；页面只展示已经明确登记的真实文件。",
+        coreFiles: [
+          { path: "SKILL.md", note: "核心技能定义文件" }
+        ],
+        demoFiles: []
+      };
+    }
+
+    function packagesForScene(scene) {
+      const ids = relatedIds(scene).l2;
+      const directSkill = LEDGER.l2Skills.find((item) => item["关联场景"]?.includes(scene?.["场景_ID"]));
+      if (directSkill && !ids.includes(directSkill["L2_ID"])) {
+        ids.push(directSkill["L2_ID"]);
+      }
+      return ids
+        .map((id) => packageForSkill(id))
+        .filter(Boolean);
+    }
+
+    function renderFileRows(pkg, files) {
+      return files.map((file) => {
+        const depth = Math.max(0, file.path.split("/").filter(Boolean).length - 1);
+        const isDirectory = file.path.endsWith("/");
+        const href = pathHref(pkg.root + file.path);
+        const icon = isDirectory ? "▸" : "•";
+        const name = icon + " " + file.path;
+        const nameHtml = isDirectory
+          ? '<span class="file-name">' + escapeHtml(name) + '</span>'
+          : '<button class="file-name file-link" type="button" data-file-path="' + href + '" data-file-name="' + escapeHtml(file.path) + '">' + escapeHtml(name) + '</button>';
+        return '<li class="file-depth-' + depth + '"><div class="file-line">' +
+          nameHtml +
+          '<span class="file-note">' + escapeHtml(file.note || "") + '</span>' +
+        '</div></li>';
+      }).join("");
+    }
+
+    function renderFileSection(title, pkg, files) {
+      if (!files?.length) {
+        return "";
+      }
+      return '<div class="file-section"><span class="file-section-title">' + escapeHtml(title) + '</span><ul class="file-tree">' + renderFileRows(pkg, files) + '</ul></div>';
+    }
+
+    function renderSkillPackage(pkg) {
+      if (!pkg) {
+        return "";
+      }
+      return '<div class="package-card">' +
+        '<div class="package-head">' +
+          '<div><strong>' + escapeHtml(pkg.name) + '</strong><span>' + escapeHtml(pkg.summary) + '</span></div>' +
+          '<div class="package-actions"><button class="package-link" type="button" data-file-path="' + pathHref(pkg.root + "SKILL.md") + '" data-file-name="SKILL.md">打开 SKILL.md</button></div>' +
+        '</div>' +
+        '<div class="package-path">' + escapeHtml(pkg.root) + '</div>' +
+        renderFileSection("核心 Skill 文件", pkg, pkg.coreFiles || []) +
+        renderFileSection("配套 Demo 文件", pkg, pkg.demoFiles || []) +
+      '</div>';
+    }
+
+    function renderSkillPackagesBlock(packages) {
+      if (!packages.length) {
+        return "";
+      }
+      return '<div class="detail-block"><strong>真实 Skill 文件</strong>' + packages.map(renderSkillPackage).join("") + '</div>';
+    }
+
+    async function openFilePreview(path, name) {
+      els.fileModal.hidden = false;
+      els.fileTitle.textContent = name || path;
+      els.filePreview.textContent = "加载中...";
+      try {
+        const response = await fetch(path, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("文件读取失败");
+        }
+        const buffer = await response.arrayBuffer();
+        const text = new TextDecoder("utf-8").decode(buffer);
+        els.filePreview.textContent = text;
+      } catch (error) {
+        els.filePreview.textContent = "无法预览该文件。可以检查本地服务是否已启动，或直接在仓库中打开原始文件。";
+      }
+    }
+
+    function bindFilePreviewLinks() {
+      Array.from(els.itemDetail.querySelectorAll("[data-file-path]")).forEach((button) => {
+        button.addEventListener("click", () => {
+          openFilePreview(button.dataset.filePath, button.dataset.fileName);
+        });
+      });
+    }
+
     function normalizeTeamSkillItem(item) {
       const id = item["L2_ID"] || item["Skill_ID"];
       const name = item["L2 Skill名称"] || item["Skill名称"];
@@ -1143,6 +1433,19 @@
         mergeTeamSkillRegister(Array.isArray(payload.items) ? payload.items : []);
       } catch (error) {
         // Local file previews may block fetch; the built-in data still renders.
+      }
+    }
+
+    async function loadSkillPackages() {
+      try {
+        const response = await fetch("data/skill_packages.json", { cache: "no-store" });
+        if (!response.ok) {
+          return;
+        }
+        const payload = await response.json();
+        skillPackages = payload.packages || {};
+      } catch (error) {
+        skillPackages = {};
       }
     }
 
@@ -1470,6 +1773,7 @@
       const type = sceneSkillType(scene);
       const scenarioType = scenarioTypeOf(scene);
       const source = sourceInfo(scene);
+      const packages = packagesForScene(scene);
       els.itemDetail.innerHTML =
         '<div class="tags">' + sourceTag(scene) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(scene["Skill分类"] || "待分类", "type") + tag(scene["所属层级"]) + tag(scene["业务子类"]) + tag(scene["业务环节"]) + '</div>' +
         '<h3>' + escapeHtml(scene["场景名称"]) + '</h3>' +
@@ -1481,10 +1785,12 @@
           '<div class="meta-box"><strong>后续工作</strong><p>' + escapeHtml(profile.next) + '</p></div>' +
           '<div class="meta-box"><strong>FDE 工作重点</strong><p>' + escapeHtml(profile.fde) + '</p></div>' +
         '</div>' +
+        renderSkillPackagesBlock(packages) +
         '<div class="detail-block"><strong>Skill设计</strong><p>' + escapeHtml(scene["Skill设计"] || scene["Skill实现建议"]) + '</p></div>' +
         '<div class="detail-block"><strong>关联 L2</strong><div class="tags">' + (ids.l2.length ? ids.l2.map((id) => tag(id + " " + (LEDGER.l2Skills.find((item) => item["L2_ID"] === id)?.["L2 Skill名称"] || ""), "l2")).join("") : tag("待定")) + '</div></div>' +
         '<div class="detail-block"><strong>关联 L1</strong><div class="tags">' + (ids.l1.length ? ids.l1.map((id) => tag(id + " " + (LEDGER.l1Skills.find((item) => item["L1_ID"] === id)?.["L1 Skill名称"] || ""), "l1")).join("") : tag("待定")) + '</div></div>' +
         (demo ? '<div class="demo-links"><a class="demo-link" href="' + demoLinks[demo] + '">打开已完成 Demo</a></div>' : '');
+      bindFilePreviewLinks();
     }
 
     function renderL2List() {
@@ -1530,6 +1836,7 @@
       const source = sourceInfo(skill);
       const link = type.link;
       const statusClass = skill["建设状态"] === "已开发" ? "ready" : "plan";
+      const pkg = packageForSkill(skill);
       els.itemDetail.innerHTML =
         '<div class="tags">' + tag(skill["L2_ID"], "l2") + sourceTag(skill) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(skill["建设状态"], statusClass) + tag(skill["Skill分类"] || "待分类", "type") + '</div>' +
         '<h3>' + escapeHtml(skill["L2 Skill名称"]) + '</h3>' +
@@ -1545,10 +1852,12 @@
           '<div class="meta-box"><strong>后续工作</strong><p>' + escapeHtml(profile.next) + '</p></div>' +
           '<div class="meta-box"><strong>FDE 工作重点</strong><p>' + escapeHtml(profile.fde) + '</p></div>' +
         '</div>' +
+        renderSkillPackagesBlock(pkg ? [pkg] : []) +
         '<div class="detail-block"><strong>独立L2判断</strong><p>' + escapeHtml(skill["独立L2判断"] || "待讨论") + '</p></div>' +
         '<div class="detail-block"><strong>首批试点建议</strong><p>' + escapeHtml(skill["首批试点建议"] || "待讨论") + '</p></div>' +
         '<div class="detail-block"><strong>建议复用 L1</strong><div class="tags">' + (l1Ids.length ? l1Ids.map((id) => tag(id + " " + (LEDGER.l1Skills.find((item) => item["L1_ID"] === id)?.["L1 Skill名称"] || ""), "l1")).join("") : tag("待定")) + '</div></div>' +
         (link ? '<div class="demo-links"><a class="demo-link" href="' + link + '">打开 Demo</a></div>' : '');
+      bindFilePreviewLinks();
     }
 
     function renderWorkbenchHeader() {
@@ -1631,19 +1940,30 @@
       els.guideModal.hidden = true;
     });
 
+    els.closeFile.addEventListener("click", () => {
+      els.fileModal.hidden = true;
+    });
+
     els.guideModal.addEventListener("click", (event) => {
       if (event.target === els.guideModal) {
         els.guideModal.hidden = true;
       }
     });
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        els.guideModal.hidden = true;
+    els.fileModal.addEventListener("click", (event) => {
+      if (event.target === els.fileModal) {
+        els.fileModal.hidden = true;
       }
     });
 
-    loadTeamSkillRegister().finally(render);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        els.guideModal.hidden = true;
+        els.fileModal.hidden = true;
+      }
+    });
+
+    Promise.all([loadTeamSkillRegister(), loadSkillPackages()]).finally(render);
   </script>
 </body>
 </html>

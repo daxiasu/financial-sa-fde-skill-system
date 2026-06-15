@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-06-15T11:08:25.278793+00:00",
+  "packages": {
+    "B-L2-025": {
+      "root": "presales-skill-matrix/ground-zero-credit-risk-analysis/",
+      "name": "ground-zero-credit-risk-analysis",
+      "summary": "授信走访前风险分析 Skill。文件清单由仓库真实文件生成。",
+      "coreFiles": [
+        {
+          "path": "SKILL.md",
+          "note": "核心技能定义文件"
+        },
+        {
+          "path": "references/risk_rules.md",
+          "note": "规则文件"
+        }
+      ],
+      "demoFiles": [
+        {
+          "path": "授信风险分析工作台Demo.html",
+          "note": "可打开的本地演示页面"
+        }
+      ],
+      "generatedFrom": "real-filesystem-scan"
+    },
+    "B-L2-026": {
+      "root": "presales-skill-matrix/post-loan-risk-monitoring/",
+      "name": "post-loan-risk-monitoring",
+      "summary": "贷后风险监测 Skill。文件清单由仓库真实文件生成。",
+      "coreFiles": [
+        {
+          "path": "SKILL.md",
+          "note": "核心技能定义文件"
+        },
+        {
+          "path": "references/monitoring_rules.md",
+          "note": "规则文件"
+        }
+      ],
+      "demoFiles": [
+        {
+          "path": "贷后风险监测工作台Demo.html",
+          "note": "可打开的本地演示页面"
+        }
+      ],
+      "generatedFrom": "real-filesystem-scan"
+    }
+  }
+}

@@ -71,8 +71,9 @@ L1 原子 Skill
 1. 售前库只使用模拟数据、脱敏数据或公开数据。
 2. 客户现场真实数据、客户私有规则、系统接口和业务秘密不得进入售前展示库。
 3. 客户现场经验可以通过脱敏、抽象、重构，沉淀为通用场景模式和模拟案例。
-4. Skill 不是单一文件，而是由 `SKILL.md`、规则、模板、测试样例、演示数据和 Demo 共同构成的能力资产。
-5. 每个 Skill 都应能回答：适用场景、目标用户、输入、流程、规则、输出、边界、测试样例和售前话术。
+4. 网页可以作为售前演示工具，Demo 可以做可视化包装，但凡标记为“已开发 Skill”的文件资产必须来自仓库真实文件。
+5. Skill 不是单一文件，至少应有真实 `SKILL.md`；规则、模板、测试样例、演示数据和 Demo 可以作为配套资产，但不得为了展示效果凭空补目录。
+6. 每个 Skill 都应能回答：适用场景、目标用户、输入、流程、规则、输出、边界、测试样例和售前话术。
 
 ## 银行场景 Skill 化 Basic Rule
 
@@ -129,3 +130,17 @@ python3 scripts/excel_to_team_skill_json.py shared-templates/team_skill_register
 ```
 
 发布时 `publish.sh` 会自动尝试执行这一步。这样 Excel 是源数据，JSON 是网页读取的数据文件。
+
+## 真实 Skill 文件展示
+
+首页右侧的“真实 Skill 文件”区域读取：
+
+`data/skill_packages.json`
+
+该文件由脚本扫描仓库中的真实文件生成：
+
+```bash
+python3 scripts/build_skill_packages.py
+```
+
+原则是：页面只展示已经存在于仓库中的 `SKILL.md`、规则文件和配套 Demo 文件；不会为了让目录看起来完整而生成虚假的 `references/`、`scripts/`、`tests/` 文件树。
