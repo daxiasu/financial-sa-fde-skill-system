@@ -3,3 +3,9 @@ node_modules/
 *.log
 __pycache__/
 *.pyc
+*.swp
+*.swo
+.*.swp
+.*.swo
+.~*
+~$*

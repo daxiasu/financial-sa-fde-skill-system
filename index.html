@@ -1322,6 +1322,7 @@
         '</div>' +
         '<div class="package-path">' + escapeHtml(pkg.root) + '</div>' +
         renderFileSection("核心 Skill 文件", pkg, pkg.coreFiles || []) +
+        renderFileSection("执行与工具文件", pkg, pkg.supportFiles || []) +
         renderFileSection("配套 Demo 文件", pkg, pkg.demoFiles || []) +
       '</div>';
     }
@@ -1469,7 +1470,7 @@
         scene?.["Skill分类"]
       ].join("\n");
 
-      if (["B-SCN-001", "B-SCN-007", "B-SCN-008", "B-SCN-020"].includes(id)) {
+      if (["B-SCN-001", "B-SCN-007", "B-SCN-008", "B-SCN-020"].includes(id) || /投研|多智能体|TradingAgents|产业链/.test(textBlock)) {
         return {
           shape: "Agent 编排",
           className: "agent",
@@ -1770,6 +1771,8 @@
       const profile = implementationProfile(scene);
       const ids = relatedIds(scene);
       const demo = ids.l2.find((id) => demoLinks[id]);
+      const directSkill = LEDGER.l2Skills.find((item) => item["关联场景"]?.includes(scene?.["场景_ID"]));
+      const demoHref = scene["Demo页面路径"] || (directSkill && (directSkill["Demo页面路径"] || demoLinks[directSkill["L2_ID"]])) || (demo ? demoLinks[demo] : "");
       const type = sceneSkillType(scene);
       const scenarioType = scenarioTypeOf(scene);
       const source = sourceInfo(scene);
@@ -1789,7 +1792,7 @@
         '<div class="detail-block"><strong>Skill设计</strong><p>' + escapeHtml(scene["Skill设计"] || scene["Skill实现建议"]) + '</p></div>' +
         '<div class="detail-block"><strong>关联 L2</strong><div class="tags">' + (ids.l2.length ? ids.l2.map((id) => tag(id + " " + (LEDGER.l2Skills.find((item) => item["L2_ID"] === id)?.["L2 Skill名称"] || ""), "l2")).join("") : tag("待定")) + '</div></div>' +
         '<div class="detail-block"><strong>关联 L1</strong><div class="tags">' + (ids.l1.length ? ids.l1.map((id) => tag(id + " " + (LEDGER.l1Skills.find((item) => item["L1_ID"] === id)?.["L1 Skill名称"] || ""), "l1")).join("") : tag("待定")) + '</div></div>' +
-        (demo ? '<div class="demo-links"><a class="demo-link" href="' + demoLinks[demo] + '">打开已完成 Demo</a></div>' : '');
+        (demoHref ? '<div class="demo-links"><a class="demo-link" href="' + demoHref + '">打开已完成 Demo</a></div>' : '');
       bindFilePreviewLinks();
     }
 

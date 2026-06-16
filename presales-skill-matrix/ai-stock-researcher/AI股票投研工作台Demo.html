@@ -1,0 +1,1705 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI股票投研工作台 Demo</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --line: #d8dee8;
+      --text: #172033;
+      --muted: #637083;
+      --blue: #2563eb;
+      --teal: #0f766e;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --violet: #6d28d9;
+      --shadow: 0 10px 30px rgba(23, 32, 51, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 1180px;
+      color: var(--text);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.45;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 64px 1fr;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: #ffffff;
+      background: var(--teal);
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .header-action {
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #1f2937;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .header-action:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: #f8fbff;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(410px, 1.08fr) minmax(330px, 0.86fr) minmax(390px, 1fr);
+      gap: 14px;
+      padding: 14px;
+      min-height: 0;
+    }
+
+    .notice {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #f3d18a;
+      border-radius: 8px;
+      background: #fff8e8;
+      color: #7c4a03;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .notice strong {
+      color: #5f3900;
+    }
+
+    .panel {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 54px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .panel-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel-body {
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    label {
+      color: #334155;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    textarea,
+    select,
+    input[type="number"] {
+      width: 100%;
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--text);
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    select:focus,
+    textarea:focus,
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0 14px;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 9px 12px;
+      background: #edf2f7;
+      color: #1f2937;
+      cursor: pointer;
+      font-weight: 650;
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .btn.secondary {
+      background: #ffffff;
+      border-color: #cfd7e3;
+    }
+
+    .btn:hover {
+      filter: brightness(0.97);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+      filter: none;
+    }
+
+    .run-status {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      border: 1px solid #d8dee8;
+      border-radius: 7px;
+      background: #f8fafc;
+      color: #475569;
+      padding: 8px 10px;
+      margin: 0 0 12px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .run-status.running {
+      border-color: #bfdbfe;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .run-status.dirty {
+      border-color: #f3d18a;
+      background: #fff8e8;
+      color: #7c4a03;
+    }
+
+    .result-top {
+      display: grid;
+      grid-template-columns: 128px 1fr;
+      gap: 12px;
+      align-items: stretch;
+      margin-bottom: 12px;
+    }
+
+    .level-box {
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 12px;
+      min-height: 118px;
+      text-align: center;
+    }
+
+    .level {
+      font-size: 36px;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    .level.buy { color: var(--green); }
+    .level.accumulate { color: var(--teal); }
+    .level.hold { color: var(--blue); }
+    .level.cautious { color: var(--amber); }
+    .level.reduce { color: var(--red); }
+
+    .score {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .summary {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    .summary h2 {
+      margin: 0 0 7px;
+      font-size: 16px;
+    }
+
+    .summary p {
+      margin: 0;
+      color: #344054;
+      font-size: 13px;
+    }
+
+    .section {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .item-list,
+    .pipeline,
+    .toggle-list,
+    .scenario-buttons {
+      display: grid;
+      gap: 8px;
+    }
+
+    .item {
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      padding: 9px 10px;
+      background: #ffffff;
+    }
+
+    .item strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    .item span,
+    .item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 26px 1fr auto;
+      gap: 8px;
+      align-items: start;
+      border: 1px solid #e1e7f0;
+      border-radius: 8px;
+      padding: 10px;
+      background: #ffffff;
+    }
+
+    .step.pending {
+      background: #f8fafc;
+      color: #64748b;
+    }
+
+    .step.running {
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: #eaf2ff;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .step-title {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .step-text {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tag {
+      align-self: start;
+      border-radius: 999px;
+      padding: 3px 8px;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .tag.ok { background: var(--green); }
+    .tag.info { background: var(--blue); }
+    .tag.warn { background: var(--amber); }
+    .tag.danger { background: var(--red); }
+    .tag.violet { background: var(--violet); }
+    .tag.pending { background: #94a3b8; }
+
+    .data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .span-2 {
+      grid-column: span 2;
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 1fr 62px;
+      gap: 9px;
+      align-items: center;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--blue);
+    }
+
+    .toggle {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 8px;
+      align-items: start;
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      padding: 8px;
+      background: #ffffff;
+      color: #334155;
+      font-size: 13px;
+    }
+
+    .toggle small {
+      display: block;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    .scenario {
+      text-align: left;
+      border: 1px solid #d8dee8;
+      border-radius: 7px;
+      background: #ffffff;
+      padding: 9px 10px;
+      cursor: pointer;
+    }
+
+    .scenario:hover {
+      border-color: var(--blue);
+      background: #f8fbff;
+    }
+
+    .scenario strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .scenario span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 98px 1fr;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .kv b {
+      color: #334155;
+    }
+
+    .copy-status {
+      color: var(--green);
+      font-size: 12px;
+      min-height: 18px;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 10px;
+      background: #f8fafc;
+      border: 1px dashed #cfd7e3;
+      border-radius: 7px;
+    }
+
+    .log-box {
+      display: grid;
+      gap: 7px;
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      background: #0f172a;
+      color: #dbeafe;
+      padding: 10px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      min-height: 112px;
+    }
+
+    .log-line {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 8px;
+    }
+
+    .log-time {
+      color: #93c5fd;
+    }
+
+    .trace-card {
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      background: #eff6ff;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .trace-card strong {
+      display: block;
+      color: #1d4ed8;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .trace-card span {
+      display: block;
+      color: #334155;
+      font-size: 12px;
+    }
+
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .score-table th,
+    .score-table td {
+      border-bottom: 1px solid #e1e7f0;
+      padding: 7px 6px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .score-table th {
+      color: #475569;
+      background: #f8fafc;
+      font-weight: 750;
+    }
+
+    .score-table td:last-child,
+    .score-table th:last-child {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .bar {
+      height: 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      background: var(--teal);
+    }
+
+    .mini-chart {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      align-items: end;
+      gap: 4px;
+      height: 98px;
+      padding: 10px;
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      background: #ffffff;
+    }
+
+    .mini-chart span {
+      display: block;
+      border-radius: 3px 3px 0 0;
+      background: #8ecae6;
+      min-height: 12px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.46);
+      padding: 24px;
+      z-index: 10;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(980px, 92vw);
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .modal-body {
+      overflow: auto;
+      padding: 14px;
+      background: #0f172a;
+    }
+
+    .modal-body pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #dbeafe;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-mark">投</div>
+        <div>
+          <h1>AI股票投研工作台</h1>
+          <div class="subtitle">模拟投研智能体平台：自然语言入口、Skill 路由、多维评分、产业链分析、研报生成</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <span>Skill：ai-stock-researcher</span>
+        <span>版本：v1.0.11</span>
+        <span>场景：个股与产业链投研分析报告生成</span>
+        <button class="header-action" id="viewDemoGuideBtn" type="button">演示说明</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="notice">
+        <strong>公开演示说明：</strong>
+        <span>本页面使用脱敏模拟行情与舆情数据，用于展示真实 Skill 包的投研链路。不构成投资建议、买卖推荐或收益承诺。</span>
+      </div>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">投研员工作台</div>
+            <div class="panel-note">输入自然语言任务，生成个股与产业链研究摘要</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label for="stockSelect">研究标的</label>
+            <select id="stockSelect"></select>
+          </div>
+          <div class="field">
+            <label for="periodSelect">研究周期</label>
+            <select id="periodSelect">
+              <option value="short">短期：1-5 个交易日</option>
+              <option value="medium" selected>中期：20-60 个交易日</option>
+              <option value="long">长期：120 日以上</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="promptInput">投研员输入</label>
+            <textarea id="promptInput">帮我分析这只股票当前投资价值，补充产业链位置、板块轮动和主要风险，最后生成一页投研摘要。</textarea>
+          </div>
+          <div class="toolbar">
+            <button class="btn primary" id="runBtn">生成投研摘要</button>
+            <button class="btn secondary" id="resetBtn">恢复样例数据</button>
+            <button class="btn secondary" id="copyBtn">复制报告</button>
+          </div>
+          <div class="run-status dirty" id="runStatus">资料已加载，等待发起 ai-stock-researcher 分析。</div>
+          <div class="copy-status" id="copyStatus"></div>
+
+          <div class="result-top">
+            <div class="level-box">
+              <div class="level hold" id="levelText">Hold</div>
+              <div class="score" id="scoreText">综合分 58</div>
+            </div>
+            <div class="summary">
+              <h2 id="summaryTitle">投研摘要</h2>
+              <p id="summaryText"></p>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">核心结论</div>
+            <div class="item-list" id="insightList"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">产业链关注点</div>
+            <div class="item-list" id="chainList"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">风险提示</div>
+            <div class="item-list" id="riskList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">后台 Skill 执行链路</div>
+            <div class="panel-note">展示平台如何调用真实 Skill 包中的能力模块</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="section" style="border-top:0;margin-top:0;padding-top:0;">
+            <div class="section-title">平台路由</div>
+            <div class="pipeline" id="routerPipeline"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">SKILL.md 工作流进度</div>
+            <div class="pipeline" id="skillPipeline"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">多维评分与因果链</div>
+            <div id="causeTrace"></div>
+            <div id="scoreBreakdown"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">执行日志</div>
+            <div class="log-box" id="logBox"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">真实 Skill 包调用关系</div>
+            <div class="toolbar" style="margin-top:0;">
+              <button class="btn secondary" id="viewSkillBtn">查看 SKILL.md</button>
+              <button class="btn secondary" id="viewReadmeBtn">查看 README.md</button>
+            </div>
+            <div class="step">
+              <div class="step-num">S</div>
+              <div>
+                <div class="step-title">SKILL.md</div>
+                <div class="step-text">定义触发词、能力边界、Web UI、多智能体、产业链、报告导出等能力。</div>
+              </div>
+              <span class="tag info">入口</span>
+            </div>
+            <div class="step">
+              <div class="step-num">E</div>
+              <div>
+                <div class="step-title">pkg/recommendation_engine.py</div>
+                <div class="step-text">研究面、新闻、技术、持仓反馈、风险五维评分。</div>
+              </div>
+              <span class="tag violet">评分</span>
+            </div>
+            <div class="step">
+              <div class="step-num">C</div>
+              <div>
+                <div class="step-title">industry_chain / sector_forecast</div>
+                <div class="step-text">分析产业链位置、国产替代、板块轮动和短中期窗口。</div>
+              </div>
+              <span class="tag ok">数据</span>
+            </div>
+            <div class="step">
+              <div class="step-num">M</div>
+              <div>
+                <div class="step-title">mcp_server.py</div>
+                <div class="step-text">把股票研究、持仓导入、技术分析、产业链分析暴露为可调用工具。</div>
+              </div>
+              <span class="tag info">集成</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">投研数据区</div>
+            <div class="panel-note">调整模拟数据，观察评分、结论和风险如何变化</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="section" style="border-top:0;margin-top:0;padding-top:0;">
+            <div class="section-title">标的画像</div>
+            <div id="profileBox"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">近 12 期走势</div>
+            <div class="mini-chart" id="priceChart"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">核心变量</div>
+            <div class="data-grid">
+              <div class="field span-2">
+                <label>技术面强度</label>
+                <div class="slider-row">
+                  <input id="technical" type="range" min="0" max="100" value="62">
+                  <input id="technicalValue" type="number" min="0" max="100">
+                </div>
+              </div>
+              <div class="field span-2">
+                <label>新闻舆情强度</label>
+                <div class="slider-row">
+                  <input id="sentiment" type="range" min="0" max="100" value="58">
+                  <input id="sentimentValue" type="number" min="0" max="100">
+                </div>
+              </div>
+              <div class="field span-2">
+                <label>估值安全边际</label>
+                <div class="slider-row">
+                  <input id="valuation" type="range" min="0" max="100" value="54">
+                  <input id="valuationValue" type="number" min="0" max="100">
+                </div>
+              </div>
+              <div class="field span-2">
+                <label>产业链景气度</label>
+                <div class="slider-row">
+                  <input id="chain" type="range" min="0" max="100" value="66">
+                  <input id="chainValue" type="number" min="0" max="100">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">风险信号开关</div>
+            <div class="toggle-list">
+              <label class="toggle">
+                <input type="checkbox" id="policyRisk">
+                <span>政策或监管扰动<small>行业监管、补贴退坡、采购政策变化等。</small></span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="supplyRisk">
+                <span>上游供给紧张<small>关键原材料、芯片、算力、能源价格波动。</small></span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="valuationRisk">
+                <span>估值处于高分位<small>PE/PB 分位偏高，安全边际不足。</small></span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="eventCatalyst">
+                <span>存在短期催化<small>订单、政策、业绩预告、产品发布或资金流入。</small></span>
+              </label>
+              <label class="toggle">
+                <input type="checkbox" id="holderDivergence">
+                <span>持仓反馈分歧<small>股吧/雪球讨论分歧较大，波动可能放大。</small></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">一键情景</div>
+            <div class="scenario-buttons">
+              <button class="scenario" data-preset="bull">
+                <strong>业绩与板块共振</strong>
+                <span>技术、舆情、产业链景气同步改善，观察评级上修。</span>
+              </button>
+              <button class="scenario" data-preset="expensive">
+                <strong>估值过热</strong>
+                <span>短期热度较高但估值安全边际下降。</span>
+              </button>
+              <button class="scenario" data-preset="chainRisk">
+                <strong>产业链扰动</strong>
+                <span>上游供给紧张、政策扰动叠加。</span>
+              </button>
+              <button class="scenario" data-preset="defensive">
+                <strong>防御观察</strong>
+                <span>风险降低但上涨动能不足，适合观察类结论。</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="fileModal" role="dialog" aria-modal="true" aria-labelledby="fileModalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title" id="fileModalTitle">文件内容</div>
+        <button class="btn secondary" id="closeModalBtn">关闭</button>
+      </div>
+      <div class="modal-body">
+        <pre id="fileModalContent"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const skillMdFallback = `---
+name: ai-stock-researcher
+description: |
+  AI股票研究员 — A股智能投研工具，数据来源：东方财富/腾讯财经/雪球，国内网络直接可用。
+  核心能力：Web UI 交互仪表盘、TradingAgents多智能体分析（7位AI分析师）、三维评分预测、短/中/长期研报、量化Alpha信号、板块轮动分析、产业链分析。
+  内置巴菲特/格雷厄姆/彼得林奇投资范式，支持全市场股票筛选、持仓导入（截图OCR/PPT/Word/PDF）、PPT/PDF报告导出。
+  MCP Server 集成，可直接调用股票研究/持仓导入/技术分析/产业链分析功能。
+  触发词：股票研究、个股报告、技术分析、投资价值、短期/中期/长期预测、股票跟踪、指数分析、板块轮动、情绪分析、PPT报告、量化信号、导入持仓、导出Excel、产业链分析、国产替代、上下游分析、启动Web、Web界面
+---`;
+
+    const readmeFallback = `# AI股票研究员
+
+专业股票分析 | 三维预测 | 投资大师范式 | 短中长报告 | 股票跟踪 | 指数板块
+
+本演示页只展示售前交互链路；真实 Skill 包包含 SKILL.md、README.md、mcp_server.py、scripts/、pkg/ 和 templates/ 等文件。`;
+
+    const demoGuideContent = `# AI股票投研工作台演示说明
+
+## 这个 Demo 要说明什么
+
+这个页面的重点不是证明 AI 能直接替代投研判断，而是说明一件事：投研工作可以被 Skill 化。
+
+具体来说，它把一次投研分析拆成几个可观察的环节：自然语言输入、任务路由、数据准备、技术分析、舆情研究、产业链分析、多维评分、报告生成。客户看到的不是一个静态报告，而是一个可以解释、可以调参、可以复核的投研过程。
+
+内部演示时要讲清楚两层关系：
+
+- 真实资产层：SKILL.md、README.md、mcp_server.py、scripts/、pkg/ 来自真实 ai-stock-researcher Skill 包。
+- 演示体验层：本页面使用脱敏模拟行情和舆情数据，把真实 Skill 的工作链路可视化，保证售前现场稳定。
+
+这句话可以作为开场：
+
+“这个 Demo 模拟的是投研人员使用 AI 股票研究员 Skill 的过程。左侧是业务人员真实输入，中间是平台怎么识别任务、调用 Skill、跑分析链路，右侧是影响投研结论的数据变量。”
+
+## 建议演示路径
+
+1. 先讲三栏结构。
+
+左侧是投研员工作区，模拟真实业务输入和最终输出。中间是后台 Skill 执行链路，用来证明系统不是简单拼接文本，而是经过路由、数据、评分、产业链和报告生成。右侧是投研数据区，用来展示不同数据变化如何影响结论。
+
+2. 跑一次基准分析。
+
+保持默认标的“浪潮信息”，研究周期选择“中期：20-60 个交易日”，点击“生成投研摘要”。
+
+讲解重点不要只放在左侧报告，而要引导客户看中间链路：系统先识别这是股票投研任务，再路由到 ai-stock-researcher，然后依次完成数据准备、技术分析、舆情研究、产业链分析、多维评分和报告生成。
+
+3. 打开 SKILL.md。
+
+点击“查看 SKILL.md”时，可以说明：这个页面不是孤立的 HTML 演示，而是挂在真实 Skill 包上的售前入口。SKILL.md 定义了触发词、能力范围、边界和可调用能力，页面只是把这些能力组织成客户能看懂的演示过程。
+
+## 右侧变量如何影响结果
+
+推荐优先使用“一键情景”，不要一开始就逐个拖动滑块。情景更利于客户理解因果关系。
+
+### 业绩与板块共振
+
+这个情景模拟技术面、新闻舆情、产业链景气度同步改善，并且存在短期催化。
+
+重新生成后，综合评分会提高，结论会更积极，核心结论里会强调短期催化、板块共振和趋势改善。
+
+这一步适合说明：Skill 会把多个正向信号合并判断，而不是只看单一指标。
+
+### 估值过热
+
+这个情景模拟市场热度较高，但估值安全边际下降，同时存在估值高分位和持仓反馈分歧。
+
+重新生成后，系统不会简单因为技术面和舆情好就给出强乐观结论，而会提示估值回撤、交易拥挤和波动风险。
+
+这一步适合说明：一个合格的金融 Skill 不能只会唱多，必须能处理克制和边界。
+
+### 产业链扰动
+
+这个情景模拟政策扰动和上游供给紧张。
+
+重新生成后，产业链景气度和风险约束会拖累综合评分，报告里的产业链关注点和风险提示也会变化。
+
+这一步适合说明：投研结论不是只由个股价格决定，产业链位置、供需扰动和政策环境会进入判断过程。
+
+### 防御观察
+
+这个情景模拟风险较少，但上涨动能也不足。
+
+重新生成后，结论通常不会激进，更偏持有、观察或等待催化。
+
+这一步适合说明：Skill 可以输出“不急于行动”的结论，这在真实投研和客户交流里很重要。
+
+## 单个变量的解释口径
+
+- 技术面强度提高：更容易改善短中期评分，报告会强调趋势和动能。
+- 新闻舆情强度提高：会改善市场关注度和情绪判断，但不会自动变成买入结论。
+- 估值安全边际提高：更有利于中长期判断，能解释为什么不能只看短期涨跌。
+- 产业链景气度提高：会强化行业逻辑、板块轮动和国产替代等判断。
+- 政策或监管扰动打开：会扣分，并在风险提示中出现政策风险。
+- 上游供给紧张打开：会影响产业链判断，提示成本、交付和利润率风险。
+- 估值处于高分位打开：会明显压制最终结论，避免演示显得只会乐观。
+- 存在短期催化打开：会给短期评分加分，但不是决定性因素。
+- 持仓反馈分歧打开：会提示波动和情绪分歧，结论会更谨慎。
+
+## 必须守住的边界
+
+这版 Demo 不直接访问东方财富、腾讯财经、雪球，也不实时调用同事 Python 脚本。这样设计是为了售前稳定，避免现场受网络、接口、登录 Cookie、依赖包和模型 Key 影响。
+
+对客户可以表达为：
+
+“当前页面使用脱敏模拟数据来演示链路。真实部署时，可以接入客户授权的数据源、投研库、行情系统和内部研究材料。”
+
+不要把页面中的 Buy、Hold、Reduce 当成真实投资建议来讲。它们只是演示评级标签，用来说明数据变化如何影响投研结论。正式场景下，输出必须进入投研人员复核流程。
+
+## 收口话术
+
+“这个 Demo 想展示的不是 AI 替代投研人员下结论，而是把投研过程 Skill 化：输入标准化、链路可解释、数据变化可追踪、报告输出可复核。后续如果接入真实行情、研报、新闻、持仓和客户自己的投研数据库，这个页面就可以从演示版升级成真实投研工作台。”`;
+
+    const stocks = [
+      {
+        code: "000977",
+        name: "浪潮信息",
+        industry: "计算机 / AI算力",
+        chainNode: "服务器整机与算力基础设施",
+        price: 42.8,
+        pe: 32,
+        pb: 3.6,
+        marketCap: "约 630 亿元",
+        periodPrices: [35, 36, 35.5, 37.2, 38.1, 39.6, 38.8, 40.2, 41.8, 42.1, 41.5, 42.8],
+        technical: 62,
+        sentiment: 58,
+        valuation: 54,
+        chain: 66,
+        policyRisk: false,
+        supplyRisk: true,
+        valuationRisk: false,
+        eventCatalyst: true,
+        holderDivergence: true,
+        facts: ["AI算力需求仍是中期主线。", "服务器整机处于产业链中游，受上游芯片供给和下游资本开支影响。", "板块热度较高，短期波动可能放大。"]
+      },
+      {
+        code: "300750",
+        name: "宁德时代",
+        industry: "电力设备 / 锂电",
+        chainNode: "动力电池核心制造",
+        price: 211.4,
+        pe: 24,
+        pb: 4.8,
+        marketCap: "约 9300 亿元",
+        periodPrices: [198, 201, 207, 204, 206, 210, 208, 213, 216, 214, 209, 211.4],
+        technical: 56,
+        sentiment: 52,
+        valuation: 48,
+        chain: 59,
+        policyRisk: false,
+        supplyRisk: false,
+        valuationRisk: true,
+        eventCatalyst: false,
+        holderDivergence: true,
+        facts: ["全球动力电池龙头，受新能源车销量和储能需求影响。", "产业链议价能力较强，但竞争和价格压力仍需关注。", "市场对盈利韧性与海外业务进展较敏感。"]
+      },
+      {
+        code: "600519",
+        name: "贵州茅台",
+        industry: "食品饮料 / 白酒",
+        chainNode: "高端白酒品牌与渠道",
+        price: 1568.0,
+        pe: 25,
+        pb: 8.1,
+        marketCap: "约 1.97 万亿元",
+        periodPrices: [1510, 1535, 1542, 1528, 1558, 1572, 1565, 1586, 1591, 1575, 1560, 1568],
+        technical: 51,
+        sentiment: 50,
+        valuation: 61,
+        chain: 54,
+        policyRisk: false,
+        supplyRisk: false,
+        valuationRisk: false,
+        eventCatalyst: false,
+        holderDivergence: false,
+        facts: ["高端白酒基本盘稳定，现金流质量较强。", "消费复苏节奏和批价稳定性是短中期关键。", "更适合作为防御和长期质量资产观察。"]
+      },
+      {
+        code: "688981",
+        name: "中芯国际",
+        industry: "电子 / 半导体制造",
+        chainNode: "晶圆制造与国产替代",
+        price: 68.2,
+        pe: 76,
+        pb: 4.2,
+        marketCap: "约 5400 亿元",
+        periodPrices: [55, 57, 58.5, 61, 63, 62, 65.5, 67, 70, 69.2, 66.8, 68.2],
+        technical: 68,
+        sentiment: 64,
+        valuation: 36,
+        chain: 72,
+        policyRisk: true,
+        supplyRisk: true,
+        valuationRisk: true,
+        eventCatalyst: true,
+        holderDivergence: true,
+        facts: ["国产替代主线明确，产业链战略价值较高。", "设备、材料和先进制程约束仍是中长期变量。", "估值对政策、订单和技术进展高度敏感。"]
+      }
+    ];
+
+    let baseCase = structuredClone(stocks[0]);
+    let currentCase = structuredClone(baseCase);
+    let lastReport = "";
+    let lastResult = null;
+    let hasRun = false;
+    let running = false;
+    let logLines = [];
+
+    const els = {
+      stockSelect: document.getElementById("stockSelect"),
+      periodSelect: document.getElementById("periodSelect"),
+      promptInput: document.getElementById("promptInput"),
+      runBtn: document.getElementById("runBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      copyBtn: document.getElementById("copyBtn"),
+      viewSkillBtn: document.getElementById("viewSkillBtn"),
+      viewReadmeBtn: document.getElementById("viewReadmeBtn"),
+      viewDemoGuideBtn: document.getElementById("viewDemoGuideBtn"),
+      fileModal: document.getElementById("fileModal"),
+      fileModalTitle: document.getElementById("fileModalTitle"),
+      fileModalContent: document.getElementById("fileModalContent"),
+      closeModalBtn: document.getElementById("closeModalBtn"),
+      copyStatus: document.getElementById("copyStatus"),
+      levelText: document.getElementById("levelText"),
+      scoreText: document.getElementById("scoreText"),
+      summaryTitle: document.getElementById("summaryTitle"),
+      summaryText: document.getElementById("summaryText"),
+      insightList: document.getElementById("insightList"),
+      chainList: document.getElementById("chainList"),
+      riskList: document.getElementById("riskList"),
+      routerPipeline: document.getElementById("routerPipeline"),
+      skillPipeline: document.getElementById("skillPipeline"),
+      causeTrace: document.getElementById("causeTrace"),
+      scoreBreakdown: document.getElementById("scoreBreakdown"),
+      runStatus: document.getElementById("runStatus"),
+      logBox: document.getElementById("logBox"),
+      profileBox: document.getElementById("profileBox"),
+      priceChart: document.getElementById("priceChart"),
+      technical: document.getElementById("technical"),
+      technicalValue: document.getElementById("technicalValue"),
+      sentiment: document.getElementById("sentiment"),
+      sentimentValue: document.getElementById("sentimentValue"),
+      valuation: document.getElementById("valuation"),
+      valuationValue: document.getElementById("valuationValue"),
+      chain: document.getElementById("chain"),
+      chainValue: document.getElementById("chainValue"),
+      policyRisk: document.getElementById("policyRisk"),
+      supplyRisk: document.getElementById("supplyRisk"),
+      valuationRisk: document.getElementById("valuationRisk"),
+      eventCatalyst: document.getElementById("eventCatalyst"),
+      holderDivergence: document.getElementById("holderDivergence")
+    };
+
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    function clamp(value, min = 0, max = 100) {
+      return Math.max(min, Math.min(max, Number(value) || 0));
+    }
+
+    function ratingForScore(score) {
+      if (score >= 82) return { label: "Buy", className: "buy", cn: "积极关注" };
+      if (score >= 70) return { label: "Accumulate", className: "accumulate", cn: "可逢低配置" };
+      if (score >= 55) return { label: "Hold", className: "hold", cn: "持有/观察" };
+      if (score >= 40) return { label: "Cautious", className: "cautious", cn: "谨慎观察" };
+      return { label: "Reduce", className: "reduce", cn: "降低暴露" };
+    }
+
+    function syncControlsFromCase() {
+      els.technical.value = currentCase.technical;
+      els.technicalValue.value = currentCase.technical;
+      els.sentiment.value = currentCase.sentiment;
+      els.sentimentValue.value = currentCase.sentiment;
+      els.valuation.value = currentCase.valuation;
+      els.valuationValue.value = currentCase.valuation;
+      els.chain.value = currentCase.chain;
+      els.chainValue.value = currentCase.chain;
+      els.policyRisk.checked = Boolean(currentCase.policyRisk);
+      els.supplyRisk.checked = Boolean(currentCase.supplyRisk);
+      els.valuationRisk.checked = Boolean(currentCase.valuationRisk);
+      els.eventCatalyst.checked = Boolean(currentCase.eventCatalyst);
+      els.holderDivergence.checked = Boolean(currentCase.holderDivergence);
+    }
+
+    function syncCaseFromControls() {
+      currentCase.technical = clamp(els.technical.value);
+      currentCase.sentiment = clamp(els.sentiment.value);
+      currentCase.valuation = clamp(els.valuation.value);
+      currentCase.chain = clamp(els.chain.value);
+      currentCase.policyRisk = els.policyRisk.checked;
+      currentCase.supplyRisk = els.supplyRisk.checked;
+      currentCase.valuationRisk = els.valuationRisk.checked;
+      currentCase.eventCatalyst = els.eventCatalyst.checked;
+      currentCase.holderDivergence = els.holderDivergence.checked;
+    }
+
+    function evaluate(c) {
+      const components = [
+        { key: "research", name: "研究面", score: Math.round((c.valuation * 0.45) + (c.chain * 0.35) + (c.sentiment * 0.2)), weight: 0.30, source: "pkg/research_cn.py / 研报与行业信息" },
+        { key: "news", name: "新闻舆情", score: c.sentiment, weight: 0.20, source: "pkg/news_analyzer.py / 东方财富、同花顺、雪球" },
+        { key: "technical", name: "技术面", score: c.technical, weight: 0.20, source: "scripts/stock_researcher/core/technical.py / MA、MACD、RSI" },
+        { key: "holder", name: "持仓反馈", score: c.holderDivergence ? Math.max(35, c.sentiment - 12) : Math.min(100, c.sentiment + 6), weight: 0.15, source: "pkg/portfolio_tracker.py / 持仓与讨论反馈" },
+        { key: "risk", name: "风险约束", score: Math.max(0, 100 - riskPenalty(c) * 4), weight: 0.15, source: "pkg/recommendation_engine.py / Risk 维度" }
+      ];
+      let weighted = components.reduce((sum, item) => sum + item.score * item.weight, 0);
+      const adjustments = [];
+      if (c.eventCatalyst) {
+        weighted += 4;
+        adjustments.push({ name: "短期催化", effect: "+4", basis: "订单、政策、业绩预告或资金流入形成事件驱动。" });
+      }
+      if (c.policyRisk) {
+        weighted -= 5;
+        adjustments.push({ name: "政策扰动", effect: "-5", basis: "行业政策、监管或补贴变化需要折价处理。" });
+      }
+      if (c.supplyRisk) {
+        weighted -= 4;
+        adjustments.push({ name: "供应链扰动", effect: "-4", basis: "上游供给或关键材料约束影响产业链兑现节奏。" });
+      }
+      if (c.valuationRisk) {
+        weighted -= 7;
+        adjustments.push({ name: "估值高分位", effect: "-7", basis: "估值处于较高分位时降低安全边际。" });
+      }
+      if (c.holderDivergence) {
+        weighted -= 3;
+        adjustments.push({ name: "持仓反馈分歧", effect: "-3", basis: "讨论热度高但方向分歧，短期波动可能放大。" });
+      }
+      const score = Math.round(clamp(weighted));
+      const rating = ratingForScore(score);
+      return { score, rating, components, adjustments };
+    }
+
+    function riskPenalty(c) {
+      return (c.policyRisk ? 7 : 0) + (c.supplyRisk ? 6 : 0) + (c.valuationRisk ? 8 : 0) + (c.holderDivergence ? 4 : 0);
+    }
+
+    function insightsFor(c, result) {
+      const list = [];
+      list.push([result.rating.cn, `综合评分 ${result.score}/100，当前更适合定位为“${result.rating.cn}”。该判断来自研究面、新闻、技术、持仓反馈和风险约束五维加权。`]);
+      if (c.technical >= 65) list.push(["技术面偏强", "均线与动量指标处于偏强区间，短期交易热度较高。"]);
+      else if (c.technical <= 45) list.push(["技术面偏弱", "价格动能不足，需等待放量或均线修复。"]);
+      else list.push(["技术面中性", "短期走势未形成明确方向，建议结合行业催化观察。"]);
+      if (c.sentiment >= 65) list.push(["舆情偏正向", "新闻与投资者讨论情绪改善，可作为短期催化来源。"]);
+      if (c.valuation <= 45 || c.valuationRisk) list.push(["安全边际不足", "估值分位偏高或盈利预期消化较充分，向上空间需要业绩继续验证。"]);
+      if (c.eventCatalyst) list.push(["短期催化存在", "近期订单、政策、业绩或资金流入可能驱动短线关注度。"]);
+      return list;
+    }
+
+    function chainPointsFor(c) {
+      const list = [
+        ["产业链位置", `${c.name} 所处位置：${c.chainNode}。`],
+        ["景气度判断", c.chain >= 65 ? "产业链景气度偏强，可关注上游供给、下游资本开支和订单兑现。" : c.chain >= 50 ? "产业链景气度中性，需观察需求侧是否持续改善。" : "产业链景气度偏弱，短期更适合等待基本面信号。"]
+      ];
+      if (c.supplyRisk) list.push(["上游扰动", "关键原材料、芯片、能源或算力资源扰动会影响利润率和交付节奏。"]);
+      if (/半导体|AI|计算机|电子/.test(c.industry)) list.push(["国产替代", "国产替代进程是中长期叙事，但也会放大政策、技术和估值弹性。"]);
+      if (/白酒|食品/.test(c.industry)) list.push(["渠道与库存", "关注批价、渠道库存、动销和消费复苏节奏。"]);
+      return list;
+    }
+
+    function risksFor(c) {
+      const list = [];
+      if (c.policyRisk) list.push(["政策或监管扰动", "政策调整可能影响行业估值中枢和订单节奏。"]);
+      if (c.supplyRisk) list.push(["供应链风险", "上游供给紧张或价格波动可能压缩盈利弹性。"]);
+      if (c.valuationRisk) list.push(["估值回撤风险", "估值较高时，业绩不及预期容易触发波动。"]);
+      if (c.holderDivergence) list.push(["情绪波动风险", "持仓反馈分歧较大，短线交易拥挤度可能上升。"]);
+      if (!list.length) list.push(["常规风险", "仍需关注业绩兑现、行业景气、流动性和市场整体风险偏好变化。"]);
+      list.push(["合规边界", "本演示不输出确定性买卖指令，不承诺收益，结论需投研人员复核。"]);
+      return list;
+    }
+
+    function renderItems(container, items) {
+      container.innerHTML = items.map(item => `
+        <div class="item">
+          <strong>${item[0]}</strong>
+          <span>${item[1]}</span>
+        </div>`).join("");
+    }
+
+    function renderResult(result) {
+      syncCaseFromControls();
+      els.levelText.textContent = result.rating.label;
+      els.levelText.className = `level ${result.rating.className}`;
+      els.scoreText.textContent = `综合分 ${result.score}/100`;
+      els.summaryTitle.textContent = `${currentCase.name}（${currentCase.code}）｜${currentCase.industry}`;
+      els.summaryText.textContent = `基于模拟行情、新闻舆情、估值、技术面和产业链数据，当前结论为“${result.rating.cn}”。此结果用于投研辅助和演示，不构成投资建议。`;
+      renderItems(els.insightList, insightsFor(currentCase, result));
+      renderItems(els.chainList, chainPointsFor(currentCase));
+      renderItems(els.riskList, risksFor(currentCase));
+      renderExecutionTrace(result, 7);
+      renderProfile();
+      lastReport = buildReport(result);
+    }
+
+    function renderPlaceholder(message = "等待发起 Skill 分析。") {
+      els.levelText.textContent = "--";
+      els.levelText.className = "level hold";
+      els.scoreText.textContent = "尚未计算";
+      els.summaryTitle.textContent = `${currentCase.name}（${currentCase.code}）｜${currentCase.industry}`;
+      els.summaryText.textContent = message;
+      els.insightList.innerHTML = `<div class="empty">点击“生成投研摘要”后，Skill 将输出研究结论。</div>`;
+      els.chainList.innerHTML = `<div class="empty">执行完成后展示产业链位置和关注点。</div>`;
+      els.riskList.innerHTML = `<div class="empty">执行完成后展示风险提示和合规边界。</div>`;
+      lastReport = "";
+      renderExecutionTrace(null, 0);
+      renderProfile();
+    }
+
+    function routeSteps() {
+      const prompt = els.promptInput.value;
+      const routeHit = /股票|个股|投研|技术|投资|报告|产业链|板块|持仓|估值/.test(prompt);
+      return [
+        ["意图识别", routeHit ? "识别为股票投研与报告生成任务。" : "当前输入未明显命中投研场景。", routeHit ? "ok" : "warn"],
+        ["Router 路由", routeHit ? "命中 ai-stock-researcher Skill。" : "建议补充股票、投研、产业链、报告等关键词。", routeHit ? "info" : "warn"],
+        ["加载 Skill 包", "加载 SKILL.md、README.md、pkg/、scripts/ 与 MCP Server 能力描述。", "info"]
+      ];
+    }
+
+    function skillSteps(result) {
+      return [
+        ["SKILL.md 触发", "根据触发词进入股票研究、个股报告、技术分析、产业链分析路径。", "ok"],
+        ["数据准备", "读取模拟行情，真实包可对接东方财富、腾讯财经、雪球等数据源。", "ok"],
+        ["技术分析", "计算 MA、MACD、RSI、布林带等指标并形成技术面评分。", "ok"],
+        ["舆情与研究", "聚合新闻、讨论、研究信息，形成新闻情绪与研究面评分。", "ok"],
+        ["产业链分析", "识别上中下游位置、国产替代、供需扰动和板块轮动。", result && currentCase.supplyRisk ? "warn" : "ok"],
+        ["多维评分", result ? `五维加权后得到 ${result.score}/100，对应 ${result.rating.label}。` : "调用 recommendation_engine.py 的五维评分口径。", result ? (result.score >= 70 ? "ok" : result.score < 45 ? "danger" : "warn") : "pending"],
+        ["报告生成", "输出投研摘要、产业链关注点、风险提示和合规边界。", "ok"]
+      ];
+    }
+
+    function renderStepList(container, steps, activeCount = 0, runningIndex = -1) {
+      container.innerHTML = steps.map((s, i) => {
+        const done = i < activeCount;
+        const isRunning = i === runningIndex;
+        const cls = isRunning ? "running" : done ? "" : "pending";
+        const tagClass = isRunning ? "info" : done ? s[2] : "pending";
+        const tagText = isRunning ? "执行中" : done ? (s[2] === "ok" ? "完成" : s[2] === "warn" ? "关注" : s[2] === "danger" ? "风险" : "执行") : "等待";
+        return `
+        <div class="step ${cls}">
+          <div class="step-num">${i + 1}</div>
+          <div>
+            <div class="step-title">${s[0]}</div>
+            <div class="step-text">${s[1]}</div>
+          </div>
+          <span class="tag ${tagClass}">${tagText}</span>
+        </div>`;
+      }).join("");
+    }
+
+    function renderScoreTrace(result) {
+      if (!result) {
+        els.causeTrace.innerHTML = `<div class="trace-card"><strong>等待调用</strong><span>执行到评分阶段后，将展示 ai-stock-researcher 的五维评分因果链。</span></div>`;
+        els.scoreBreakdown.innerHTML = "";
+        return;
+      }
+      els.causeTrace.innerHTML = `
+        <div class="trace-card">
+          <strong>调用因果链</strong>
+          <span>SKILL.md 触发投研任务 → 数据准备 → 技术/新闻/研究/持仓/风险评分 → 产业链校正 → 输出 ${result.score}/100 和“${result.rating.cn}”。</span>
+        </div>`;
+      const componentRows = result.components.map(item => `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.source}</td>
+          <td>${item.score}</td>
+          <td>${Math.round(item.weight * 100)}%</td>
+        </tr>`).join("");
+      const adjustmentRows = result.adjustments.map(item => `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.basis}</td>
+          <td>${item.effect}</td>
+          <td>校正</td>
+        </tr>`).join("");
+      els.scoreBreakdown.innerHTML = `
+        <table class="score-table">
+          <thead><tr><th>维度</th><th>依据</th><th>分值</th><th>权重</th></tr></thead>
+          <tbody>${componentRows}${adjustmentRows}</tbody>
+        </table>`;
+    }
+
+    function renderExecutionTrace(result, activeCount) {
+      renderStepList(els.routerPipeline, routeSteps(), result ? 3 : Math.min(activeCount, 1));
+      renderStepList(els.skillPipeline, skillSteps(result), result ? 7 : 0);
+      renderScoreTrace(result);
+      renderLogs(result);
+    }
+
+    function renderLogs(result) {
+      if (!logLines.length) {
+        logLines = [
+          ["09:30", "Skill 包已加载：SKILL.md、README.md、mcp_server.py。"],
+          ["09:31", "等待投研员输入研究任务。"]
+        ];
+      }
+      if (result) {
+        logLines = [
+          ["09:30", `收到任务：${currentCase.code} ${currentCase.name} ${els.periodSelect.options[els.periodSelect.selectedIndex].text}`],
+          ["09:30", "Router 命中 ai-stock-researcher。"],
+          ["09:31", "调用技术面、舆情、研究面、产业链与风险评分模块。"],
+          ["09:31", `综合评分 ${result.score}/100，输出 ${result.rating.label}。`],
+          ["09:32", "生成投研摘要，并附带合规边界。"]
+        ];
+      }
+      els.logBox.innerHTML = logLines.map(line => `<div class="log-line"><span class="log-time">${line[0]}</span><span>${line[1]}</span></div>`).join("");
+    }
+
+    function renderProfile() {
+      els.profileBox.innerHTML = `
+        <div class="kv"><b>股票代码</b><span>${currentCase.code}</span></div>
+        <div class="kv"><b>标的名称</b><span>${currentCase.name}</span></div>
+        <div class="kv"><b>所属行业</b><span>${currentCase.industry}</span></div>
+        <div class="kv"><b>产业链位置</b><span>${currentCase.chainNode}</span></div>
+        <div class="kv"><b>模拟价格</b><span>${currentCase.price.toFixed(2)}</span></div>
+        <div class="kv"><b>PE / PB</b><span>${currentCase.pe} / ${currentCase.pb}</span></div>
+        <div class="kv"><b>市值</b><span>${currentCase.marketCap}</span></div>
+        <div class="item" style="margin-top:8px;"><strong>样例事实</strong><span>${currentCase.facts.join(" ")}</span></div>
+      `;
+      renderChart();
+    }
+
+    function renderChart() {
+      const prices = currentCase.periodPrices || [];
+      const max = Math.max(...prices);
+      const min = Math.min(...prices);
+      const range = Math.max(1, max - min);
+      els.priceChart.innerHTML = prices.map((price, index) => {
+        const height = 18 + ((price - min) / range) * 70;
+        const color = index && price >= prices[index - 1] ? "#0f766e" : "#b45309";
+        return `<span title="${price}" style="height:${height}px;background:${color};"></span>`;
+      }).join("");
+    }
+
+    function buildReport(result) {
+      const insights = insightsFor(currentCase, result).map(item => `- ${item[0]}：${item[1]}`).join("\n");
+      const chains = chainPointsFor(currentCase).map(item => `- ${item[0]}：${item[1]}`).join("\n");
+      const risks = risksFor(currentCase).map(item => `- ${item[0]}：${item[1]}`).join("\n");
+      return `# ${currentCase.name}（${currentCase.code}）投研摘要
+
+## 结论
+${result.rating.cn}，综合评分 ${result.score}/100。该结论为投研辅助，不构成投资建议。
+
+## 核心结论
+${insights}
+
+## 产业链关注点
+${chains}
+
+## 风险提示
+${risks}`;
+    }
+
+    async function runAnalysis() {
+      if (running) return;
+      running = true;
+      els.runBtn.disabled = true;
+      els.runStatus.className = "run-status running";
+      els.runStatus.textContent = "正在执行 ai-stock-researcher Skill...";
+      renderStepList(els.routerPipeline, routeSteps(), 0, 0);
+      renderStepList(els.skillPipeline, skillSteps(null), 0, -1);
+      await sleep(260);
+      renderStepList(els.routerPipeline, routeSteps(), 1, 1);
+      await sleep(260);
+      renderStepList(els.routerPipeline, routeSteps(), 2, 2);
+      await sleep(260);
+      renderStepList(els.routerPipeline, routeSteps(), 3, -1);
+      const steps = skillSteps(null);
+      for (let i = 0; i < steps.length; i += 1) {
+        renderStepList(els.skillPipeline, steps, i, i);
+        await sleep(180);
+      }
+      syncCaseFromControls();
+      const result = evaluate(currentCase);
+      lastResult = result;
+      hasRun = true;
+      renderResult(result);
+      els.runStatus.className = "run-status";
+      els.runStatus.textContent = "分析完成。可调整右侧数据再次生成。";
+      els.runBtn.disabled = false;
+      running = false;
+    }
+
+    function markDirty() {
+      if (running) return;
+      syncCaseFromControls();
+      hasRun = false;
+      els.runStatus.className = "run-status dirty";
+      els.runStatus.textContent = "数据已变化，点击生成投研摘要后重新计算。";
+      renderPlaceholder("数据已变化，等待重新执行 Skill。");
+    }
+
+    function resetCurrentCase() {
+      currentCase = structuredClone(baseCase);
+      syncControlsFromCase();
+      hasRun = false;
+      els.runStatus.className = "run-status dirty";
+      els.runStatus.textContent = "资料已恢复，等待发起 Skill 分析。";
+      renderPlaceholder("资料已恢复，等待发起 Skill 分析。");
+    }
+
+    function loadStock(id) {
+      const selected = stocks.find(item => item.code === id) || stocks[0];
+      baseCase = structuredClone(selected);
+      currentCase = structuredClone(selected);
+      syncControlsFromCase();
+      renderPlaceholder("已切换研究标的，等待发起 Skill 分析。");
+      els.runStatus.className = "run-status dirty";
+      els.runStatus.textContent = "研究标的已切换，等待发起 Skill 分析。";
+    }
+
+    function applyPreset(name) {
+      if (name === "bull") {
+        currentCase.technical = 78;
+        currentCase.sentiment = 74;
+        currentCase.valuation = 66;
+        currentCase.chain = 80;
+        currentCase.policyRisk = false;
+        currentCase.supplyRisk = false;
+        currentCase.valuationRisk = false;
+        currentCase.eventCatalyst = true;
+        currentCase.holderDivergence = false;
+      }
+      if (name === "expensive") {
+        currentCase.technical = 76;
+        currentCase.sentiment = 70;
+        currentCase.valuation = 34;
+        currentCase.chain = 68;
+        currentCase.policyRisk = false;
+        currentCase.supplyRisk = false;
+        currentCase.valuationRisk = true;
+        currentCase.eventCatalyst = true;
+        currentCase.holderDivergence = true;
+      }
+      if (name === "chainRisk") {
+        currentCase.technical = 48;
+        currentCase.sentiment = 42;
+        currentCase.valuation = 50;
+        currentCase.chain = 38;
+        currentCase.policyRisk = true;
+        currentCase.supplyRisk = true;
+        currentCase.valuationRisk = false;
+        currentCase.eventCatalyst = false;
+        currentCase.holderDivergence = true;
+      }
+      if (name === "defensive") {
+        currentCase.technical = 50;
+        currentCase.sentiment = 52;
+        currentCase.valuation = 68;
+        currentCase.chain = 54;
+        currentCase.policyRisk = false;
+        currentCase.supplyRisk = false;
+        currentCase.valuationRisk = false;
+        currentCase.eventCatalyst = false;
+        currentCase.holderDivergence = false;
+      }
+      syncControlsFromCase();
+      markDirty();
+    }
+
+    async function copyReport() {
+      if (!lastReport) {
+        els.copyStatus.textContent = "请先生成报告。";
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(lastReport);
+        els.copyStatus.textContent = "报告已复制。";
+      } catch (error) {
+        els.copyStatus.textContent = "浏览器限制复制，可手动选中报告内容。";
+      }
+      setTimeout(() => { els.copyStatus.textContent = ""; }, 2200);
+    }
+
+    async function fetchText(path, fallback) {
+      try {
+        const response = await fetch(path, { cache: "no-store" });
+        if (!response.ok) throw new Error("not found");
+        const buffer = await response.arrayBuffer();
+        return new TextDecoder("utf-8").decode(buffer);
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    async function openFileModal(title, path, fallback) {
+      els.fileModalTitle.textContent = title;
+      els.fileModalContent.textContent = "加载中...";
+      els.fileModal.classList.add("open");
+      els.fileModalContent.textContent = await fetchText(path, fallback);
+    }
+
+    function openTextModal(title, content) {
+      els.fileModalTitle.textContent = title;
+      els.fileModalContent.textContent = content;
+      els.fileModal.classList.add("open");
+    }
+
+    function closeFileModal() {
+      els.fileModal.classList.remove("open");
+    }
+
+    function init() {
+      els.stockSelect.innerHTML = stocks.map(item => `<option value="${item.code}">${item.name}（${item.code}）</option>`).join("");
+      syncControlsFromCase();
+      renderPlaceholder("资料已加载，等待发起 Skill 分析。");
+
+      els.stockSelect.addEventListener("change", () => loadStock(els.stockSelect.value));
+      els.periodSelect.addEventListener("change", markDirty);
+      els.runBtn.addEventListener("click", runAnalysis);
+      els.resetBtn.addEventListener("click", resetCurrentCase);
+      els.copyBtn.addEventListener("click", copyReport);
+      els.viewSkillBtn.addEventListener("click", () => openFileModal("SKILL.md", "SKILL.md", skillMdFallback));
+      els.viewReadmeBtn.addEventListener("click", () => openFileModal("README.md", "README.md", readmeFallback));
+      els.viewDemoGuideBtn.addEventListener("click", () => openTextModal("演示说明", demoGuideContent));
+      els.closeModalBtn.addEventListener("click", closeFileModal);
+      els.fileModal.addEventListener("click", (event) => {
+        if (event.target === els.fileModal) closeFileModal();
+      });
+
+      [els.technical, els.sentiment, els.valuation, els.chain].forEach((input) => {
+        input.addEventListener("input", () => {
+          const valueInput = els[input.id + "Value"];
+          valueInput.value = input.value;
+          markDirty();
+        });
+      });
+
+      [els.technicalValue, els.sentimentValue, els.valuationValue, els.chainValue].forEach((input) => {
+        input.addEventListener("input", () => {
+          const range = els[input.id.replace("Value", "")];
+          range.value = clamp(input.value);
+          input.value = range.value;
+          markDirty();
+        });
+      });
+
+      [els.policyRisk, els.supplyRisk, els.valuationRisk, els.eventCatalyst, els.holderDivergence].forEach((input) => {
+        input.addEventListener("change", markDirty);
+      });
+
+      Array.from(document.querySelectorAll("[data-preset]")).forEach((button) => {
+        button.addEventListener("click", () => applyPreset(button.dataset.preset));
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>

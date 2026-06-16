@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-15",
-  "sourceExcel": "/Users/WILL/Documents/Codex/2026-06-02/codex-claude-dumate-gemini-cli/outputs/financial-sa-fde-skill-system/shared-templates/team_skill_register.xlsx",
+  "generatedAt": "2026-06-16",
+  "sourceExcel": "shared-templates/team_skill_register.xlsx",
   "items": [
     {
       "Skill_ID": "dumate-wealth-product-interpretation",
@@ -38,21 +38,21 @@
       "业务子类": "投研",
       "业务环节": "研究分析",
       "能力说明": "解读个股表现、分析产业链情况，并整理形成完整投研分析报告或 PPT。",
-      "Skill分类": "LLM+金融研究报告型 Skill",
-      "关键输入": "个股名称、行业方向、市场数据、研究口径",
-      "关键输出": "个股分析、产业链图谱、行业报告、PPT大纲",
-      "建设状态": "规划",
-      "展示状态": "catalog",
+      "Skill分类": "Agent编排+金融研究报告型 Skill",
+      "关键输入": "股票代码、研究周期、市场行情、新闻舆情、产业链方向、持仓或研究口径",
+      "关键输出": "个股投研摘要、技术分析、产业链关注点、多维评分、风险提示、PPT/PDF报告",
+      "建设状态": "已开发",
+      "展示状态": "demo",
       "作者": "同事/Dumate场景积累",
       "来源平台": "Dumate",
-      "迁移建议": "适合作为客户金融演示场景；底层数据检索和报告生成逻辑需要平台适配。",
-      "Skill文件路径": "",
-      "Demo页面路径": "",
-      "规则/模板路径": "",
-      "样例数据路径": "",
-      "版本": "0.1.0",
+      "迁移建议": "已接收真实 ai-stock-researcher Skill 包；网页侧补同风格售前 Demo，底层实时数据和 MCP 调用可在客户环境按平台适配。",
+      "Skill文件路径": "presales-skill-matrix/ai-stock-researcher/SKILL.md",
+      "Demo页面路径": "presales-skill-matrix/ai-stock-researcher/AI股票投研工作台Demo.html",
+      "规则/模板路径": "presales-skill-matrix/ai-stock-researcher/README.md",
+      "样例数据路径": "presales-skill-matrix/ai-stock-researcher/templates/index.html",
+      "版本": "1.0.11",
       "标签": "投研,个股分析,产业链,报告生成",
-      "备注": "来源：Dumate场景积累-2026.05.29.pdf；PDF 示例包含计算机存储行业产业链分析。"
+      "备注": "来源：Dumate场景积累-2026.05.29.pdf；已对齐同事提供的 aistockresearcher-1.0.11.zip，真实 Skill 包已落入仓库。"
     },
     {
       "Skill_ID": "dumate-daily-global-finance-news",
