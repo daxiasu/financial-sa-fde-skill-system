@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16",
+  "generatedAt": "2026-06-18",
   "sourceExcel": "shared-templates/team_skill_register.xlsx",
   "items": [
     {
@@ -14,19 +14,19 @@
       "能力说明": "面向投顾、理财经理、客户经理，在财富营销和陪伴过程中解读基金、股票、债券等产品，并支持持仓变化和净值走势分析。",
       "Skill分类": "LLM+金融数据分析型 Skill",
       "关键输入": "产品材料、持仓截图、净值数据、客户问题",
-      "关键输出": "产品解读、行业配置变化、净值走势、客户沟通要点",
-      "建设状态": "规划",
-      "展示状态": "catalog",
+      "关键输出": "产品解读、净值归因、风险提示、客户沟通话术",
+      "建设状态": "已制作Demo",
+      "展示状态": "demo",
       "作者": "同事/Dumate场景积累",
       "来源平台": "Dumate",
-      "迁移建议": "保留为平台中立目录项；真实演示可复用 Dumate 能力，网页侧补一个轻量 Demo。",
+      "迁移建议": "已接入同事提供的页面 Demo；暂无真实 SKILL.md 与配套脚本，后续需补 Skill 包后再进入真实文件展示。",
       "Skill文件路径": "",
-      "Demo页面路径": "",
+      "Demo页面路径": "presales-skill-matrix/wealth-product-net-value-analysis/wealth-product-net-value-analysis-demo.html",
       "规则/模板路径": "",
       "样例数据路径": "",
-      "版本": "0.1.0",
-      "标签": "财富管理,投顾,产品解读,金融数据",
-      "备注": "来源：Dumate场景积累-2026.05.29.pdf；仅先登记名称和分类，待补 SKILL.md。"
+      "版本": "0.2.0-demo",
+      "标签": "财富管理,投顾,产品解读,净值走势,客户沟通,Demo",
+      "备注": "2026-06-18 接入同事提供的财富产品解读与净值走势分析页面 Demo；当前仅有 HTML demo 文件，未伪造 Skill 文件包。"
     },
     {
       "Skill_ID": "dumate-equity-industry-research",
