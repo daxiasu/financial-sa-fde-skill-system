@@ -618,6 +618,32 @@
       white-space: pre-line;
     }
 
+    .value-block {
+      border: 1px solid #c7d2fe;
+      border-radius: 8px;
+      background: #f8fbff;
+      padding: 12px;
+    }
+
+    .value-block strong {
+      color: #1d4ed8;
+    }
+
+    .taxonomy-block {
+      border: 1px solid #d9d2ff;
+      border-radius: 8px;
+      background: #fbfaff;
+      padding: 12px;
+    }
+
+    .taxonomy-block strong {
+      color: #5b21b6;
+    }
+
+    .taxonomy-block p {
+      color: #4b5563;
+    }
+
     .package-card {
       border: 1px solid #cfd8e3;
       background: #fff;
@@ -887,6 +913,38 @@
       line-height: 1.5;
     }
 
+    .guide-section {
+      display: grid;
+      gap: 10px;
+    }
+
+    .guide-section h3 {
+      margin: 0;
+      color: #25313d;
+      font-size: 15px;
+    }
+
+    .guide-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .guide-table th,
+    .guide-table td {
+      border: 1px solid #dbe2eb;
+      padding: 8px 9px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .guide-table th {
+      background: #f5f7fb;
+      color: #334155;
+      font-weight: 820;
+    }
+
     .file-modal {
       width: min(920px, calc(100vw - 32px));
       max-height: calc(100vh - 56px);
@@ -1068,8 +1126,44 @@
         <div class="guide-content">
           <div class="guide-flow">
             <div class="guide-node"><strong>页面定位</strong><span>内部共创工具，用于和同事讨论金融场景、实现形态和下一步 FDE 工作，不直接作为客户售前展示页。</span></div>
-            <div class="guide-node"><strong>Agent</strong><span>当用户只给出业务目标、任务需要拆解或跨多个能力调度时使用。</span></div>
-            <div class="guide-node"><strong>Skill</strong><span>当任务边界清晰、输入输出稳定、步骤相对固定时使用。</span></div>
+            <div class="guide-node"><strong>分类原则</strong><span>分类不是标签堆叠，而是四个稳定判断：它服务谁、解决什么业务问题、如何沉淀、主要靠什么机制完成。</span></div>
+            <div class="guide-node"><strong>页面阅读</strong><span>左侧先选客户金融场景或 SA-AI 内化场景；中间用筛选片切换来源、业务、形态、模式、状态和真实性。</span></div>
+            <div class="guide-node"><strong>资产原则</strong><span>页面可以有演示包装，但真实 Skill 文件区只展示仓库里实际存在的 SKILL.md、references、scripts、data 或 demo 文件。</span></div>
+          </div>
+          <div class="guide-section">
+            <h3>分类口径：四个主维度</h3>
+            <table class="guide-table">
+              <thead>
+                <tr><th>维度</th><th>回答的问题</th><th>填写规则</th><th>典型取值</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>场景大类</td><td>它服务谁？</td><td>先分清是客户业务场景，还是 SA 自身提效场景。</td><td>客户金融场景 / SA-AI内化场景</td></tr>
+                <tr><td>业务分类</td><td>它解决哪类业务问题？</td><td>用业务语言，不写技术词；投研、风控、团队管理这类词才是主分类。</td><td>风控、财富管理、投研、团队管理、投标、方案写作、技术评估、资料检索、合规</td></tr>
+                <tr><td>落地形态</td><td>它在 FDE 体系里如何沉淀？</td><td>判断它是一个独立 Skill，还是需要 L1 复用、Agent 编排或专项沉淀。</td><td>独立 Skill、主 Skill + L1、Agent 编排、L1 候选、L3 专项候选</td></tr>
+                <tr><td>实现模式</td><td>主要靠什么机制完成？</td><td>填主导机制；如果真实链路依赖内部接口、MCP、EOP/Dodo 工具，优先看作工具调用型或混合型。</td><td>规则型、LLM生成型、RAG知识检索型、数据分析型、工具调用型、Agent编排型、混合型</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="guide-section">
+            <h3>状态口径：不要把 Demo 当 Skill 包</h3>
+            <table class="guide-table">
+              <thead>
+                <tr><th>维度</th><th>用途</th><th>典型取值</th><th>判断方式</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>建设状态</td><td>说明内容成熟度。</td><td>规划 / 已制作 / 已开发</td><td>看是否已有真实定义、真实文件、可运行或可演示资产。</td></tr>
+                <tr><td>展示状态</td><td>控制页面如何展示。</td><td>catalog / skill / demo</td><td>catalog 是目录项；skill 是已有 Skill 定义；demo 是已有演示页面。</td></tr>
+                <tr><td>交付真实性</td><td>说明仓库里到底有什么。</td><td>目录规划 / 仅Demo / 真实SKILL.md / 真实Skill包 / 真实Skill包+Demo</td><td>按仓库真实文件判断，不能为了页面效果补假 references、scripts 或 tests。</td></tr>
+                <tr><td>Skill分类</td><td>历史兼容字段。</td><td>自由文本</td><td>可保留旧描述，但新增内容优先维护四个主维度。</td></tr>
+                <tr><td>标签</td><td>自由检索词。</td><td>P800、日报、净值、信创等</td><td>只放关键词，不承担主分类职责。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="guide-flow">
+            <div class="guide-node"><strong>客户金融场景</strong><span>面向银行、保险、证券、资管等客户业务，用于售前共创、客户演示和金融行业方案沉淀。</span></div>
+            <div class="guide-node"><strong>SA-AI内化场景</strong><span>面向 SA 自身工作，例如投标、方案、技术评估、团队日报、资料检索和交付复盘。</span></div>
+            <div class="guide-node"><strong>Excel 源数据</strong><span>团队新增 Skill 先填 shared-templates/team_skill_register.xlsx，再生成 data/team_skill_register.json 供页面读取。</span></div>
+            <div class="guide-node"><strong>筛选目的</strong><span>筛选不是为了装饰，而是帮助我们回答：哪些能演示、哪些有真文件、哪些需要迁移、哪些还只是规划。</span></div>
           </div>
         </div>
       </section>
@@ -1104,7 +1198,9 @@
       layer: "全部",
       business: "全部",
       shape: "全部",
+      mode: "全部",
       skillType: "全部",
+      authenticity: "全部",
       query: "",
       selectedSceneId: LEDGER.scenarios[0]?.["场景_ID"] || "",
       selectedL2Id: LEDGER.l2Skills[0]?.["L2_ID"] || ""
@@ -1233,7 +1329,15 @@
       const sourcePlatform = item?.["来源平台"] || "";
       const author = item?.["作者"] || "";
       const note = item?.["备注"] || "";
+      const skillPath = item?.["Skill文件路径"] || "";
       const text = [id, sourcePlatform, author, note].join(" ");
+
+      if (skillPath) {
+        return {
+          label: "同事 Skill包",
+          detail: sourcePlatform || author || "真实 SKILL.md 已登记"
+        };
+      }
 
       if (text.includes("Dumate") || text.includes("Dodo") || id.startsWith("dumate-") || id.includes("TEAM-SCN-dumate-")) {
         return {
@@ -1274,6 +1378,52 @@
         ],
         demoFiles: []
       };
+    }
+
+    const skillValueStatements = {
+      "B-SCN-025": "这个 Skill 的价值在于把客户经理和审批人员走访前最耗时的风险准备工作前置自动化：它不只是生成一段风险摘要，而是把企业画像、财务异常、关联交易和公开风险线索组织成可追问、可复核、可补材料的走访清单。售前演示时，它能很好地说明 FDE 不是泛泛做报告，而是在真实信贷流程里缩短准备时间、提升风险识别一致性，并把专家经验沉淀为可复用规则。",
+      "B-SCN-026": "这个 Skill 的价值在于把贷后监测从“事后人工翻材料”变成持续性的风险变化解释。它围绕存量客户，识别还款、财务、公开风险和关联交易的变化，并输出重点客户名单、风险变化原因和下一步跟进动作。对银行客户来说，它展示的是贷后管理的规模化能力：同样一套 L1 能力可以从授信走访延伸到贷后监测，形成风控闭环。",
+      "TEAM-SCN-dumate-wealth-product-interpretation": "这个 Skill 的价值在于帮助投顾、理财经理和客户经理快速把复杂的基金/财富产品材料转化成客户能理解的产品解读、净值走势解释和沟通话术。它适合售前展示“金融数据 + 大模型表达”的组合能力：左侧是客户问题和产品材料，中间是分析链路，右侧是净值、持仓、同类对比等数据变化，能直观看出不同数据输入会如何影响最终结论。",
+      "TEAM-SCN-dumate-equity-industry-research": "这个 Skill 的价值在于把个股研究、产业链分析、行情数据、新闻舆情和报告生成组织成一个投研工作流，而不是让分析师在多个工具之间手工拼材料。它适合展示 Agent 编排的必要性：单一 Skill 很难完成完整投研判断，需要多个分析角色和数据工具协同，最后形成可读、可追溯、可继续追问的研究报告或 PPT。",
+      "TEAM-SCN-eop-scene-daily-report-analyse": "这个 Skill 的价值在于服务 SA 团队自身管理，把分散在成员日报里的项目进展、变化、阻塞和风险自动汇总为 leader 可直接使用的周报/日报分析。它不是客户金融业务场景，而是 SA-AI 内化场景：用真实内部工作流证明 Skill 可以先在团队管理、项目复盘和风险预警中提升效率，再反哺售前方法论和客户共创案例。"
+    };
+
+    function skillValueForScene(scene) {
+      const sceneId = scene?.["场景_ID"] || "";
+      if (skillValueStatements[sceneId]) {
+        return skillValueStatements[sceneId];
+      }
+
+      const directSkill = LEDGER.l2Skills.find((item) => item["关联场景"]?.includes(sceneId));
+      if (directSkill && skillValueStatements["TEAM-SCN-" + directSkill["L2_ID"]]) {
+        return skillValueStatements["TEAM-SCN-" + directSkill["L2_ID"]];
+      }
+
+      return "";
+    }
+
+    function sceneSortWeight(scene) {
+      if (scenarioTypeOf(scene) === "SA-AI内化场景" && scene?.["场景_ID"] === "TEAM-SCN-eop-scene-daily-report-analyse") {
+        return -1000;
+      }
+      const type = sceneSkillType(scene);
+      if (type.typeValue === "已制作Demo") {
+        return -100;
+      }
+      if (type.typeValue === "已制作Skill") {
+        return -50;
+      }
+      return 0;
+    }
+
+    function sortScenes(list) {
+      return [...list].sort((a, b) => {
+        const weightDelta = sceneSortWeight(a) - sceneSortWeight(b);
+        if (weightDelta !== 0) {
+          return weightDelta;
+        }
+        return String(a["场景_ID"] || "").localeCompare(String(b["场景_ID"] || ""), "zh-Hans-CN");
+      });
     }
 
     function packagesForScene(scene) {
@@ -1382,6 +1532,10 @@
             item["备注"] ? "备注：" + item["备注"] : ""
           ].filter(Boolean).join("\n"),
           "Skill分类": item["Skill分类"] || "待分类",
+          "业务分类": item["业务分类"] || item["业务子类"] || "未分类",
+          "落地形态": item["落地形态"] || "",
+          "实现模式": item["实现模式"] || "",
+          "交付真实性": item["交付真实性"] || "",
           "来源平台": item["来源平台"] || "",
           "迁移建议": item["迁移建议"] || "",
           "展示状态": item["展示状态"] || "",
@@ -1399,6 +1553,10 @@
           "首批试点建议": item["备注"] || "待补充试点建议。",
           "建设状态": item["建设状态"] || "规划",
           "Demo状态": item["Demo状态"] || "",
+          "业务分类": item["业务分类"] || item["业务子类"] || "未分类",
+          "落地形态": item["落地形态"] || "",
+          "实现模式": item["实现模式"] || "",
+          "交付真实性": item["交付真实性"] || "",
           "备注": item["备注"] || ""
         }
       };
@@ -1509,6 +1667,84 @@
       };
     }
 
+    function businessCategory(item) {
+      const scene = item?.["L2_ID"] ? sceneForL2(item) : item;
+      const text = [
+        item?.["业务分类"],
+        item?.["业务子类"],
+        item?.["业务环节"],
+        item?.["L2 Skill名称"],
+        item?.["场景名称"],
+        item?.["能力说明"],
+        item?.["场景描述/可能流程"],
+        item?.["标签"]
+      ].join(" ");
+
+      if (item?.["业务分类"]) return item["业务分类"];
+      if (scene?.["业务分类"]) return scene["业务分类"];
+      if (/授信|贷后|反洗钱|风控|风险|信贷/.test(text)) return "风控";
+      if (/财富|理财|基金|净值|投顾|客户陪伴/.test(text)) return "财富管理";
+      if (/投研|个股|产业链|研究/.test(text)) return "投研";
+      if (/日报|周报|团队/.test(text)) return "团队管理";
+      if (/投标|招标|应标|废标/.test(text)) return "投标";
+      if (/PPT|方案|案例|架构图/.test(text)) return "方案写作";
+      if (/信创|代码|技术评估/.test(text)) return "技术评估";
+      if (/合同|资料检索|关键词/.test(text)) return "资料检索";
+      return item?.["业务子类"] || scene?.["业务子类"] || "未分类";
+    }
+
+    function landingShape(item) {
+      const scene = item?.["L2_ID"] ? sceneForL2(item) : item;
+      return item?.["落地形态"] || scene?.["落地形态"] || implementationProfile(scene).shape;
+    }
+
+    function implementationMode(item) {
+      const scene = item?.["L2_ID"] ? sceneForL2(item) : item;
+      const explicit = item?.["实现模式"] || scene?.["实现模式"];
+      if (explicit) return explicit;
+      const text = [
+        item?.["Skill分类"],
+        scene?.["Skill分类"],
+        item?.["L2 Skill名称"],
+        scene?.["场景名称"],
+        item?.["能力说明"],
+        scene?.["场景描述/可能流程"],
+        item?.["关键输入"],
+        item?.["关键输出"]
+      ].join(" ");
+      if (/Agent|编排|多智能体/.test(text)) return "Agent编排型";
+      if (/规则/.test(text) && /LLM|人工|报告|审核/.test(text)) return "混合型";
+      if (/RAG|知识|图谱|检索|问答/.test(text)) return "RAG知识检索型";
+      if (/数据|净值|量化|统计|采集|分析/.test(text)) return "数据分析型";
+      if (/工具|调用|EOP|Dodo|MCP/.test(text)) return "工具调用型";
+      if (/规则|审核|红线/.test(text)) return "规则型";
+      return "LLM生成型";
+    }
+
+    function authenticityStatus(item) {
+      const scene = item?.["L2_ID"] ? sceneForL2(item) : item;
+      const explicit = item?.["交付真实性"] || scene?.["交付真实性"];
+      if (explicit) return explicit;
+      const skillPath = item?.["Skill文件路径"] || scene?.["Skill文件路径"] || "";
+      const demoPath = item?.["Demo页面路径"] || scene?.["Demo页面路径"] || "";
+      const type = item?.["L2_ID"] ? demoInfo(item) : sceneSkillType(scene);
+      if (skillPath && (demoPath || type.typeValue === "已制作Demo")) return "真实Skill包+Demo";
+      if (skillPath) return "真实SKILL.md";
+      if (demoPath || type.typeValue === "已制作Demo") return "仅Demo";
+      return "目录规划";
+    }
+
+    function taxonomyNarrative(item, kind = "scene") {
+      const scene = item?.["L2_ID"] ? sceneForL2(item) : item;
+      const scenarioType = scenarioTypeOf(item?.["场景大类"] ? item : scene);
+      const business = businessCategory(item);
+      const shape = landingShape(item);
+      const mode = implementationMode(item);
+      const truth = authenticityStatus(item);
+      const subject = kind === "skill" ? "这个 L2 Skill" : "这个场景";
+      return subject + "归入“" + scenarioType + "”，业务上看作“" + business + "”；落地时按“" + shape + "”沉淀，执行机制主标为“" + mode + "”。当前交付真实性为“" + truth + "”，表示页面展示会以仓库真实资产为准，Demo 只是演示层，不替代真实 SKILL.md 和配套文件。";
+    }
+
     function relatedIds(scene) {
       const suggestion = [scene?.["Skill设计"], scene?.["Skill编排"], scene?.["Skill实现建议"]].join("\n");
       return {
@@ -1543,7 +1779,7 @@
     }
 
     function skillBusiness(skill) {
-      return skill?.["业务子类"] || sceneForL2(skill)?.["业务子类"] || "未分类";
+      return businessCategory(skill);
     }
 
     function baseScenes() {
@@ -1562,19 +1798,25 @@
         return state.view === "scene" ? item["所属层级"] : skillLayer(item);
       }
       if (group === "business") {
-        return state.view === "scene" ? item["业务子类"] : skillBusiness(item);
+        return state.view === "scene" ? businessCategory(item) : skillBusiness(item);
       }
       if (group === "shape") {
-        return state.view === "scene" ? implementationProfile(item).shape : implementationProfile(sceneForL2(item)).shape;
+        return landingShape(item);
+      }
+      if (group === "mode") {
+        return implementationMode(item);
       }
       if (group === "skillType") {
         return state.view === "scene" ? sceneSkillType(item).typeValue : demoInfo(item).typeValue;
+      }
+      if (group === "authenticity") {
+        return authenticityStatus(item);
       }
       return "";
     }
 
     function itemMatchesActiveFilters(item, ignoreGroup = "") {
-      return ["source", "layer", "business", "shape", "skillType"].every((group) => {
+      return ["source", "layer", "business", "shape", "mode", "skillType", "authenticity"].every((group) => {
         if (group === ignoreGroup) {
           return true;
         }
@@ -1584,11 +1826,15 @@
     }
 
     function filteredScenes() {
-      return LEDGER.scenarios.filter((scene) => {
+      return sortScenes(LEDGER.scenarios.filter((scene) => {
         const profile = implementationProfile(scene);
         const type = sceneSkillType(scene);
         const scenarioType = scenarioTypeOf(scene);
         const source = sourceInfo(scene).label;
+        const value = skillValueForScene(scene);
+        const business = businessCategory(scene);
+        const mode = implementationMode(scene);
+        const truth = authenticityStatus(scene);
         const byScenarioType = state.scenarioType === "全部" || scenarioType === state.scenarioType;
         return byScenarioType && itemMatchesActiveFilters(scene) && matchesQuery([
           scene["场景_ID"],
@@ -1596,15 +1842,18 @@
           scenarioType,
           source,
           scene["所属层级"],
-          scene["业务子类"],
+          business,
           scene["业务环节"],
           scene["场景描述/可能流程"],
           scene["Skill设计"],
           scene["Skill分类"],
+          mode,
+          truth,
+          value,
           profile.shape,
           type.label
         ]);
-      });
+      }));
     }
 
     function filteredL2() {
@@ -1614,6 +1863,9 @@
         const type = demoInfo(skill);
         const scenarioType = skillScenarioType(skill);
         const source = sourceInfo(skill).label;
+        const business = businessCategory(skill);
+        const mode = implementationMode(skill);
+        const truth = authenticityStatus(skill);
         const byScenarioType = state.scenarioType === "全部" || scenarioType === state.scenarioType;
         return byScenarioType && itemMatchesActiveFilters(skill) && matchesQuery([
           skill["L2_ID"],
@@ -1621,10 +1873,12 @@
           scenarioType,
           source,
           skillLayer(skill),
-          skill["业务子类"],
+          business,
           skill["业务环节"],
           skill["能力说明"],
           skill["Skill分类"],
+          mode,
+          truth,
           skill["Demo状态"],
           skill["关键输入"],
           skill["关键输出"],
@@ -1660,7 +1914,16 @@
     }
 
     function filterChip(group, value, label, count) {
-      const key = group === "source" ? "source" : group === "layer" ? "layer" : group === "business" ? "business" : group === "shape" ? "shape" : "skillType";
+      const filterKeys = {
+        source: "source",
+        layer: "layer",
+        business: "business",
+        shape: "shape",
+        mode: "mode",
+        skillType: "skillType",
+        authenticity: "authenticity"
+      };
+      const key = filterKeys[group] || "skillType";
       const active = state[key] === value ? " active" : "";
       const disabled = count === 0 && value !== "全部" ? " disabled" : "";
       return '<button class="filter-chip' + active + '" type="button" data-filter-group="' + group + '" data-filter-value="' + escapeHtml(value) + '"' + disabled + '>' +
@@ -1689,35 +1952,47 @@
       const layerBase = itemsFor("layer");
       const businessBase = itemsFor("business");
       const shapeBase = itemsFor("shape");
+      const modeBase = itemsFor("mode");
       const skillTypeBase = itemsFor("skillType");
+      const authenticityBase = itemsFor("authenticity");
       const sourceCounts = countBy(sourceBase, (item) => itemFilterValue(item, "source"));
       const layerCounts = countBy(layerBase, (item) => itemFilterValue(item, "layer"));
       const businessCounts = countBy(businessBase, (item) => itemFilterValue(item, "business"));
       const shapeCounts = countBy(shapeBase, (item) => itemFilterValue(item, "shape"));
+      const modeCounts = countBy(modeBase, (item) => itemFilterValue(item, "mode"));
       const skillTypeCounts = countBy(skillTypeBase, (item) => itemFilterValue(item, "skillType"));
+      const authenticityCounts = countBy(authenticityBase, (item) => itemFilterValue(item, "authenticity"));
 
       els.workbenchFilters.innerHTML = [
         filterGroup("来源", "source", [
           { value: "全部", label: "全部来源", count: sourceBase.length },
-          ...optionsFromCounts(sourceCounts, ["原始规划", "Dumate PDF导入"])
+          ...optionsFromCounts(sourceCounts, ["原始规划", "同事 Skill包", "Dumate PDF导入"])
         ]),
         filterGroup("层级", "layer", [
           { value: "全部", count: layerBase.length },
           ...optionsFromCounts(layerCounts, ["前台", "中台", "后台", "未分类"])
         ]),
-        filterGroup("子类", "business", [
+        filterGroup("业务", "business", [
           { value: "全部", count: businessBase.length },
           ...optionsFromCounts(businessCounts)
         ]),
         filterGroup("形态", "shape", [
           { value: "全部", count: shapeBase.length },
-          ...optionsFromCounts(shapeCounts, ["独立 Skill", "主 Skill + L1", "Agent 编排", "L1 候选"])
+          ...optionsFromCounts(shapeCounts, ["独立 Skill", "主 Skill + L1", "Agent 编排", "L1 候选", "L3 专项候选"])
+        ]),
+        filterGroup("模式", "mode", [
+          { value: "全部", count: modeBase.length },
+          ...optionsFromCounts(modeCounts, ["规则型", "LLM生成型", "RAG知识检索型", "数据分析型", "工具调用型", "Agent编排型", "混合型"])
         ]),
         filterGroup("状态", "skillType", [
           { value: "全部", count: skillTypeBase.length },
           { value: "目录项", label: "Skill 目录", count: skillTypeCounts["目录项"] || 0 },
           { value: "已制作Skill", label: "已制作 Skill", count: skillTypeCounts["已制作Skill"] || 0 },
           { value: "已制作Demo", label: "已制作 Demo", count: skillTypeCounts["已制作Demo"] || 0 }
+        ]),
+        filterGroup("真实性", "authenticity", [
+          { value: "全部", count: authenticityBase.length },
+          ...optionsFromCounts(authenticityCounts, ["目录规划", "仅Demo", "真实SKILL.md", "真实Skill包", "真实Skill包+Demo"])
         ])
       ].join("");
 
@@ -1729,7 +2004,9 @@
           if (group === "layer") state.layer = value;
           if (group === "business") state.business = value;
           if (group === "shape") state.shape = value;
+          if (group === "mode") state.mode = value;
           if (group === "skillType") state.skillType = value;
+          if (group === "authenticity") state.authenticity = value;
           render();
         });
       });
@@ -1745,10 +2022,13 @@
           const profile = implementationProfile(scene);
           const type = sceneSkillType(scene);
           const scenarioType = scenarioTypeOf(scene);
+          const business = businessCategory(scene);
+          const mode = implementationMode(scene);
+          const truth = authenticityStatus(scene);
           const active = scene["场景_ID"] === state.selectedSceneId ? " active" : "";
           return '<button class="item-row' + active + '" type="button" data-scene-id="' + escapeHtml(scene["场景_ID"]) + '">' +
             '<div class="row-main"><h3>' + escapeHtml(scene["场景名称"]) + '</h3><span class="tag">' + escapeHtml(scene["场景_ID"]) + '</span></div>' +
-            '<div class="tags">' + sourceTag(scene) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(scene["Skill分类"] || "待分类", "type") + tag(scene["所属层级"]) + tag(scene["业务子类"]) + tag(scene["业务环节"]) + '</div>' +
+            '<div class="tags">' + sourceTag(scene) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(mode, "type") + tag(truth, "catalog") + tag(scene["所属层级"]) + tag(business) + tag(scene["业务环节"]) + '</div>' +
             '<p class="row-desc">' + escapeHtml(scene["场景描述/可能流程"]) + '</p>' +
           '</button>';
         }).join("")
@@ -1777,18 +2057,28 @@
       const scenarioType = scenarioTypeOf(scene);
       const source = sourceInfo(scene);
       const packages = packagesForScene(scene);
+      const value = skillValueForScene(scene);
+      const business = businessCategory(scene);
+      const mode = implementationMode(scene);
+      const truth = authenticityStatus(scene);
       els.itemDetail.innerHTML =
-        '<div class="tags">' + sourceTag(scene) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(scene["Skill分类"] || "待分类", "type") + tag(scene["所属层级"]) + tag(scene["业务子类"]) + tag(scene["业务环节"]) + '</div>' +
+        '<div class="tags">' + sourceTag(scene) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(mode, "type") + tag(truth, "catalog") + tag(scene["所属层级"]) + tag(business) + tag(scene["业务环节"]) + '</div>' +
         '<h3>' + escapeHtml(scene["场景名称"]) + '</h3>' +
         '<div class="detail-block"><strong>场景描述/可能流程</strong><p>' + escapeHtml(scene["场景描述/可能流程"]) + '</p></div>' +
+        '<div class="detail-block taxonomy-block"><strong>分类说明</strong><p>' + escapeHtml(taxonomyNarrative(scene, "scene")) + '</p></div>' +
+        (value ? '<div class="detail-block value-block"><strong>Skill价值</strong><p>' + escapeHtml(value) + '</p></div>' : '') +
         '<div class="meta-grid">' +
           '<div class="meta-box"><strong>来源</strong><p>' + escapeHtml(source.detail) + '</p></div>' +
-          '<div class="meta-box"><strong>实现形态</strong><p>' + escapeHtml(profile.shape) + '</p></div>' +
+          '<div class="meta-box"><strong>业务分类</strong><p>' + escapeHtml(business) + '</p></div>' +
+          '<div class="meta-box"><strong>落地形态</strong><p>' + escapeHtml(profile.shape) + '</p></div>' +
+          '<div class="meta-box"><strong>实现模式</strong><p>' + escapeHtml(mode) + '</p></div>' +
+          '<div class="meta-box"><strong>交付真实性</strong><p>' + escapeHtml(truth) + '</p></div>' +
           '<div class="meta-box"><strong>平台依赖</strong><p>' + escapeHtml(profile.platform) + '</p></div>' +
           '<div class="meta-box"><strong>后续工作</strong><p>' + escapeHtml(profile.next) + '</p></div>' +
           '<div class="meta-box"><strong>FDE 工作重点</strong><p>' + escapeHtml(profile.fde) + '</p></div>' +
         '</div>' +
         renderSkillPackagesBlock(packages) +
+        '<div class="detail-block"><strong>历史 Skill分类</strong><p>' + escapeHtml(scene["Skill分类"] || "待补充") + '</p></div>' +
         '<div class="detail-block"><strong>Skill设计</strong><p>' + escapeHtml(scene["Skill设计"] || scene["Skill实现建议"]) + '</p></div>' +
         '<div class="detail-block"><strong>关联 L2</strong><div class="tags">' + (ids.l2.length ? ids.l2.map((id) => tag(id + " " + (LEDGER.l2Skills.find((item) => item["L2_ID"] === id)?.["L2 Skill名称"] || ""), "l2")).join("") : tag("待定")) + '</div></div>' +
         '<div class="detail-block"><strong>关联 L1</strong><div class="tags">' + (ids.l1.length ? ids.l1.map((id) => tag(id + " " + (LEDGER.l1Skills.find((item) => item["L1_ID"] === id)?.["L1 Skill名称"] || ""), "l1")).join("") : tag("待定")) + '</div></div>' +
@@ -1807,11 +2097,14 @@
           const profile = implementationProfile(scene);
           const type = demoInfo(skill);
           const scenarioType = scenarioTypeOf(skill["场景大类"] ? skill : scene);
+          const business = businessCategory(skill);
+          const mode = implementationMode(skill);
+          const truth = authenticityStatus(skill);
           const active = skill["L2_ID"] === state.selectedL2Id ? " active" : "";
           const statusClass = skill["建设状态"] === "已开发" ? "ready" : "plan";
           return '<button class="item-row' + active + '" type="button" data-l2-id="' + escapeHtml(skill["L2_ID"]) + '">' +
             '<div class="row-main"><h3>' + escapeHtml(skill["L2 Skill名称"]) + '</h3><span class="tag l2">' + escapeHtml(skill["L2_ID"]) + '</span></div>' +
-            '<div class="tags">' + sourceTag(skill) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(skill["建设状态"], statusClass) + tag(skill["Skill分类"] || "待分类", "type") + tag(skill["业务子类"] || "未分类") + '</div>' +
+            '<div class="tags">' + sourceTag(skill) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(mode, "type") + tag(truth, "catalog") + tag(skill["建设状态"], statusClass) + tag(business) + '</div>' +
             '<p class="row-desc">' + escapeHtml(skill["能力说明"]) + '</p>' +
           '</button>';
         }).join("")
@@ -1840,22 +2133,30 @@
       const link = type.link;
       const statusClass = skill["建设状态"] === "已开发" ? "ready" : "plan";
       const pkg = packageForSkill(skill);
+      const business = businessCategory(skill);
+      const mode = implementationMode(skill);
+      const truth = authenticityStatus(skill);
       els.itemDetail.innerHTML =
-        '<div class="tags">' + tag(skill["L2_ID"], "l2") + sourceTag(skill) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(skill["建设状态"], statusClass) + tag(skill["Skill分类"] || "待分类", "type") + '</div>' +
+        '<div class="tags">' + tag(skill["L2_ID"], "l2") + sourceTag(skill) + scenarioTypeTag(scenarioType) + tag(type.label, type.className) + tag(profile.shape, profile.className) + tag(mode, "type") + tag(truth, "catalog") + tag(skill["建设状态"], statusClass) + tag(business) + '</div>' +
         '<h3>' + escapeHtml(skill["L2 Skill名称"]) + '</h3>' +
         '<div class="detail-block"><strong>能力说明</strong><p>' + escapeHtml(skill["能力说明"]) + '</p></div>' +
+        '<div class="detail-block taxonomy-block"><strong>分类说明</strong><p>' + escapeHtml(taxonomyNarrative(skill, "skill")) + '</p></div>' +
         '<div class="meta-grid">' +
           '<div class="meta-box"><strong>来源</strong><p>' + escapeHtml(source.detail) + '</p></div>' +
           '<div class="meta-box"><strong>场景大类</strong><p>' + escapeHtml(scenarioType) + '</p></div>' +
+          '<div class="meta-box"><strong>业务分类</strong><p>' + escapeHtml(business) + '</p></div>' +
           '<div class="meta-box"><strong>关联场景</strong><p>' + escapeHtml(skill["关联场景"] || scene?.["场景名称"] || "待确认") + '</p></div>' +
           '<div class="meta-box"><strong>Skill 类型</strong><p>' + escapeHtml(type.status) + '</p></div>' +
-          '<div class="meta-box"><strong>实现形态</strong><p>' + escapeHtml(profile.shape) + '</p></div>' +
+          '<div class="meta-box"><strong>落地形态</strong><p>' + escapeHtml(profile.shape) + '</p></div>' +
+          '<div class="meta-box"><strong>实现模式</strong><p>' + escapeHtml(mode) + '</p></div>' +
+          '<div class="meta-box"><strong>交付真实性</strong><p>' + escapeHtml(truth) + '</p></div>' +
           '<div class="meta-box"><strong>关键输入</strong><p>' + escapeHtml(skill["关键输入"]) + '</p></div>' +
           '<div class="meta-box"><strong>关键输出</strong><p>' + escapeHtml(skill["关键输出"]) + '</p></div>' +
           '<div class="meta-box"><strong>后续工作</strong><p>' + escapeHtml(profile.next) + '</p></div>' +
           '<div class="meta-box"><strong>FDE 工作重点</strong><p>' + escapeHtml(profile.fde) + '</p></div>' +
         '</div>' +
         renderSkillPackagesBlock(pkg ? [pkg] : []) +
+        '<div class="detail-block"><strong>历史 Skill分类</strong><p>' + escapeHtml(skill["Skill分类"] || "待补充") + '</p></div>' +
         '<div class="detail-block"><strong>独立L2判断</strong><p>' + escapeHtml(skill["独立L2判断"] || "待讨论") + '</p></div>' +
         '<div class="detail-block"><strong>首批试点建议</strong><p>' + escapeHtml(skill["首批试点建议"] || "待讨论") + '</p></div>' +
         '<div class="detail-block"><strong>建议复用 L1</strong><div class="tags">' + (l1Ids.length ? l1Ids.map((id) => tag(id + " " + (LEDGER.l1Skills.find((item) => item["L1_ID"] === id)?.["L1 Skill名称"] || ""), "l1")).join("") : tag("待定")) + '</div></div>' +
@@ -1869,7 +2170,7 @@
         els.workbenchBadge.className = "level-code scene";
         els.workbenchTitle.textContent = "场景视图";
         els.workbenchSubtitle.textContent = state.scenarioType === "SA-AI内化场景" ? "沉淀 SA 自身提效、售前、方案、POC 和交付复盘中的可复用 AI 工作流。" : "先看真实业务场景，再判断它适合 Agent 编排、独立 Skill 还是 L1 能力沉淀。";
-        els.searchBox.placeholder = "搜索场景、子类、环节、分类";
+        els.searchBox.placeholder = "搜索场景、业务、环节、分类";
       } else {
         els.workbenchBadge.textContent = "L2";
         els.workbenchBadge.className = "level-code l2";
@@ -1894,7 +2195,9 @@
       state.layer = "全部";
       state.business = "全部";
       state.shape = "全部";
+      state.mode = "全部";
       state.skillType = "全部";
+      state.authenticity = "全部";
     }
 
     function render() {

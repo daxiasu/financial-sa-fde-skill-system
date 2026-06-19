@@ -35,6 +35,10 @@ def row_to_item(row):
         "业务环节": normalize(row.get("业务环节")),
         "能力说明": normalize(row.get("能力说明")),
         "Skill分类": normalize(row.get("Skill分类")),
+        "业务分类": normalize(row.get("业务分类")),
+        "落地形态": normalize(row.get("落地形态")),
+        "实现模式": normalize(row.get("实现模式")),
+        "交付真实性": normalize(row.get("交付真实性")),
         "关键输入": normalize(row.get("关键输入")),
         "关键输出": normalize(row.get("关键输出")),
         "建设状态": normalize(row.get("建设状态")),
@@ -75,7 +79,7 @@ def main() -> int:
         for values in sheet.iter_rows(min_row=2, values_only=True):
             row = dict(zip(headers, values))
             skill_id = normalize(row.get("Skill_ID"))
-            if not skill_id or skill_id in {"填写说明", "示例"}:
+            if not skill_id or skill_id.startswith("填写说明") or skill_id.startswith("示例"):
                 continue
             item = row_to_item(row)
             if not item["L2 Skill名称"]:

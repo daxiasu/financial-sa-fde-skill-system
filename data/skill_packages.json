@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-19T01:07:09.749063+00:00",
+  "generatedAt": "2026-06-19T02:50:16.789966+00:00",
   "packages": {
     "B-L2-025": {
       "root": "presales-skill-matrix/ground-zero-credit-risk-analysis/",
@@ -214,6 +214,38 @@
       "demoFiles": [
         {
           "path": "wealth-product-net-value-analysis-demo.html",
+          "note": "可打开的本地演示页面"
+        }
+      ],
+      "generatedFrom": "real-filesystem-scan"
+    },
+    "eop-scene-daily-report-analyse": {
+      "root": "presales-skill-matrix/eop-scene-daily-report-analyse/",
+      "name": "eop-scene-daily-report-analyse",
+      "summary": "团队日报汇总分析 Skill。文件清单来自同事提供的真实 Dodo/EOP Skill 包，并配套 SA 内化场景 Demo。",
+      "coreFiles": [
+        {
+          "path": "SKILL.md",
+          "note": "核心技能定义文件"
+        }
+      ],
+      "supportFiles": [
+        {
+          "path": ".dodo_managed.json",
+          "note": "Dodo 平台管理元数据"
+        },
+        {
+          "path": "references/output_template.md",
+          "note": "Markdown 报告输出模板"
+        },
+        {
+          "path": "scripts/invoke_stat.py",
+          "note": "Skill 调用统计上报脚本"
+        }
+      ],
+      "demoFiles": [
+        {
+          "path": "eop-scene-daily-report-analyse-demo.html",
           "note": "可打开的本地演示页面"
         }
       ],
