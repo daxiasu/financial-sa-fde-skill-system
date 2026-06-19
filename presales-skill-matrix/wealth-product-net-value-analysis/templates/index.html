@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融智能投资顾问</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f7fa;--card:#fff;--primary:#1a2332;--accent:#3b82f6;--red:#ef4444;--green:#22c55e;--text:#1e293b;--text2:#64748b;--border:#e2e8f0;--hover:#f1f5f9}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.header{background:var(--primary);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.header h1{font-size:20px;font-weight:600;letter-spacing:1px}
+.header .client-select{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 12px;border-radius:6px;font-size:13px}
+.tabs{display:flex;background:#fff;border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto}
+.tab{padding:14px 20px;cursor:pointer;font-size:14px;color:var(--text2);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;user-select:none}
+.tab:hover{color:var(--accent);background:var(--hover)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.content{max-width:1200px;margin:0 auto;padding:20px 24px}
+.section{display:none}
+.section.active{display:block}
+.card{background:var(--card);border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:16px}
+.card h3{font-size:15px;color:var(--text);margin-bottom:12px;font-weight:600}
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.stat-card{background:var(--card);border-radius:10px;padding:16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.stat-card .label{font-size:12px;color:var(--text2);margin-bottom:4px}
+.stat-card .value{font-size:22px;font-weight:700}
+.stat-card .change{font-size:13px;margin-top:4px}
+.up{color:var(--red)}
+.down{color:var(--green)}
+.neutral{color:var(--text2)}
+.chart-container{width:100%;height:360px}
+.chart-sm{height:280px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;border-bottom:2px solid var(--border);color:var(--text2);font-weight:600;font-size:12px}
+td{padding:10px 12px;border-bottom:1px solid var(--border)}
+tr:hover{background:var(--hover)}
+tr{cursor:pointer}
+.search-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-bar input{flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;outline:none;transition:border .2s}
+.search-bar input:focus{border-color:var(--accent)}
+.search-bar select{padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:#fff}
+.search-bar button{padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;transition:background .2s}
+.search-bar button:hover{background:#2563eb}
+.news-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.news-item:last-child{border-bottom:none}
+.news-item .title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px}
+.news-item .meta{font-size:12px;color:var(--text2)}
+.news-item .summary{font-size:13px;color:var(--text2);margin-top:4px}
+.sentiment-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:11px;font-weight:600;margin-right:6px}
+.sentiment-tag.positive{background:#fef2f2;color:var(--red)}
+.sentiment-tag.negative{background:#f0fdf4;color:var(--green)}
+.sentiment-tag.neutral{background:#f8fafc;color:var(--text2)}
+.chat-box{display:flex;flex-direction:column;height:calc(100vh - 240px);min-height:400px}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;background:#f8fafc;border-radius:10px;margin-bottom:12px}
+.msg{margin-bottom:12px;max-width:85%}
+.msg.user{margin-left:auto}
+.msg .bubble{padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.6;word-break:break-word}
+.msg.user .bubble{background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+.msg.bot .bubble{background:#fff;border:1px solid var(--border);border-bottom-left-radius:4px}
+.msg .name{font-size:11px;color:var(--text2);margin-bottom:2px}
+.chat-input{display:flex;gap:10px}
+.chat-input input{flex:1;padding:12px 16px;border:1px solid var(--border);border-radius:10px;font-size:14px;outline:none}
+.chat-input input:focus{border-color:var(--accent)}
+.chat-input button{padding:12px 24px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:14px;cursor:pointer}
+.chat-input-area{display:flex;flex-direction:column;gap:8px}
+.upload-zone{border:1px dashed var(--border);border-radius:8px;padding:8px 12px;background:#fafbfc;transition:border-color .2s}
+.upload-zone.dragover{border-color:var(--accent);background:#eff6ff}
+.upload-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.client-id-input{width:120px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;outline:none}
+.client-id-input:focus{border-color:var(--accent)}
+.upload-btn{padding:6px 12px;background:#fff;border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;transition:all .2s}
+.upload-btn:hover{border-color:var(--accent);color:var(--accent)}
+.upload-hint{font-size:11px;color:var(--text2)}
+.upload-preview{display:flex;align-items:center;gap:6px;margin-top:6px;padding:6px 10px;background:#eff6ff;border-radius:6px}
+.upload-filename{font-size:12px;color:var(--accent);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upload-remove{background:none;border:none;color:var(--text2);cursor:pointer;font-size:14px;padding:0 4px}
+.upload-remove:hover{color:var(--red)}
+.msg .bubble .file-info{font-size:12px;color:var(--text2);margin-top:6px;padding:4px 8px;background:rgba(0,0,0,.04);border-radius:4px}
+.msg.user .bubble .file-info{background:rgba(255,255,255,.15)}
+.detail-panel{display:none;margin-top:16px}
+.detail-panel.show{display:block}
+.signal-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0}
+.signal-card{background:#f8fafc;border-radius:8px;padding:12px;text-align:center}
+.signal-card .sig-name{font-size:12px;color:var(--text2)}
+.signal-card .sig-value{font-size:20px;font-weight:700;margin:4px 0}
+.signal-card .sig-desc{font-size:11px;color:var(--text2)}
+.loading{text-align:center;padding:40px;color:var(--text2)}
+.loading::after{content:'';display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;margin-left:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:40px;color:var(--text2);font-size:14px}
+@media(max-width:768px){.stat-cards{grid-template-columns:repeat(2,1fr)}.content{padding:12px}.tabs{padding:0 8px}.tab{padding:10px 14px;font-size:13px}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>金融智能投资顾问</h1>
+  <div>
+    <select class="client-select" id="clientSelect" onchange="loadHoldings()">
+      <option value="">选择客户...</option>
+    </select>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="market" onclick="switchTab('market')">市场概览</div>
+  <div class="tab" data-tab="holdings" onclick="switchTab('holdings')">持仓分析</div>
+  <div class="tab" data-tab="search" onclick="switchTab('search')">基金查询</div>
+  <div class="tab" data-tab="quant" onclick="switchTab('quant')">量化分析</div>
+  <div class="tab" data-tab="news" onclick="switchTab('news')">资讯</div>
+  <div class="tab" data-tab="chat" onclick="switchTab('chat')">智能对话</div>
+</div>
+
+<div class="content">
+
+<!-- ====== 市场概览 ====== -->
+<div class="section active" id="sec-market">
+  <div class="stat-cards" id="marketCards"><div class="loading">加载市场数据</div></div>
+  <div class="card">
+    <h3>主要指数走势（近30日）</h3>
+    <div class="chart-container" id="marketChart"></div>
+  </div>
+</div>
+
+<!-- ====== 持仓分析 ====== -->
+<div class="section" id="sec-holdings">
+  <div id="holdingsSummary" class="stat-cards"></div>
+  <div class="card">
+    <h3>持仓明细</h3>
+    <table>
+      <thead><tr><th>代码</th><th>名称</th><th>份额</th><th>成本净值</th><th>当前净值</th><th>盈亏%</th></tr></thead>
+      <tbody id="holdingsTable"><tr><td colspan="6" class="empty">请选择客户查看持仓</td></tr></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h3>盈亏分布</h3>
+    <div class="chart-container chart-sm" id="holdingsChart"></div>
+  </div>
+</div>
+
+<!-- ====== 基金查询 ====== -->
+<div class="section" id="sec-search">
+  <div class="search-bar">
+    <input id="searchInput" placeholder="输入基金名称、代码、经理名或公司名" onkeydown="if(event.key==='Enter')doSearch()">
+    <select id="searchType"><option value="fund">基金</option><option value="manager">经理</option><option value="company">公司</option></select>
+    <button onclick="doSearch()">搜索</button>
+  </div>
+  <div id="searchResults"></div>
+  <div class="detail-panel" id="detailPanel">
+    <div class="card">
+      <h3 id="detailTitle">基金详情</h3>
+      <div class="chart-container" id="detailChart"></div>
+    </div>
+    <div class="card">
+      <h3>同类对比</h3>
+      <div class="search-bar">
+        <input id="compareInput" placeholder="输入对比基金代码（逗号分隔）">
+        <button onclick="doCompare()">对比</button>
+      </div>
+      <div class="chart-container" id="compareChart"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 量化分析 ====== -->
+<div class="section" id="sec-quant">
+  <div class="search-bar">
+    <input id="quantCode" placeholder="输入基金代码">
+    <select id="forecastDays"><option value="30">30天</option><option value="60">60天</option><option value="90">90天</option></select>
+    <button onclick="doForecast()">分析</button>
+  </div>
+  <div id="quantResult">
+    <div class="empty">输入基金代码开始量化分析</div>
+  </div>
+</div>
+
+<!-- ====== 资讯 ====== -->
+<div class="section" id="sec-news">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3 style="margin:0">最新财经资讯</h3>
+      <button onclick="loadNews()" style="padding:6px 14px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px">刷新</button>
+    </div>
+    <div id="newsList"><div class="loading">加载新闻</div></div>
+  </div>
+</div>
+
+<!-- ====== 智能对话 ====== -->
+<div class="section" id="sec-chat">
+  <div class="card" style="height:calc(100vh - 220px);display:flex;flex-direction:column">
+    <div class="chat-box">
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg bot"><div class="name">投资顾问</div><div class="bubble">您好！我是您的智能投资顾问。您可以：<br>1. 输入基金代码/名称/经理名查询数据<br>2. 上传持仓截图/Word/PDF/Excel自动识别分析<br>3. 咨询市场行情、量化分析等问题</div></div>
+      </div>
+      <div class="chat-input-area">
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.bmp,.gif,.docx,.pdf,.xlsx,.xls,.csv" style="display:none" onchange="handleFileSelect(this)">
+          <div class="upload-bar">
+            <input id="clientIdInput" placeholder="客户名称（可选）" class="client-id-input">
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()" title="上传持仓文件">
+              &#128206; 上传文件
+            </button>
+            <span class="upload-hint">支持截图/Word/PDF/Excel/CSV</span>
+          </div>
+          <div class="upload-preview" id="uploadPreview" style="display:none">
+            <span class="upload-filename" id="uploadFilename"></span>
+            <button class="upload-remove" onclick="clearUpload()">&#10005;</button>
+          </div>
+        </div>
+        <div class="chat-input">
+          <input id="chatInput" placeholder="输入问题..." onkeydown="if(event.key==='Enter')sendChat()">
+          <button onclick="sendChat()">发送</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+const API = '';
+let charts = {};
+
+// ── Tab 切换 ───────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'sec-' + name));
+  if (name === 'market' && !charts.market) loadMarket();
+  if (name === 'news') loadNews();
+}
+
+// ── 工具函数 ───────────────────────────────────────────────────────
+function cls(v) { return v > 0 ? 'up' : v < 0 ? 'down' : 'neutral'; }
+function fmt(v, d=2) { return typeof v === 'number' ? v.toFixed(d) : v; }
+async function api(url, opts) {
+  try { const r = await fetch(API + url, opts); return await r.json(); }
+  catch(e) { console.error('API error:', e); return null; }
+}
+
+// ── 市场概览 ───────────────────────────────────────────────────────
+async function loadMarket() {
+  const data = await api('/api/market/overview');
+  if (!data || !data.markets) return;
+  const cards = document.getElementById('marketCards');
+  cards.innerHTML = data.markets.map(m => `
+    <div class="stat-card">
+      <div class="label">${m.name}</div>
+      <div class="value ${cls(m.change_pct)}">${fmt(m.price, m.price > 1000 ? 0 : 2)}</div>
+      <div class="change ${cls(m.change_pct)}">${m.change_pct > 0 ? '+' : ''}${fmt(m.change_pct)}%</div>
+    </div>
+  `).join('');
+
+  // 折线图
+  const chart = echarts.init(document.getElementById('marketChart'));
+  charts.market = chart;
+  const series = data.markets.map(m => ({
+    name: m.name, type: 'line', smooth: true, symbol: 'none',
+    lineStyle: {width: 2}, data: m.closes
+  }));
+  chart.setOption({
+    tooltip: {trigger: 'axis'},
+    legend: {data: data.markets.map(m => m.name), top: 0},
+    grid: {left: 60, right: 20, top: 40, bottom: 30},
+    xAxis: {type: 'category', data: data.markets[0]?.dates || [], axisLabel: {fontSize: 11}},
+    yAxis: {type: 'value', scale: true, axisLabel: {fontSize: 11}},
+    series
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ── 持仓分析 ───────────────────────────────────────────────────────
+async function loadClients() {
+  const data = await api('/api/holdings');
+  if (data && data.clients) {
+    const sel = document.getElementById('clientSelect');
+    data.clients.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c; opt.textContent = c;
+      sel.appendChild(opt);
+    });
+  }
+}
+
+async function loadHoldings() {
+  const cid = document.getElementById('clientSelect').value;
+  if (!cid) return;
+  const data = await api('/api/holdings?client_id=' + encodeURIComponent(cid));
+  if (!data) return;
+
+  // 汇总卡片
+  const s = data.summary || {};
+  document.getElementById('holdingsSummary').innerHTML = `
+    <div class="stat-card"><div class="label">总市值</div><div class="value">¥${fmt(s.total_value, 0)}</div></div>
+    <div class="stat-card"><div class="label">总成本</div><div class="value">¥${fmt(s.total_cost, 0)}</div></div>
+    <div class="stat-card"><div class="label">总盈亏</div><div class="value ${cls(s.total_pnl)}">¥${fmt(s.total_pnl, 0)}</div></div>
+    <div class="stat-card"><div class="label">盈亏比例</div><div class="value ${cls(s.total_pnl_pct)}">${fmt(s.total_pnl_pct)}%</div></div>
+  `;
+
+  // 明细表
+  const tbody = document.getElementById('holdingsTable');
+  tbody.innerHTML = (data.holdings || []).map(h => `
+    <tr onclick="showNavChart('${h.code}')">
+      <td>${h.code}</td><td>${h.name}</td><td>${fmt(h.shares, 0)}</td>
+      <td>${fmt(h.cost_nav, 4)}</td><td>${fmt(h.current_nav, 4)}</td>
+      <td class="${cls(h.pnl_pct)}">${h.pnl_pct > 0 ? '+' : ''}${fmt(h.pnl_pct)}%</td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" class="empty">暂无持仓数据</td></tr>';
+
+  // 饼图
+  if (data.holdings && data.holdings.length) {
+    const chart = echarts.init(document.getElementById('holdingsChart'));
+    charts.holdings = chart;
+    chart.setOption({
+      tooltip: {trigger: 'item', formatter: '{b}: ¥{c} ({d}%)'},
+      series: [{
+        type: 'pie', radius: ['40%', '70%'],
+        data: data.holdings.map(h => ({name: h.name || h.code, value: h.value || 0}))
+      }]
+    });
+    window.addEventListener('resize', () => chart.resize());
+  }
+}
+
+// ── 基金搜索 ───────────────────────────────────────────────────────
+async function doSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  const type = document.getElementById('searchType').value;
+  if (!q) return;
+  const data = await api(`/api/search?q=${encodeURIComponent(q)}&type=${type}`);
+  const div = document.getElementById('searchResults');
+  if (!data || !data.results || !data.results.length) {
+    div.innerHTML = '<div class="empty">未找到相关结果</div>';
+    return;
+  }
+  div.innerHTML = '<div class="card"><table><thead><tr>';
+  if (type === 'manager') {
+    div.innerHTML += '<th>姓名</th><th>公司</th><th>管理基金</th><th>风格</th><th>任职年限</th></tr></thead><tbody>';
+    div.innerHTML += data.results.map(r => `<tr onclick="showNavChart('${r.fund_code}')"><td>${r.name}</td><td>${r.company}</td><td>${r.fund_name}</td><td>${r.style}</td><td>${r.tenure_years}年</td></tr>`).join('');
+  } else if (type === 'company') {
+    div.innerHTML += '<th>公司名称</th><th>简称</th><th>基金数</th><th>经理数</th><th>风格</th></tr></thead><tbody>';
+    div.innerHTML += data.results.map(r => `<tr><td>${r.name}</td><td>${r.short_name}</td><td>${r.total_funds}</td><td>${r.manager_count}</td><td>${r.style}</td></tr>`).join('');
+  } else {
+    div.innerHTML += '<th>代码</th><th>名称</th><th>经理</th><th>公司</th><th>风格</th></tr></thead><tbody>';
+    div.innerHTML += data.results.map(r => `<tr onclick="showNavChart('${r.code}')"><td>${r.code}</td><td>${r.name}</td><td>${r.manager}</td><td>${r.company}</td><td>${r.style}</td></tr>`).join('');
+  }
+  div.innerHTML += '</tbody></table></div>';
+}
+
+async function showNavChart(code) {
+  const panel = document.getElementById('detailPanel');
+  panel.classList.add('show');
+  document.getElementById('detailTitle').textContent = '净值走势 - ' + code;
+  document.getElementById('compareInput').value = '';
+
+  const data = await api(`/api/nav/chart?code=${code}&period=1y`);
+  if (!data || !data.dates) return;
+
+  const chart = echarts.init(document.getElementById('detailChart'));
+  charts.detail = chart;
+  chart.setOption({
+    tooltip: {trigger: 'axis'},
+    legend: {data: ['累计净值', '单位净值']},
+    grid: {left: 60, right: 20, top: 40, bottom: 30},
+    xAxis: {type: 'category', data: data.dates},
+    yAxis: {type: 'value', scale: true},
+    series: [
+      {name: '累计净值', type: 'line', smooth: true, symbol: 'none', data: data.acc_navs, lineStyle: {width: 2}},
+      {name: '单位净值', type: 'line', smooth: true, symbol: 'none', data: data.navs, lineStyle: {width: 1.5, type: 'dashed'}}
+    ]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+async function doCompare() {
+  const input = document.getElementById('compareInput').value.trim();
+  if (!input) return;
+  const codes = input.split(/[,，\s]+/).filter(Boolean);
+  const detailCode = document.getElementById('detailTitle').textContent.replace('净值走势 - ', '');
+  if (detailCode && !codes.includes(detailCode)) codes.unshift(detailCode);
+
+  const data = await api('/api/compare', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({codes})
+  });
+  if (!data || !data.chart_data) return;
+
+  const chart = echarts.init(document.getElementById('compareChart'));
+  charts.compare = chart;
+  const series = Object.entries(data.chart_data.series).map(([code, vals]) => {
+    const fund = data.funds.find(f => f.code === code);
+    return {name: (fund?.name || code) + ' (' + code + ')', type: 'line', smooth: true, symbol: 'none', data: vals};
+  });
+  chart.setOption({
+    tooltip: {trigger: 'axis'},
+    legend: {data: series.map(s => s.name), top: 0},
+    grid: {left: 60, right: 20, top: 40, bottom: 30},
+    xAxis: {type: 'category', data: data.chart_data.dates},
+    yAxis: {type: 'value', name: '归一化走势', scale: true},
+    series
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ── 量化分析 ───────────────────────────────────────────────────────
+async function doForecast() {
+  const code = document.getElementById('quantCode').value.trim();
+  const days = document.getElementById('forecastDays').value;
+  if (!code) return;
+
+  const div = document.getElementById('quantResult');
+  div.innerHTML = '<div class="loading">分析中</div>';
+
+  const data = await api('/api/quant/forecast', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({code, forecast_days: parseInt(days)})
+  });
+
+  if (!data || data.error) {
+    div.innerHTML = `<div class="empty">${data?.error || '分析失败'}</div>`;
+    return;
+  }
+
+  const m = data.metrics || {};
+  const sigCls = m.signal === 'buy' ? 'up' : m.signal === 'sell' ? 'down' : 'neutral';
+  const sigText = m.signal === 'buy' ? '买入' : m.signal === 'sell' ? '卖出' : '持有';
+
+  div.innerHTML = `
+    <div class="stat-cards">
+      <div class="stat-card"><div class="label">基金</div><div class="value" style="font-size:16px">${data.name || code}</div><div class="change">${code}</div></div>
+      <div class="stat-card"><div class="label">当前净值</div><div class="value">${fmt(data.current_nav, 4)}</div></div>
+      <div class="stat-card"><div class="label">趋势</div><div class="value ${cls(m.trend==='up'?1:m.trend==='down'?-1:0)}">${m.trend==='up'?'上行':m.trend==='down'?'下行':'震荡'}</div></div>
+      <div class="stat-card"><div class="label">波动率</div><div class="value">${fmt(m.volatility)}%</div></div>
+      <div class="stat-card"><div class="label">信号</div><div class="value ${sigCls}">${sigText}</div></div>
+      <div class="stat-card"><div class="label">建议</div><div class="value" style="font-size:16px">${m.action || '持有'}</div></div>
+    </div>
+    ${m.action_reason ? '<div class="card"><h3>分析理由</h3><p style="font-size:13px;color:var(--text2)">' + m.action_reason + '</p></div>' : ''}
+    <div class="card"><h3>量化信号明细</h3>
+      <div class="signal-cards">
+        ${Object.entries(data.signals || {}).map(([k, v]) => `
+          <div class="signal-card">
+            <div class="sig-name">${k}</div>
+            <div class="sig-value ${cls(v.value)}">${v.value > 0 ? '+' : ''}${fmt(v.value)}</div>
+            <div class="sig-desc">${v.components?.assessment || v.components?.trend || v.components?.rsi ? fmt(v.components?.rsi, 1) : ''}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div class="card"><h3>净值预测（${days}天）</h3><div class="chart-container" id="forecastChart"></div></div>
+  `;
+
+  // 预测图
+  if (data.forecast && data.forecast.length) {
+    const chart = echarts.init(document.getElementById('forecastChart'));
+    const dates = data.forecast.map(f => f.date);
+    const preds = data.forecast.map(f => f.predicted_nav);
+    const lows = data.forecast.map(f => f.confidence_low);
+    const highs = data.forecast.map(f => f.confidence_high);
+    chart.setOption({
+      tooltip: {trigger: 'axis'},
+      grid: {left: 60, right: 20, top: 30, bottom: 30},
+      xAxis: {type: 'category', data: dates},
+      yAxis: {type: 'value', scale: true},
+      series: [
+        {name: '预测净值', type: 'line', smooth: true, symbol: 'none', data: preds, lineStyle: {width: 2, type: 'dashed'}},
+        {name: '置信下限', type: 'line', smooth: true, symbol: 'none', data: lows, lineStyle: {width: 1, opacity: 0.3}, areaStyle: {opacity: 0}},
+        {name: '置信上限', type: 'line', smooth: true, symbol: 'none', data: highs, lineStyle: {width: 1, opacity: 0.3}, areaStyle: {opacity: 0.1}}
+      ]
+    });
+    window.addEventListener('resize', () => chart.resize());
+  }
+}
+
+// ── 新闻资讯 ───────────────────────────────────────────────────────
+async function loadNews() {
+  const div = document.getElementById('newsList');
+  div.innerHTML = '<div class="loading">加载新闻</div>';
+  const data = await api('/api/news?limit=30');
+  if (!data || !data.news || !data.news.length) {
+    div.innerHTML = '<div class="empty">暂无新闻数据</div>';
+    return;
+  }
+  div.innerHTML = data.news.map(n => {
+    const sCls = n.sentiment === 'positive' ? 'positive' : n.sentiment === 'negative' ? 'negative' : 'neutral';
+    const sText = n.sentiment === 'positive' ? '利好' : n.sentiment === 'negative' ? '利空' : '中性';
+    return `<div class="news-item">
+      <span class="sentiment-tag ${sCls}">${sText}</span>
+      <div class="title">${n.url ? '<a href="' + n.url + '" target="_blank" style="color:inherit;text-decoration:none">' + n.title + '</a>' : n.title}</div>
+      <div class="meta">${n.source || ''} ${n.time || ''}</div>
+      ${n.summary ? '<div class="summary">' + n.summary + '</div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── 智能对话 ───────────────────────────────────────────────────────
+let pendingFile = null;
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  const file = pendingFile;
+
+  // 如果有待上传文件，优先上传
+  if (file) {
+    input.value = '';
+    clearUpload();
+    await uploadFile(file, msg);
+    return;
+  }
+
+  if (!msg) return;
+  input.value = '';
+
+  const messages = document.getElementById('chatMessages');
+  messages.innerHTML += `<div class="msg user"><div class="name">我</div><div class="bubble">${escHtml(msg)}</div></div>`;
+  messages.scrollTop = messages.scrollHeight;
+
+  messages.innerHTML += `<div class="msg bot" id="thinking"><div class="name">投资顾问</div><div class="bubble"><span class="loading">思考中</span></div></div>`;
+  messages.scrollTop = messages.scrollHeight;
+
+  const data = await api('/api/chat', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({query: msg})
+  });
+
+  const thinking = document.getElementById('thinking');
+  if (thinking) thinking.remove();
+
+  const reply = data?.reply || '抱歉，暂时无法处理您的问题。';
+  messages.innerHTML += `<div class="msg bot"><div class="name">投资顾问</div><div class="bubble">${escHtml(reply)}</div></div>`;
+  messages.scrollTop = messages.scrollHeight;
+}
+
+// ── 文件上传 ───────────────────────────────────────────────────────
+async function uploadFile(file, remark) {
+  const messages = document.getElementById('chatMessages');
+  const clientId = document.getElementById('clientIdInput').value.trim();
+
+  // 显示用户消息
+  let fileInfo = `<div class="file-info">&#128206; ${escHtml(file.name)} (${(file.size/1024).toFixed(1)}KB)</div>`;
+  messages.innerHTML += `<div class="msg user"><div class="name">我</div><div class="bubble">${remark ? escHtml(remark) + '<br>' : ''}上传持仓文件${fileInfo}</div></div>`;
+  messages.scrollTop = messages.scrollHeight;
+
+  // 显示处理中
+  messages.innerHTML += `<div class="msg bot" id="thinking"><div class="name">投资顾问</div><div class="bubble"><span class="loading">正在解析文件</span></div></div>`;
+  messages.scrollTop = messages.scrollHeight;
+
+  // 上传
+  const formData = new FormData();
+  formData.append('file', file);
+  if (clientId) formData.append('client_id', clientId);
+
+  let data;
+  try {
+    const resp = await fetch(API + '/api/upload', {method: 'POST', body: formData});
+    data = await resp.json();
+  } catch(e) {
+    data = {error: '上传失败: ' + e.message};
+  }
+
+  const thinking = document.getElementById('thinking');
+  if (thinking) thinking.remove();
+
+  if (data.error) {
+    messages.innerHTML += `<div class="msg bot"><div class="name">投资顾问</div><div class="bubble">解析失败：${escHtml(data.error)}</div></div>`;
+  } else {
+    const reply = data.reply || '文件已处理';
+    // 识别到的持仓明细
+    let holdingsHtml = '';
+    if (data.holdings && data.holdings.length) {
+      holdingsHtml = '<table style="margin-top:8px;font-size:12px;width:100%;border-collapse:collapse">';
+      holdingsHtml += '<tr style="border-bottom:1px solid rgba(0,0,0,.1)"><th style="text-align:left;padding:4px">代码</th><th style="text-align:left;padding:4px">名称</th><th style="text-align:right;padding:4px">份额</th><th style="text-align:right;padding:4px">成本</th></tr>';
+      for (const h of data.holdings.slice(0, 15)) {
+        holdingsHtml += `<tr><td style="padding:3px 4px">${h.fund_code||h.code||''}</td><td style="padding:3px 4px">${escHtml(h.fund_name||h.name||'')}</td><td style="padding:3px 4px;text-align:right">${h.shares||h.amount||''}</td><td style="padding:3px 4px;text-align:right">${h.cost||h.cost_nav||''}</td></tr>`;
+      }
+      if (data.holdings.length > 15) {
+        holdingsHtml += `<tr><td colspan="4" style="padding:3px 4px;color:#888">...及其他 ${data.holdings.length - 15} 条</td></tr>`;
+      }
+      holdingsHtml += '</table>';
+    }
+    messages.innerHTML += `<div class="msg bot"><div class="name">投资顾问</div><div class="bubble">${escHtml(reply)}${holdingsHtml}</div></div>`;
+
+    // 自动发送到对话引擎进行分析
+    if (data.holdings && data.holdings.length) {
+      const analyzeQuery = (remark || '请分析') + `上传的${data.holdings.length}条持仓数据`;
+      messages.innerHTML += `<div class="msg bot" id="analyzing"><div class="name">投资顾问</div><div class="bubble"><span class="loading">正在分析持仓</span></div></div>`;
+      messages.scrollTop = messages.scrollHeight;
+
+      const chatData = await api('/api/chat', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({query: analyzeQuery})
+      });
+      const analyzing = document.getElementById('analyzing');
+      if (analyzing) analyzing.remove();
+
+      const analysisReply = chatData?.reply || '';
+      if (analysisReply) {
+        messages.innerHTML += `<div class="msg bot"><div class="name">投资顾问</div><div class="bubble">${escHtml(analysisReply)}</div></div>`;
+      }
+    }
+  }
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function clearUpload() {
+  pendingFile = null;
+  document.getElementById('fileInput').value = '';
+  document.getElementById('uploadPreview').style.display = 'none';
+}
+
+function handleFileSelect(input) {
+  if (input.files && input.files[0]) {
+    pendingFile = input.files[0];
+    document.getElementById('uploadFilename').textContent = pendingFile.name + ' (' + (pendingFile.size/1024).toFixed(1) + 'KB)';
+    document.getElementById('uploadPreview').style.display = 'flex';
+  }
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// 拖拽上传
+document.addEventListener('DOMContentLoaded', () => {
+  const zone = document.getElementById('uploadZone');
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      pendingFile = e.dataTransfer.files[0];
+      document.getElementById('uploadFilename').textContent = pendingFile.name + ' (' + (pendingFile.size/1024).toFixed(1) + 'KB)';
+      document.getElementById('uploadPreview').style.display = 'flex';
+    }
+  });
+});
+
+// ── 初始化 ─────────────────────────────────────────────────────────
+loadMarket();
+loadClients();
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fund-advisor"
+version = "5.0.0"
+description = "基金投资智能顾问 — Web UI 交互仪表盘、持仓分析、量化预估、智能对话"
+requires-python = ">=3.8"
+dependencies = [
+    "requests>=2.28.0",
+    "beautifulsoup4>=4.12.0",
+    "akshare>=1.12.0",
+    "pandas>=2.0.0",
+    "python-dateutil>=2.8.0",
+    "flask>=3.0.0",
+    "flask-cors>=4.0.0",
+    "mcp>=1.0.0",
+    "openpyxl>=3.1.0",
+    "python-docx>=0.8.11",
+    "pdfplumber>=0.10.0",
+    "Pillow>=10.0.0",
+]
+
+[project.optional-dependencies]
+ocr = ["pytesseract>=0.3.10"]
+browser = ["selenium>=4.15.0"]
+pdf = ["PyPDF2>=3.0.0"]
+ppt = ["python-pptx"]
+all = [
+    "pytesseract>=0.3.10",
+    "selenium>=4.15.0",
+    "PyPDF2>=3.0.0",
+    "python-pptx",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scripts*"]

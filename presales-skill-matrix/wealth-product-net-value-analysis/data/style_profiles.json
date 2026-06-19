@@ -1,0 +1,116 @@
+{
+  "styles": [
+    {
+      "style_id": "S001",
+      "name": "价值成长均衡型",
+      "code": "VALUE_BALANCED",
+      "description": "兼顾价值与成长，仓位适中，追求稳健收益",
+      "characteristics": {
+        "pe_range": [15, 30],
+        "position_range": [70, 85],
+        "turnover": "中等",
+        "sector_distribution": "分散"
+      },
+      "suitable_investors": ["稳健型", "保守型"],
+      "typical_companies": []
+    },
+    {
+      "style_id": "S002",
+      "name": "积极成长型",
+      "code": "AGGRESSIVE_GROWTH",
+      "description": "高仓位高换手，专注成长赛道，追求超额收益",
+      "characteristics": {
+        "pe_range": [25, 50],
+        "position_range": [85, 95],
+        "turnover": "高",
+        "sector_distribution": "集中"
+      },
+      "suitable_investors": ["积极型", "激进型"],
+      "typical_companies": []
+    },
+    {
+      "style_id": "S003",
+      "name": "深度价值型",
+      "code": "DEEP_VALUE",
+      "description": "低估值、高分红、稳定ROE，追求安全边际",
+      "characteristics": {
+        "pe_range": [5, 20],
+        "position_range": [75, 90],
+        "turnover": "低",
+        "sector_distribution": "均衡"
+      },
+      "suitable_investors": ["保守型"],
+      "typical_companies": []
+    },
+    {
+      "style_id": "S004",
+      "name": "灵活配置型",
+      "code": "FLEXIBLE_ALLOCATION",
+      "description": "仓位灵活调整，行业配置分散，适应多变市场",
+      "characteristics": {
+        "position_range": [40, 95],
+        "turnover": "中等偏高",
+        "sector_distribution": "高度分散"
+      },
+      "suitable_investors": ["稳健型", "积极型"],
+      "typical_companies": []
+    },
+    {
+      "style_id": "S005",
+      "name": "红利低波型",
+      "code": "DIVIDEND_LOW_VOL",
+      "description": "高股息、低波动，追求稳健现金流",
+      "characteristics": {
+        "pe_range": [10, 25],
+        "position_range": [80, 95],
+        "turnover": "低",
+        "dividend_yield": ">3%"
+      },
+      "suitable_investors": ["保守型", "稳健型"],
+      "typical_companies": []
+    },
+    {
+      "style_id": "S006",
+      "name": "行业集中型",
+      "code": "SECTOR_CONCENTRATED",
+      "description": "专注单一或少数行业，攻守风格明显",
+      "characteristics": {
+        "single_sector_weight": ">40%",
+        "position_range": [80, 95],
+        "turnover": "中等"
+      },
+      "suitable_investors": ["积极型", "激进型"],
+      "typical_companies": []
+    },
+    {
+      "style_id": "S007",
+      "name": "全球配置型",
+      "code": "GLOBAL_ALLOCATION",
+      "description": "跨市场配置，兼顾A股、港股、美股等",
+      "characteristics": {
+        "market_coverage": ["A股", "港股", "美股"],
+        "position_range": [70, 90],
+        "currency_hedge": "部分对冲"
+      },
+      "suitable_investors": ["稳健型", "积极型"],
+      "typical_companies": []
+    },
+    {
+      "style_id": "S008",
+      "name": "固收增强型",
+      "code": "FIXED_INCOME_ENHANCED",
+      "description": "以债券为主，股票增强，追求稳定收益",
+      "characteristics": {
+        "bond_ratio": "70-80%",
+        "stock_ratio": "20-30%",
+        "target_return": "5-8%"
+      },
+      "suitable_investors": ["保守型", "稳健型"],
+      "typical_companies": []
+    }
+  ],
+  "meta": {
+    "total_styles": 8,
+    "last_update": "2026-05-20"
+  }
+}

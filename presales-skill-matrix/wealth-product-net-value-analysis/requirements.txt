@@ -1,0 +1,33 @@
+# fund-advisor skill dependencies
+# Core third-party packages (excludes stdlib)
+requests>=2.28.0
+beautifulsoup4>=4.12.0
+akshare>=1.12.0
+pandas>=2.0.0
+python-dateutil>=2.8.0
+
+# 持仓导入 - OCR截图识别
+# Tesseract OCR (需额外安装系统包: https://github.com/UB-Mannheim/tesseract/wiki)
+pytesseract>=0.3.10
+Pillow>=10.0.0
+
+# 持仓导入 - 文档解析
+python-docx>=0.8.11
+pdfplumber>=0.10.0
+PyPDF2>=3.0.0
+
+# 持仓导入 - 浏览器爬取
+selenium>=4.15.0
+
+# 表格导出
+openpyxl>=3.1.0
+
+# Web UI
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# MCP Server 集成
+mcp>=1.0.0
+
+# 可选: EasyOCR 备用OCR引擎（体积较大，按需安装）
+# easyocr>=1.7.0

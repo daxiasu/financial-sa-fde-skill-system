@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-18",
+  "generatedAt": "2026-06-19",
   "sourceExcel": "shared-templates/team_skill_register.xlsx",
   "items": [
     {
@@ -11,22 +11,22 @@
       "所属层级": "前台",
       "业务子类": "财富管理",
       "业务环节": "客户陪伴",
-      "能力说明": "面向投顾、理财经理、客户经理，在财富营销和陪伴过程中解读基金、股票、债券等产品，并支持持仓变化和净值走势分析。",
+      "能力说明": "面向投顾、理财经理、客户经理，围绕基金/财富产品进行材料解读、净值走势分析、持仓识别、量化评估和客户沟通话术生成。",
       "Skill分类": "LLM+金融数据分析型 Skill",
-      "关键输入": "产品材料、持仓截图、净值数据、客户问题",
-      "关键输出": "产品解读、净值归因、风险提示、客户沟通话术",
-      "建设状态": "已制作Demo",
+      "关键输入": "产品材料、持仓截图、净值数据、客户问题、基金/经理/公司数据",
+      "关键输出": "产品解读、净值归因、量化分析、风险提示、客户沟通话术、持仓报告",
+      "建设状态": "已开发",
       "展示状态": "demo",
-      "作者": "同事/Dumate场景积累",
-      "来源平台": "Dumate",
-      "迁移建议": "已接入同事提供的页面 Demo；暂无真实 SKILL.md 与配套脚本，后续需补 Skill 包后再进入真实文件展示。",
-      "Skill文件路径": "",
+      "作者": "同事/Fund Advisor Skill包",
+      "来源平台": "Dumate/Dodo",
+      "迁移建议": "已补齐 fund-advisor 真实 Skill 包；页面 Demo 与真实 SKILL.md、脚本、数据、引用文档共同展示。后续可继续做 Web UI 运行验证和真实数据接入。",
+      "Skill文件路径": "presales-skill-matrix/wealth-product-net-value-analysis/SKILL.md",
       "Demo页面路径": "presales-skill-matrix/wealth-product-net-value-analysis/wealth-product-net-value-analysis-demo.html",
-      "规则/模板路径": "",
-      "样例数据路径": "",
-      "版本": "0.2.0-demo",
-      "标签": "财富管理,投顾,产品解读,净值走势,客户沟通,Demo",
-      "备注": "2026-06-18 接入同事提供的财富产品解读与净值走势分析页面 Demo；当前仅有 HTML demo 文件，未伪造 Skill 文件包。"
+      "规则/模板路径": "presales-skill-matrix/wealth-product-net-value-analysis/references/",
+      "样例数据路径": "presales-skill-matrix/wealth-product-net-value-analysis/data/",
+      "版本": "5.0.0",
+      "标签": "财富管理,基金投顾,产品解读,净值走势,持仓识别,量化分析,客户沟通,已开发Skill",
+      "备注": "2026-06-18 已接入 fund-advisor 完整 Skill 包；保留同事提供的财富产品解读页面 Demo。"
     },
     {
       "Skill_ID": "dumate-equity-industry-research",

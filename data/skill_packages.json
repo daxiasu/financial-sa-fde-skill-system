@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-18T04:03:41.542500+00:00",
+  "generatedAt": "2026-06-19T01:07:09.749063+00:00",
   "packages": {
     "B-L2-025": {
       "root": "presales-skill-matrix/ground-zero-credit-risk-analysis/",
@@ -122,6 +122,98 @@
       "demoFiles": [
         {
           "path": "AI股票投研工作台Demo.html",
+          "note": "可打开的本地演示页面"
+        }
+      ],
+      "generatedFrom": "real-filesystem-scan"
+    },
+    "dumate-wealth-product-interpretation": {
+      "root": "presales-skill-matrix/wealth-product-net-value-analysis/",
+      "name": "fund-advisor",
+      "summary": "基金投资AI客户经理 Skill。文件清单来自同事提供的真实 Skill 包，并配套财富产品净值走势 Demo。",
+      "coreFiles": [
+        {
+          "path": "SKILL.md",
+          "note": "核心技能定义文件"
+        },
+        {
+          "path": "requirements.txt",
+          "note": "依赖清单"
+        },
+        {
+          "path": "pyproject.toml",
+          "note": "Python 项目配置"
+        },
+        {
+          "path": "_meta.json",
+          "note": "Skill 元数据"
+        }
+      ],
+      "supportFiles": [
+        {
+          "path": "mcp_server.py",
+          "note": "MCP Server 集成入口"
+        },
+        {
+          "path": "scripts/web_server.py",
+          "note": "Web UI 服务入口"
+        },
+        {
+          "path": "scripts/analysis/fund_quant_analyzer.py",
+          "note": "基金量化分析"
+        },
+        {
+          "path": "scripts/analysis/comparison_engine.py",
+          "note": "产品/基金对比引擎"
+        },
+        {
+          "path": "scripts/analysis/portfolio_analyzer.py",
+          "note": "投资组合分析"
+        },
+        {
+          "path": "scripts/analysis/fund_advisor_speech.py",
+          "note": "投顾沟通话术生成"
+        },
+        {
+          "path": "scripts/client_manager/conversation_engine.py",
+          "note": "客户对话引擎"
+        },
+        {
+          "path": "scripts/client_manager/holdings_importer.py",
+          "note": "持仓导入识别"
+        },
+        {
+          "path": "scripts/client_manager/report_generator.py",
+          "note": "客户报告生成"
+        },
+        {
+          "path": "scripts/data_collection/eastmoney_collector.py",
+          "note": "东方财富数据采集"
+        },
+        {
+          "path": "scripts/data_collection/amac_collector.py",
+          "note": "基金业协会数据采集"
+        },
+        {
+          "path": "references/database_schema.md",
+          "note": "数据结构说明"
+        },
+        {
+          "path": "references/eastmoney_api.md",
+          "note": "东方财富接口说明"
+        },
+        {
+          "path": "references/amac_api.md",
+          "note": "基金业协会接口说明"
+        },
+        {
+          "path": "templates/index.html",
+          "note": "原包自带 Web UI 模板"
+        }
+      ],
+      "demoFiles": [
+        {
+          "path": "wealth-product-net-value-analysis-demo.html",
           "note": "可打开的本地演示页面"
         }
       ],
