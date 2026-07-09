@@ -36,6 +36,22 @@ PACKAGE_DEFINITIONS = {
             {"path": "贷后风险监测工作台Demo.html", "note": "可打开的本地演示页面"},
         ],
     },
+    "credit-due-diligence-report": {
+        "root": "presales-skill-matrix/credit-due-diligence-report/",
+        "name": "credit-due-diligence-report",
+        "summary": "信贷尽调调查与分析报告生成 Skill。文件清单来自本仓库内可复核的 demo 配套 Skill 包。",
+        "coreFiles": [
+            {"path": "SKILL.md", "note": "核心技能定义文件"},
+            {"path": "references/due_diligence_rules.md", "note": "尽调规则口径"},
+            {"path": "references/report_template.md", "note": "尽调报告模板"},
+        ],
+        "supportFiles": [
+            {"path": "scripts/smoke_test.py", "note": "结构完整性检查脚本"},
+        ],
+        "demoFiles": [
+            {"path": "credit-due-diligence-report-demo.html", "note": "可打开的本地演示页面"},
+        ],
+    },
     "dumate-equity-industry-research": {
         "root": "presales-skill-matrix/ai-stock-researcher/",
         "name": "ai-stock-researcher",

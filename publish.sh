@@ -35,7 +35,7 @@ fi
 
 "$PYTHON_BIN" scripts/build_skill_packages.py
 
-git add .gitignore index.html README.md publish.sh data scripts shared-templates/team_skill_register.xlsx presales-skill-matrix
+git add .gitignore index.html README.md publish.sh data scripts shared-templates/team_skill_register.xlsx shared-templates/bank_skill_basic_rule.md presales-skill-matrix
 
 if git diff --cached --quiet; then
   echo "没有需要提交的更新。"

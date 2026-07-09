@@ -1,0 +1,1523 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>信贷尽调调查与分析报告生成工作台</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --line: #d8dee8;
+      --text: #172033;
+      --muted: #637083;
+      --blue: #2563eb;
+      --teal: #0f766e;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --violet: #6d28d9;
+      --shadow: 0 10px 30px rgba(23, 32, 51, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 1180px;
+      color: var(--text);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.45;
+      letter-spacing: 0;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 64px 1fr;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      position: sticky;
+      top: 0;
+      z-index: 4;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: #ffffff;
+      background: var(--blue);
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 760;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .pill {
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 5px;
+      border: 1px solid #d8dee7;
+      background: #f8fafc;
+      color: #435264;
+      font-weight: 740;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(410px, 1.05fr) minmax(360px, 0.95fr) minmax(380px, 1fr);
+      gap: 14px;
+      padding: 14px;
+      min-height: 0;
+    }
+
+    .notice {
+      grid-column: 1 / -1;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #f3d18a;
+      border-radius: 8px;
+      background: #fff8e8;
+      color: #7c4a03;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .notice strong { color: #5f3900; }
+
+    .panel {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 54px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 760;
+    }
+
+    .panel-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel-body {
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    label {
+      color: #334155;
+      font-size: 12px;
+      font-weight: 680;
+    }
+
+    textarea,
+    select,
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--text);
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    select:focus,
+    textarea:focus,
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0 14px;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 9px 12px;
+      background: #edf2f7;
+      color: #1f2937;
+      cursor: pointer;
+      font-weight: 680;
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .btn.secondary {
+      background: #ffffff;
+      border-color: #cfd7e3;
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .segmented button {
+      min-height: 36px;
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #334155;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 680;
+    }
+
+    .segmented button.active {
+      border-color: #9bbcff;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .kpi {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #fbfcfd;
+      padding: 10px;
+      display: grid;
+      gap: 3px;
+    }
+
+    .kpi strong {
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .kpi span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .flow {
+      display: grid;
+      gap: 9px;
+    }
+
+    .step {
+      position: relative;
+      border: 1px solid #d9e1ec;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 11px 12px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .step.active {
+      border-color: #9bbcff;
+      background: #f7fbff;
+    }
+
+    .step.done {
+      border-color: #b7e2ca;
+      background: #f4fbf7;
+    }
+
+    .step-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .step strong {
+      font-size: 13px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.52;
+    }
+
+    .status {
+      min-height: 22px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 2px 8px;
+      color: #475569;
+      background: #f1f5f9;
+      font-size: 11px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .status.done {
+      color: var(--green);
+      background: #edf8f0;
+    }
+
+    .status.active {
+      color: var(--blue);
+      background: #eff6ff;
+    }
+
+    .report {
+      display: grid;
+      gap: 12px;
+    }
+
+    .section {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+
+    .section:first-child {
+      border-top: 0;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .report-card {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .report-card h2,
+    .report-card h3 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .report-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.62;
+    }
+
+    .tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      min-height: 24px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #d4dce8;
+      border-radius: 999px;
+      background: #f8fafc;
+      color: #475569;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tag.red {
+      color: var(--red);
+      background: #fff1f0;
+      border-color: #fecaca;
+    }
+
+    .tag.amber {
+      color: var(--amber);
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    .tag.green {
+      color: var(--green);
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+
+    .tag.blue {
+      color: var(--blue);
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 8px;
+    }
+
+    .check {
+      border: 1px solid #dbe2ea;
+      border-radius: 7px;
+      padding: 9px 10px;
+      display: grid;
+      gap: 4px;
+      background: #fbfcfd;
+    }
+
+    .check strong {
+      font-size: 13px;
+    }
+
+    .check span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .item {
+      border: 1px solid #dbe2ea;
+      border-radius: 7px;
+      background: #ffffff;
+      padding: 9px 10px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .item strong {
+      font-size: 13px;
+    }
+
+    .item span,
+    .item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .data-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .data-card {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 11px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .data-card h3 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid #eef2f6;
+      padding-top: 7px;
+      font-size: 12px;
+    }
+
+    .data-row:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .data-row span:first-child {
+      color: var(--muted);
+    }
+
+    .data-row span:last-child {
+      color: #1f2937;
+      font-weight: 720;
+      text-align: right;
+    }
+
+    .meter {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e5eaf1;
+    }
+
+    .meter > i {
+      display: block;
+      height: 100%;
+      width: var(--value);
+      background: var(--color);
+    }
+
+    .evidence {
+      border-left: 3px solid #bfdbfe;
+      background: #f8fbff;
+      padding: 9px 10px;
+      border-radius: 6px;
+      color: #334155;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .pipeline {
+      display: grid;
+      gap: 9px;
+    }
+
+    .pipe-step {
+      display: grid;
+      grid-template-columns: 26px 1fr auto;
+      gap: 8px;
+      align-items: start;
+      border: 1px solid #e1e7f0;
+      border-radius: 8px;
+      padding: 10px;
+      background: #ffffff;
+    }
+
+    .pipe-step.pending {
+      background: #f8fafc;
+      color: #64748b;
+    }
+
+    .pipe-step.running {
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
+
+    .pipe-step-num {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: #eaf2ff;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .pipe-step-title {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .pipe-step-text {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .trace-card {
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      background: #eff6ff;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .trace-card strong {
+      display: block;
+      color: #1d4ed8;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .trace-card span {
+      display: block;
+      color: #334155;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .rule-hit-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .rule-hit {
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      background: #ffffff;
+      padding: 9px 10px;
+    }
+
+    .rule-hit strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    .rule-hit span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .score-table th,
+    .score-table td {
+      border-bottom: 1px solid #e1e7f0;
+      padding: 7px 6px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .score-table th {
+      color: #475569;
+      background: #f8fafc;
+      font-weight: 750;
+    }
+
+    .score-table td:last-child,
+    .score-table th:last-child {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .log-box {
+      display: grid;
+      gap: 7px;
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      background: #0f172a;
+      color: #dbeafe;
+      padding: 10px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      min-height: 112px;
+    }
+
+    .log-line {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 8px;
+    }
+
+    .log-time {
+      color: #93c5fd;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 10px;
+      background: #f8fafc;
+      border: 1px dashed #cfd7e3;
+      border-radius: 7px;
+    }
+
+    .file-callout {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #fbfcfd;
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .file-line {
+      display: grid;
+      grid-template-columns: 26px 1fr auto;
+      gap: 8px;
+      align-items: start;
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      background: #ffffff;
+      padding: 9px 10px;
+    }
+
+    .file-token {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .file-meta strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .file-meta span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .mini-btn {
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #334155;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.46);
+      padding: 24px;
+      z-index: 20;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(980px, 92vw);
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .modal-body {
+      overflow: auto;
+      padding: 14px;
+      background: #0f172a;
+    }
+
+    .modal-body pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #dbeafe;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1180px) {
+      body { min-width: 0; }
+      .main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-mark">DD</div>
+        <div>
+          <h1>信贷尽调调查与分析报告生成工作台</h1>
+          <div class="subtitle">左侧输入尽调任务，中间展示 Skill 执行链路，右侧切换模拟数据并观察报告结论变化。</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="pill">信贷</span>
+        <span class="pill">贷前</span>
+        <span class="pill">风控</span>
+        <span class="pill">仅 Demo</span>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="notice">
+        <strong>演示口径：</strong>
+        当前页面使用脱敏模拟数据展示信贷尽调 Skill 的工作方式；真实投产需接入工商、征信、流水、财报、税务、司法、舆情、授信和担保数据源，并由客户经理/审批人员复核。
+      </div>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">业务工作台</div>
+            <div class="panel-note">模拟客户经理发起贷前尽调任务</div>
+          </div>
+          <span class="pill">客户经理视角</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label for="enterprise">尽调客户</label>
+            <select id="enterprise">
+              <option value="a">宁波某智能装备有限公司</option>
+              <option value="b">成都某供应链服务有限公司</option>
+              <option value="c">武汉某建筑工程有限公司</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="amount">授信申请金额（万元）</label>
+            <input id="amount" type="number" value="3000" min="100" step="100">
+          </div>
+          <div class="field">
+            <label for="purpose">授信用途</label>
+            <select id="purpose">
+              <option>流动资金周转</option>
+              <option>设备采购与产能扩张</option>
+              <option>订单履约垫资</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="method">尽调方式</label>
+            <select id="method">
+              <option>现场走访 + 非现场核查</option>
+              <option>非现场核查</option>
+              <option>现场走访</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="focus">客户经理补充关注点</label>
+            <textarea id="focus">重点核查企业订单真实性、应收账款增长原因、实际控制人对外担保情况，以及本次授信用途与现金流覆盖能力。</textarea>
+          </div>
+          <div class="toolbar">
+            <button class="btn primary" id="runBtn" type="button">生成尽调分析</button>
+            <button class="btn secondary" id="stressBtn" type="button">切换压力场景</button>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi"><strong id="riskScore">68</strong><span>综合风险分</span></div>
+            <div class="kpi"><strong id="coverage">1.6x</strong><span>现金流覆盖</span></div>
+            <div class="kpi"><strong id="alerts">5</strong><span>待核实事项</span></div>
+          </div>
+
+          <div class="report-card">
+            <h3>客户经理输入摘要</h3>
+            <p id="inputSummary">申请 3000 万流动资金授信，拟采用抵押 + 保证组合担保，重点关注订单真实性、应收账款和担保圈风险。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">后台 Skill 执行链路</div>
+            <div class="panel-note">展示平台路由、规则命中和真实 demo 配套 Skill 包</div>
+          </div>
+          <span class="pill">L2 + L1</span>
+        </div>
+        <div class="panel-body">
+          <div class="section">
+            <div class="section-title">平台路由</div>
+            <div class="pipeline" id="routerPipeline"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">SKILL.md 工作流进度</div>
+            <div class="pipeline" id="skillPipeline"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">due_diligence_rules.md 命中规则</div>
+            <div id="causeTrace"></div>
+            <div id="scoreBreakdown"></div>
+            <div class="rule-hit-list" id="ruleHits"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">执行日志</div>
+            <div class="log-box" id="logBox"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Skill 包调用关系</div>
+            <div class="toolbar" style="margin-top:0;">
+              <button class="mini-btn" id="viewSkillBtn" type="button">查看 SKILL.md</button>
+              <button class="mini-btn" id="viewRulesBtn" type="button">查看 due_diligence_rules.md</button>
+              <button class="mini-btn" id="viewTemplateBtn" type="button">查看 report_template.md</button>
+            </div>
+            <div class="file-callout">
+              <div class="file-line">
+                <div class="file-token">S</div>
+                <div class="file-meta">
+                  <strong>SKILL.md</strong>
+                  <span>定义触发条件、工作流、输出结构和合规边界。</span>
+                </div>
+                <span class="tag blue">入口</span>
+              </div>
+              <div class="file-line">
+                <div class="file-token">R</div>
+                <div class="file-meta">
+                  <strong>due_diligence_rules.md</strong>
+                  <span>沉淀尽调规则口径、典型关注信号和证据纪律。</span>
+                </div>
+                <span class="tag amber">规则</span>
+              </div>
+              <div class="file-line">
+                <div class="file-token">T</div>
+                <div class="file-meta">
+                  <strong>report_template.md</strong>
+                  <span>约束尽调报告章节结构，避免输出失真或漏项。</span>
+                </div>
+                <span class="tag green">模板</span>
+              </div>
+              <div class="file-line">
+                <div class="file-token">C</div>
+                <div class="file-meta">
+                  <strong>scripts/smoke_test.py</strong>
+                  <span>用于检查本 demo 配套 Skill 包的结构完整性。</span>
+                </div>
+                <span class="tag blue">校验</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">尽调结论草稿</div>
+            <div class="report">
+              <div class="report-card">
+                <div class="tags" id="conclusionTags"></div>
+                <p id="conclusionText"></p>
+              </div>
+              <div class="report-card">
+                <h3>风险问题清单</h3>
+                <div class="checklist" id="riskList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">当前规则口径</div>
+            <div class="item">
+              <strong>现金流覆盖</strong>
+              <span>低于 1 倍时，建议进入重点关注并强化回款监管条件。</span>
+            </div>
+            <div class="item">
+              <strong>应收与税票交叉验证</strong>
+              <span>应收增速明显高于收入增速，或税票匹配度下降，需要优先核查收入质量。</span>
+            </div>
+            <div class="item">
+              <strong>关联担保与互保链条</strong>
+              <span>关联交易和对外担保不直接给审批结论，但会显著提高补充核查要求。</span>
+            </div>
+            <div class="item">
+              <strong>尽调结论边界</strong>
+              <span>这是尽调分析与授信建议，不是最终批复、拒贷或内部评级结果。</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">模拟数据区</div>
+            <div class="panel-note">切换右侧数据，观察风险评级和报告建议变化</div>
+          </div>
+          <span class="pill">脱敏样例</span>
+        </div>
+        <div class="panel-body">
+          <div class="segmented">
+            <button type="button" class="active" data-view="finance">财务经营</button>
+            <button type="button" data-view="credit">征信风险</button>
+            <button type="button" data-view="relation">关联担保</button>
+          </div>
+          <div class="data-list" id="dataList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="fileModal" role="dialog" aria-modal="true" aria-labelledby="fileModalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title" id="fileModalTitle">文件内容</div>
+        <button class="btn secondary" id="closeModalBtn" type="button">关闭</button>
+      </div>
+      <div class="modal-body">
+        <pre id="fileModalContent"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cases = {
+      a: {
+        name: "宁波某智能装备有限公司",
+        score: 68,
+        coverage: "1.6x",
+        alerts: 5,
+        level: "中等关注",
+        amountAdvice: "建议授信额度 2400-2800 万，期限 12 个月，落实抵押登记后提款。",
+        tags: [["中等关注", "amber"], ["建议有条件通过", "blue"], ["需补材料", "amber"]],
+        summary: "申请 3000 万流动资金授信，主营智能装备零部件加工，订单增长较快但应收账款周转放缓。",
+        conclusion: "企业主营业务连续性较好，近两年收入保持增长，现金流对短期债务覆盖尚可。但应收账款增长快于收入增长，前五大客户集中度偏高，实际控制人存在对外担保，需要补充订单、回款和担保明细后再形成最终授信意见。",
+        risks: [
+          ["应收账款增长较快", "应收账款同比增长 38%，高于收入增速 18%，需核查大额应收真实性和账龄结构。"],
+          ["客户集中度偏高", "前五大客户收入占比 61%，其中第一大客户占比 28%，需核查合作稳定性。"],
+          ["对外担保需穿透", "实际控制人存在 2 笔对外担保，需补充被担保方经营及还款情况。"],
+          ["税票匹配需复核", "开票收入与报表收入存在 6% 差异，需客户说明差异原因。"],
+          ["授信用途需闭环", "本次用途为订单履约采购，需补充订单、采购合同和资金支付计划。"]
+        ],
+        finance: [
+          ["营业收入", "2.85 亿元 / 同比 +18%"],
+          ["净利润率", "8.2%"],
+          ["资产负债率", "56%"],
+          ["流动比率", "1.34"],
+          ["经营性现金流", "4300 万元"],
+          ["应收账款周转", "96 天"],
+          ["税票匹配度", "94%"]
+        ],
+        credit: [
+          ["人行征信", "无逾期，关注类 0 笔"],
+          ["存量授信", "4 家机构合计 5200 万"],
+          ["对外担保", "2 笔，合计 850 万"],
+          ["司法诉讼", "买卖合同纠纷 1 件，已结案"],
+          ["行政处罚", "无重大处罚"],
+          ["票据融资", "近 6 个月贴现 780 万"]
+        ],
+        relation: [
+          ["关联企业", "5 家，其中 2 家同业经营"],
+          ["关联交易", "采购端占比 12%"],
+          ["担保圈风险", "中等，存在互保链条"],
+          ["实控人负债", "个人经营贷 320 万"],
+          ["上下游集中度", "客户集中偏高，供应商稳定"]
+        ]
+      },
+      b: {
+        name: "成都某供应链服务有限公司",
+        score: 82,
+        coverage: "0.9x",
+        alerts: 8,
+        level: "重点关注",
+        amountAdvice: "建议压降授信额度至 1200-1500 万，并增加核心应收回款监管与保证金安排。",
+        tags: [["重点关注", "red"], ["建议压降额度", "amber"], ["现金流承压", "red"]],
+        summary: "申请 3000 万订单履约授信，收入规模增长较快，但毛利率下降、资金占用上升，公开风险和关联交易信号较多。",
+        conclusion: "企业收入增长主要来自新拓展客户，但毛利率下降明显，经营现金流弱于利润表现，应收账款和预付款占用较高。结合司法诉讼、关联交易和对外担保情况，建议降低额度、强化回款监管，并将核心订单回款作为提款和续贷前置条件。",
+        risks: [
+          ["现金流覆盖不足", "经营性现金流对短期有息负债覆盖低于 1 倍，偿债来源稳定性不足。"],
+          ["司法风险增加", "近 12 个月新增 3 件合同纠纷，需核查是否涉及核心客户。"],
+          ["关联交易比例高", "关联采购占比 26%，需核查定价公允性和资金回流。"],
+          ["预付款异常增长", "预付款同比增长 52%，与订单增长不完全匹配。"],
+          ["担保圈较复杂", "实控人关联企业存在互保和共同债务，需穿透担保链条。"],
+          ["行业景气波动", "所在物流供应链行业受下游需求和账期影响较大。"],
+          ["客户回款周期拉长", "应收账款周转从 88 天拉长至 132 天。"],
+          ["授信用途需专款监管", "订单履约资金流向需与采购合同、发票和物流凭证匹配。"]
+        ],
+        finance: [
+          ["营业收入", "4.12 亿元 / 同比 +24%"],
+          ["净利润率", "3.1%"],
+          ["资产负债率", "71%"],
+          ["流动比率", "1.05"],
+          ["经营性现金流", "-1200 万元"],
+          ["应收账款周转", "132 天"],
+          ["税票匹配度", "87%"]
+        ],
+        credit: [
+          ["人行征信", "无逾期，关注类 1 笔"],
+          ["存量授信", "6 家机构合计 9800 万"],
+          ["对外担保", "4 笔，合计 2100 万"],
+          ["司法诉讼", "合同纠纷 3 件，2 件未结"],
+          ["行政处罚", "税务简易处罚 1 笔"],
+          ["票据融资", "近 6 个月贴现 2200 万"]
+        ],
+        relation: [
+          ["关联企业", "9 家，其中 4 家存在资金往来"],
+          ["关联交易", "采购端占比 26%"],
+          ["担保圈风险", "较高，存在互保链条"],
+          ["实控人负债", "个人经营贷 760 万"],
+          ["上下游集中度", "客户分散但账期拉长"]
+        ]
+      },
+      c: {
+        name: "武汉某建筑工程有限公司",
+        score: 75,
+        coverage: "1.1x",
+        alerts: 7,
+        level: "审慎介入",
+        amountAdvice: "建议按项目回款节点分批放款，追加核心项目回款账户监管和实控人连带保证。",
+        tags: [["审慎介入", "amber"], ["项目回款监管", "blue"], ["区域风险", "amber"]],
+        summary: "申请 3000 万流动资金授信，用于工程项目材料采购，项目回款周期长，区域与业主集中度较高。",
+        conclusion: "企业具备一定项目经验和在手订单，但建筑工程行业账期长、项目验收和回款不确定性较强。财务端存在存货和合同资产增长，信用端有少量诉讼记录。建议围绕项目真实性、工程进度、应收回款和业主资质进行补充尽调，采用分批提款和回款监管方式控制风险。",
+        risks: [
+          ["项目回款周期长", "合同资产和应收账款合计占流动资产 48%，需核查项目验收进度。"],
+          ["区域集中度较高", "70% 收入来自同一区域，受地方财政和业主付款能力影响。"],
+          ["诉讼记录需关注", "存在劳务分包纠纷 2 件，需确认是否影响项目执行。"],
+          ["存货与合同资产增长", "合同资产同比增长 41%，需核查工程确认和结算依据。"],
+          ["业主集中度偏高", "前两大业主收入占比 46%。"],
+          ["担保措施需强化", "抵押物估值波动较大，建议追加保证和回款监管。"],
+          ["资金用途需匹配项目", "提款应与项目采购合同、发票、验收节点关联。"]
+        ],
+        finance: [
+          ["营业收入", "3.36 亿元 / 同比 +9%"],
+          ["净利润率", "4.6%"],
+          ["资产负债率", "64%"],
+          ["流动比率", "1.18"],
+          ["经营性现金流", "900 万元"],
+          ["应收账款周转", "148 天"],
+          ["税票匹配度", "91%"]
+        ],
+        credit: [
+          ["人行征信", "无逾期，正常类"],
+          ["存量授信", "3 家机构合计 4300 万"],
+          ["对外担保", "1 笔，合计 300 万"],
+          ["司法诉讼", "劳务纠纷 2 件，均在审"],
+          ["行政处罚", "安全生产整改 1 次"],
+          ["票据融资", "近 6 个月贴现 650 万"]
+        ],
+        relation: [
+          ["关联企业", "4 家，均为工程相关"],
+          ["关联交易", "分包端占比 15%"],
+          ["担保圈风险", "中等偏低"],
+          ["实控人负债", "住房按揭及经营贷 410 万"],
+          ["上下游集中度", "业主集中度较高"]
+        ]
+      }
+    };
+
+    const skillMdContent = `---
+name: credit-due-diligence-report
+description: 当用户需要对银行对公授信客户开展贷前尽调、生成尽调报告草稿、梳理风险问题清单、补充材料清单或解释尽调判断依据时，使用本 Skill。
+---
+
+# 信贷尽调调查与分析报告生成 Skill
+
+本 Skill 面向银行对公授信贷前尽调场景，帮助客户经理、审查人员和风险经理将企业基本信息、经营现场、财务数据、征信公开风险、关联方和担保圈等材料组织成一份可复核的尽调分析结果。
+
+## 核心工作流
+
+1. 收集企业基础信息、授信申请信息和客户经理关注点。
+2. 检查工商、财报、流水、征信、司法、合同、税票、章程、年报等关键资料是否齐备。
+3. 形成企业经营概况、行业位置和现场核查关注点。
+4. 对财务报表、现金流、开票、纳税、流水和订单履约证据做交叉验证。
+5. 核查征信、授信、担保、票据融资、涉诉、行政处罚和公开风险。
+6. 穿透关联企业、关联交易、互保和实控人负债情况。
+7. 结合行业景气、区域集中度和授信用途形成外部风险判断。
+8. 输出风险问题清单、补充材料清单、授信建议和后续跟踪要求。`;
+
+    const rulesMdContent = `# 信贷尽调规则口径
+
+## 典型关注规则
+
+- 应收账款增速高于收入增速：需要核查大额应收真实性和账龄结构。
+- 经营性现金流覆盖不足 1 倍：需要关注偿债来源稳定性和回款质量。
+- 税票匹配度低于 90%：需要说明报表、开票与纳税差异原因。
+- 存在未结诉讼、被执行或频繁合同纠纷：作为高关注线索进入尽调问题清单。
+- 关联采购或销售占比较高：需要核验定价公允性和资金回流。
+- 存在互保链条或共同债务：需要提升担保圈风险关注等级。
+- 建筑工程、供应链、贸易等回款周期长行业：要提高对订单、验收、物流、回款闭环的关注。`;
+
+    const templateMdContent = `# 信贷尽调调查与分析报告模板
+
+1. 基本信息与授信申请概况
+2. 企业经营与现场核查摘要
+3. 财务与经营交叉验证结论
+4. 信用状况与公开风险核查
+5. 关联方及担保圈分析
+6. 行业与区域风险判断
+7. 风险问题清单
+8. 补充材料清单
+9. 尽调结论与建议
+10. 合规边界与人工复核提示`;
+
+    const routeSteps = [
+      ["意图识别", "识别为银行贷前尽调与授信调查任务。", "ok"],
+      ["Router 路由", "命中 credit-due-diligence-report Skill。", "info"],
+      ["加载 Skill 包", "加载 SKILL.md、due_diligence_rules.md、report_template.md。", "info"]
+    ];
+
+    const skillSteps = [
+      ["SKILL.md 第1步", "收集企业基础信息、授信金额、用途和客户经理关注点。", "ok"],
+      ["SKILL.md 第2步", "检查关键资料是否齐备，标记待补充材料。", "ok"],
+      ["SKILL.md 第3步", "生成经营概况、现场核查关注点和企业画像。", "ok"],
+      ["SKILL.md 第4步", "调用 due_diligence_rules.md，对财务、征信、关联、行业信号做交叉验证。", "warn"],
+      ["SKILL.md 第5步", "生成风险问题清单和补充材料清单。", "ok"],
+      ["SKILL.md 第6步", "按 report_template.md 输出尽调结论和授信建议草稿。", "ok"]
+    ];
+
+    let activeCase = "a";
+    let activeView = "finance";
+    let runState = 0;
+    let logLines = [];
+
+    const el = {
+      enterprise: document.getElementById("enterprise"),
+      amount: document.getElementById("amount"),
+      purpose: document.getElementById("purpose"),
+      method: document.getElementById("method"),
+      focus: document.getElementById("focus"),
+      runBtn: document.getElementById("runBtn"),
+      stressBtn: document.getElementById("stressBtn"),
+      flow: document.getElementById("flow"),
+      dataList: document.getElementById("dataList"),
+      riskScore: document.getElementById("riskScore"),
+      coverage: document.getElementById("coverage"),
+      alerts: document.getElementById("alerts"),
+      inputSummary: document.getElementById("inputSummary"),
+      conclusionTags: document.getElementById("conclusionTags"),
+      conclusionText: document.getElementById("conclusionText"),
+      riskList: document.getElementById("riskList"),
+      routerPipeline: document.getElementById("routerPipeline"),
+      skillPipeline: document.getElementById("skillPipeline"),
+      causeTrace: document.getElementById("causeTrace"),
+      scoreBreakdown: document.getElementById("scoreBreakdown"),
+      ruleHits: document.getElementById("ruleHits"),
+      logBox: document.getElementById("logBox"),
+      viewSkillBtn: document.getElementById("viewSkillBtn"),
+      viewRulesBtn: document.getElementById("viewRulesBtn"),
+      viewTemplateBtn: document.getElementById("viewTemplateBtn"),
+      fileModal: document.getElementById("fileModal"),
+      fileModalTitle: document.getElementById("fileModalTitle"),
+      fileModalContent: document.getElementById("fileModalContent"),
+      closeModalBtn: document.getElementById("closeModalBtn")
+    };
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function tag(label, cls = "") {
+      return '<span class="tag ' + cls + '">' + escapeHtml(label) + '</span>';
+    }
+
+    function openFileModal(title, content) {
+      el.fileModalTitle.textContent = title;
+      el.fileModalContent.textContent = content;
+      el.fileModal.classList.add("open");
+    }
+
+    function closeFileModal() {
+      el.fileModal.classList.remove("open");
+    }
+
+    function buildSignals(item) {
+      const signals = [];
+      if (item.score >= 80) signals.push(["财务与现金流", "经营性现金流覆盖不足", "经营性现金流弱于短债覆盖，触发重点关注。", 24, "due_diligence_rules.md / 财务与经营交叉验证 / 现金流覆盖不足"]);
+      if (item.score >= 75) signals.push(["关联方与担保圈", "担保链条或关联交易偏复杂", "存在对外担保、关联采购或互保链条，需要穿透核查。", 18, "due_diligence_rules.md / 关联方与担保圈 / 互保与资金回流"]);
+      if (/应收|合同资产/.test(item.risks.map((risk) => risk[0]).join(" "))) signals.push(["财务与经营交叉验证", "应收或合同资产增长偏快", "应收、合同资产或账期拉长，需要核实收入质量。", 14, "due_diligence_rules.md / 财务与经营交叉验证 / 应收增速异常"]);
+      if (/诉讼|司法/.test(item.risks.map((risk) => risk[0]).join(" "))) signals.push(["征信与公开风险", "存在诉讼或公开风险线索", "涉诉事项会抬高尽调关注等级，并进入补充核查。", 16, "due_diligence_rules.md / 征信与公开风险 / 诉讼与公开风险"]);
+      if (!signals.length) signals.push(["基础核查", "常规尽调关注", "当前样例以基础核查和材料补充为主。", 8, "due_diligence_rules.md / 演示样例口径 / 常规尽调"]);
+      return signals;
+    }
+
+    function levelForItem(item) {
+      if (item.score >= 80) return "L4";
+      if (item.score >= 70) return "L3";
+      return "L2";
+    }
+
+    function renderStepList(container, steps, activeCount, runningIndex) {
+      container.innerHTML = steps.map((step, index) => {
+        const done = index < activeCount;
+        const isRunning = index === runningIndex;
+        const cls = isRunning ? "running" : done ? "" : "pending";
+        const tagClass = isRunning ? "blue" : done ? (step[2] === "warn" ? "amber" : step[2] === "danger" ? "red" : "green") : "";
+        const tagText = isRunning ? "执行中" : done ? "完成" : "等待";
+        return '<div class="pipe-step ' + cls + '">' +
+          '<div class="pipe-step-num">' + (index + 1) + '</div>' +
+          '<div><div class="pipe-step-title">' + escapeHtml(step[0]) + '</div><div class="pipe-step-text">' + escapeHtml(step[1]) + '</div></div>' +
+          '<span class="tag ' + tagClass + '">' + tagText + '</span>' +
+        '</div>';
+      }).join("");
+    }
+
+    function renderExecutionTrace(item) {
+      const activeCount = Math.min(runState, skillSteps.length);
+      const runningIndex = runState < skillSteps.length ? runState : -1;
+      renderStepList(el.routerPipeline, routeSteps, runState ? 3 : 0, -1);
+      renderStepList(el.skillPipeline, skillSteps, activeCount, runningIndex);
+
+      if (!runState) {
+        el.causeTrace.innerHTML = '<div class="trace-card"><strong>等待调用</strong><span>点击“生成尽调分析”后，将调用 due_diligence_rules.md 展示规则命中与判断路径。</span></div>';
+        el.scoreBreakdown.innerHTML = "";
+        el.ruleHits.innerHTML = '<div class="empty">等待风险计算。执行到 SKILL.md 第 4 步后，将展示规则命中明细。</div>';
+        return;
+      }
+
+      const signals = buildSignals(item);
+      const level = levelForItem(item);
+      el.causeTrace.innerHTML =
+        '<div class="trace-card"><strong>调用因果链</strong><span>Router 命中 credit-due-diligence-report → SKILL.md 收集材料与企业画像 → 调用 due_diligence_rules.md 识别 ' +
+        signals.length + ' 条核心关注信号 → 结合 report_template.md 输出 ' + level + ' 关注等级与尽调建议。</span></div>';
+
+      el.scoreBreakdown.innerHTML =
+        '<div class="section-title" style="margin-top:10px;">评分构成</div>' +
+        '<table class="score-table"><thead><tr><th>来源</th><th>规则/信号</th><th>分值</th></tr></thead><tbody>' +
+        signals.map((signal) => '<tr><td>' + escapeHtml(signal[0]) + '</td><td>' + escapeHtml(signal[1]) + '</td><td>' + escapeHtml(signal[3]) + '</td></tr>').join("") +
+        '<tr><td><strong>等级映射</strong></td><td><strong>' + item.score + ' 分 → ' + level + '</strong></td><td><strong>' + item.score + '</strong></td></tr>' +
+        '</tbody></table>';
+
+      el.ruleHits.innerHTML = signals.map((signal) =>
+        '<div class="rule-hit"><strong>' + escapeHtml(signal[4]) + '</strong><span>' + escapeHtml(signal[2]) + '</span></div>'
+      ).join("");
+    }
+
+    function addLog(text) {
+      const stamp = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+      logLines.push([stamp, text]);
+      el.logBox.innerHTML = logLines.slice(-8).map((line) =>
+        '<div class="log-line"><span class="log-time">' + escapeHtml(line[0]) + '</span><span>' + escapeHtml(line[1]) + '</span></div>'
+      ).join("");
+    }
+
+    function renderData() {
+      const item = cases[activeCase];
+      const rows = item[activeView];
+      const titleMap = { finance: "财务经营数据", credit: "征信与公开风险", relation: "关联方与担保圈" };
+      const noteMap = {
+        finance: "用于判断经营真实性、偿债能力和异常科目。",
+        credit: "用于核查逾期、授信、担保、涉诉和外部融资。",
+        relation: "用于穿透关联交易、互保链条和实控人风险。"
+      };
+      el.dataList.innerHTML =
+        '<div class="data-card"><h3>' + titleMap[activeView] + '</h3><div class="evidence">' + noteMap[activeView] + '</div>' +
+        rows.map((row) => '<div class="data-row"><span>' + escapeHtml(row[0]) + '</span><span>' + escapeHtml(row[1]) + '</span></div>').join("") +
+        '</div>' +
+        '<div class="data-card"><h3>风险分布</h3>' +
+          '<div class="data-row"><span>综合风险分</span><span>' + item.score + ' / 100</span></div>' +
+          '<div class="meter" style="--color:' + (item.score >= 80 ? 'var(--red)' : item.score >= 70 ? 'var(--amber)' : 'var(--green)') + '"><i style="--value:' + item.score + '%"></i></div>' +
+          '<div class="data-row"><span>结论建议</span><span>' + escapeHtml(item.amountAdvice) + '</span></div>' +
+        '</div>';
+    }
+
+    function renderReport() {
+      const item = cases[activeCase];
+      const amount = Number(el.amount.value || 0);
+      el.riskScore.textContent = item.score;
+      el.coverage.textContent = item.coverage;
+      el.alerts.textContent = item.alerts;
+      el.inputSummary.textContent = "申请 " + amount + " 万" + el.purpose.value + "授信，尽调方式为“" + el.method.value + "”。" + item.summary;
+      el.conclusionTags.innerHTML = item.tags.map((entry) => tag(entry[0], entry[1])).join("");
+      el.conclusionText.textContent = item.conclusion + " " + item.amountAdvice;
+      el.riskList.innerHTML = item.risks.map((risk) =>
+        '<div class="check"><strong>' + escapeHtml(risk[0]) + '</strong><span>' + escapeHtml(risk[1]) + '</span></div>'
+      ).join("");
+      renderExecutionTrace(item);
+    }
+
+    function renderAll() {
+      renderData();
+      renderReport();
+      if (!runState) {
+        renderExecutionTrace(cases[activeCase]);
+      }
+    }
+
+    function runAnalysis() {
+      runState = 0;
+      el.runBtn.disabled = true;
+      logLines = [];
+      el.logBox.innerHTML = "";
+      renderExecutionTrace(cases[activeCase]);
+      const current = cases[activeCase];
+      const logs = [
+        "Router：识别为银行贷前尽调任务，命中 credit-due-diligence-report。",
+        "SKILL.md 第1步：收集企业信息、授信金额、用途和关注点。",
+        "SKILL.md 第2步：检查工商、财报、流水、征信、司法、合同和税票材料。",
+        "SKILL.md 第3步：生成经营概况、现场核查关注点和企业画像。",
+        "SKILL.md 第4步：调用 due_diligence_rules.md，开始交叉验证财务、征信、关联和行业信号。",
+        "SKILL.md 第5步：输出风险问题清单和补充材料清单。",
+        "SKILL.md 第6步：按 report_template.md 生成尽调分析报告草稿。"
+      ];
+      const timer = setInterval(() => {
+        if (runState < logs.length) {
+          addLog(logs[runState] + (runState === 4 ? " 当前样例：" + current.name + "。" : ""));
+        }
+        runState += 1;
+        renderExecutionTrace(current);
+        if (runState >= skillSteps.length) {
+          clearInterval(timer);
+          el.runBtn.disabled = false;
+          renderReport();
+        }
+      }, 320);
+    }
+
+    el.enterprise.addEventListener("change", () => {
+      activeCase = el.enterprise.value;
+      runState = 0;
+      renderAll();
+    });
+
+    el.amount.addEventListener("input", renderReport);
+    el.purpose.addEventListener("change", renderReport);
+    el.method.addEventListener("change", renderReport);
+    el.runBtn.addEventListener("click", runAnalysis);
+    el.stressBtn.addEventListener("click", () => {
+      activeCase = activeCase === "b" ? "a" : "b";
+      el.enterprise.value = activeCase;
+      runState = 0;
+      renderAll();
+    });
+
+    Array.from(document.querySelectorAll("[data-view]")).forEach((button) => {
+      button.addEventListener("click", () => {
+        activeView = button.dataset.view;
+        document.querySelectorAll("[data-view]").forEach((item) => item.classList.toggle("active", item === button));
+        renderData();
+      });
+    });
+
+    el.viewSkillBtn.addEventListener("click", () => openFileModal("SKILL.md", skillMdContent));
+    el.viewRulesBtn.addEventListener("click", () => openFileModal("due_diligence_rules.md", rulesMdContent));
+    el.viewTemplateBtn.addEventListener("click", () => openFileModal("report_template.md", templateMdContent));
+    el.closeModalBtn.addEventListener("click", closeFileModal);
+    el.fileModal.addEventListener("click", (event) => {
+      if (event.target === el.fileModal) closeFileModal();
+    });
+
+    renderAll();
+  </script>
+  <script>
+    window.FDE_DEMO_README = {
+      homeHref: "../../index.html",
+      title: "信贷尽调调查与分析报告生成 Demo README",
+      badge: "AI信贷 / 贷前尽调 / 仅Demo",
+      scene: "面向银行客户经理和授信审查人员，演示如何把企业工商、经营现场、财报、流水税票、征信、司法舆情、关联担保等信息组织成一份可复核的信贷尽调报告草稿。",
+      sections: [
+        "左侧业务工作台：选择尽调客户、授信金额、用途、尽调方式和客户经理关注点。",
+        "中间 Skill 链路：展示平台路由、SKILL.md 工作流、due_diligence_rules.md 命中、执行日志和 demo 配套 Skill 包文件关系。",
+        "右侧模拟数据区：在财务经营、征信风险、关联担保之间切换，观察证据如何支撑报告结论。",
+        "弹窗演示说明：给售前人员准备的讲解路径、数据切换和边界口径。"
+      ],
+      path: [
+        "先选择“宁波某智能装备有限公司”，保持 3000 万流动资金周转，点击“生成尽调分析”。讲解它是中等关注：应收增长、客户集中、对外担保、税票匹配差异、授信用途闭环。",
+        "切到中间链路区：说明 Router 先命中 credit-due-diligence-report，再由 SKILL.md 调用 due_diligence_rules.md 和 report_template.md，不是黑箱直接出报告。",
+        "讲到中间链路第 4 步：说明系统把营收、现金流、应收周转、税票匹配度放在一起看，而不是只让模型写总结。",
+        "切到右侧“征信风险”和“关联担保”：解释对外担保、存量授信、关联交易、担保圈会进入第 4、5 步，最后影响授信条件。",
+        "点击“切换压力场景”，页面切到“成都某供应链服务有限公司”。重点看综合风险分从 68 到 82、现金流覆盖从 1.6x 到 0.9x、待核实事项从 5 到 8。",
+        "此时讲规则命中：现金流覆盖不足、司法风险增加、关联交易比例高、预付款异常增长、担保圈复杂、回款周期拉长，导致建议从有条件通过变成压降额度并增加回款监管。",
+        "最后点开 SKILL.md、due_diligence_rules.md 和 report_template.md，说明这个 demo 已经有真实存在的配套 Skill 文件，而不是只做界面效果。"
+      ],
+      switches: [
+        "宁波智能装备：经营连续性较好，但应收增长和客户集中触发“中等关注”，输出补充订单、回款、担保明细的材料清单。",
+        "成都供应链：经营性现金流为负、司法纠纷、关联采购 26%、对外担保 2100 万，触发“重点关注”，额度建议压降至 1200-1500 万。",
+        "武汉建筑工程：合同资产和应收占比较高、区域和业主集中，触发“审慎介入”，建议分批放款和核心项目回款监管。",
+        "右侧数据页签不是装饰：财务经营影响现金流覆盖和异常科目，征信风险影响外部信用判断，关联担保影响风险传导和授信条件。"
+      ],
+      talkTrack: [
+        "这不是代写报告，而是把贷前尽调的核查路径 Skill 化。",
+        "客户能看到每个结论来自哪类证据，方便业务人员复核。",
+        "Demo 使用模拟数据；真实落地需要接入客户授权的数据源和行内规则。"
+      ],
+      boundary: "当前页面为售前演示 Demo，没有伪造真实 SKILL.md 和脚本文件。真实投产必须接入银行授权数据源，并由客户经理、风险经理或审批人员复核后使用。"
+    };
+  </script>
+  <script src="../demo-page-helper.js"></script>
+</body>
+</html>
