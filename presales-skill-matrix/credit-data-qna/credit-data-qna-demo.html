@@ -1,0 +1,1223 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>信贷智能问数分析工作台</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fbff;
+      --line: #d8dee8;
+      --text: #172033;
+      --muted: #637083;
+      --blue: #1d4ed8;
+      --blue-soft: #eff6ff;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --cyan: #0f766e;
+      --shadow: 0 10px 30px rgba(23, 32, 51, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 1220px;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(29, 78, 216, 0.08), transparent 24%),
+        linear-gradient(180deg, #f8fbff 0%, #f4f7fb 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.45;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 64px 1fr;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      position: sticky;
+      top: 0;
+      z-index: 6;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #2563eb 0%, #0f766e 100%);
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 760;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .pill {
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #d8dee7;
+      background: #f8fafc;
+      color: #435264;
+      font-weight: 740;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(390px, 1.02fr) minmax(400px, 1fr) minmax(390px, 1fr);
+      gap: 14px;
+      padding: 14px;
+      min-height: 0;
+    }
+
+    .notice {
+      grid-column: 1 / -1;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #f3d18a;
+      border-radius: 8px;
+      background: #fff8e8;
+      color: #7c4a03;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .notice strong { color: #5f3900; }
+
+    .panel {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 54px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 760;
+    }
+
+    .panel-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel-body {
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    label {
+      color: #334155;
+      font-size: 12px;
+      font-weight: 680;
+    }
+
+    textarea,
+    select,
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--text);
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    select:focus,
+    textarea:focus,
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .prompt-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .chip {
+      border: 1px solid #dbe4f0;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #334155;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0 14px;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 9px 12px;
+      background: #edf2f7;
+      color: #1f2937;
+      cursor: pointer;
+      font-weight: 680;
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .btn.secondary {
+      background: #ffffff;
+      border-color: #cfd7e3;
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .conversation {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .bubble {
+      max-width: 92%;
+      border-radius: 12px;
+      padding: 10px 12px;
+      line-height: 1.58;
+      font-size: 13px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+
+    .bubble.user {
+      justify-self: end;
+      background: #eef5ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .bubble.assistant {
+      justify-self: start;
+      background: #ffffff;
+      color: var(--text);
+      border: 1px solid #e2e8f0;
+    }
+
+    .bubble.assistant strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #0f172a;
+      font-size: 13px;
+    }
+
+    .bubble p {
+      margin: 0;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .kpi {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #fbfcfd;
+      padding: 10px;
+      display: grid;
+      gap: 3px;
+    }
+
+    .kpi strong {
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .kpi span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+
+    .section:first-child {
+      border-top: 0;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .pipeline {
+      display: grid;
+      gap: 9px;
+    }
+
+    .pipe-step {
+      display: grid;
+      grid-template-columns: 26px 1fr auto;
+      gap: 8px;
+      align-items: start;
+      border: 1px solid #e1e7f0;
+      border-radius: 8px;
+      padding: 10px;
+      background: #ffffff;
+    }
+
+    .pipe-step.pending {
+      background: #f8fafc;
+      color: #64748b;
+    }
+
+    .pipe-step.running {
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
+
+    .pipe-step-num {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: #eaf2ff;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .pipe-step-title {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .pipe-step-text {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .tag {
+      min-height: 24px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid #d4dce8;
+      background: #f8fafc;
+      color: #475569;
+    }
+
+    .tag.blue {
+      color: var(--blue);
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .tag.green {
+      color: var(--green);
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+
+    .tag.amber {
+      color: var(--amber);
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    .tag.red {
+      color: var(--red);
+      background: #fff1f0;
+      border-color: #fecaca;
+    }
+
+    .trace-card {
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      background: #eff6ff;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .trace-card strong {
+      display: block;
+      color: #1d4ed8;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .trace-card span {
+      display: block;
+      color: #334155;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .sql-box,
+    .logic-box {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #dbeafe;
+      padding: 10px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.58;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .result-card,
+    .data-card {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 11px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .result-card h3,
+    .data-card h3 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .result-card p,
+    .data-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .item {
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      background: #fbfcfd;
+      padding: 9px 10px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .item strong {
+      font-size: 13px;
+    }
+
+    .item span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .segmented button {
+      min-height: 36px;
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #334155;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 680;
+    }
+
+    .segmented button.active {
+      border-color: #9bbcff;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid #eef2f6;
+      padding-top: 7px;
+      font-size: 12px;
+    }
+
+    .data-row:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .data-row span:first-child {
+      color: var(--muted);
+    }
+
+    .data-row span:last-child {
+      color: #1f2937;
+      font-weight: 720;
+      text-align: right;
+    }
+
+    .mini-btn {
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #334155;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.46);
+      padding: 24px;
+      z-index: 20;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(980px, 92vw);
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .modal-body {
+      overflow: auto;
+      padding: 14px;
+      background: #0f172a;
+    }
+
+    .modal-body pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #dbeafe;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1220px) {
+      body { min-width: 0; }
+      .main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-mark">问</div>
+        <div>
+          <h1>信贷智能问数分析工作台</h1>
+          <div class="subtitle">左侧按业务语言提问，中间展示问数链路与口径解释，右侧切换企业数据和指标视图。</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="pill">AI信贷</span>
+        <span class="pill">问数</span>
+        <span class="pill">贷前/贷中</span>
+        <span class="pill">仅 Demo</span>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="notice">
+        <strong>演示口径：</strong>
+        当前页面使用脱敏模拟数据展示信贷问数 Skill 的工作方式；真实投产需接入客户授权的数据仓、指标口径、权限控制和行内问数规范。
+      </div>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">业务问答工作台</div>
+            <div class="panel-note">模拟客户经理 / 风险经理发起自然语言问数</div>
+          </div>
+          <span class="pill">业务语言入口</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label for="enterprise">问数客户</label>
+            <select id="enterprise">
+              <option value="a">石油集团客户</option>
+              <option value="b">智能装备制造客户</option>
+              <option value="c">供应链服务客户</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="scope">问数范围</label>
+            <select id="scope">
+              <option value="finance">经营财务问数</option>
+              <option value="credit">授信与征信问数</option>
+              <option value="risk">风险与预警问数</option>
+            </select>
+          </div>
+          <div class="prompt-chips">
+            <button class="chip" type="button" data-prompt="查询客户“石油集团客户”以 2008 年为基准的近四年资产总计。">资产总计四年趋势</button>
+            <button class="chip" type="button" data-prompt="这个客户最近三年营业收入、净利润和经营性现金流有什么变化？">三年经营变化</button>
+            <button class="chip" type="button" data-prompt="帮我看这个客户当前授信余额、担保余额、是否有逾期或关注类记录。">授信与逾期概览</button>
+            <button class="chip" type="button" data-prompt="这家客户的应收账款、预付款和资产负债率有没有明显异常？">异常指标排查</button>
+          </div>
+          <div class="field">
+            <label for="prompt">自然语言问题</label>
+            <textarea id="prompt">查询客户“石油集团客户”以 2008 年为基准的近四年资产总计。</textarea>
+          </div>
+          <div class="toolbar">
+            <button class="btn primary" id="runBtn" type="button">运行问数</button>
+            <button class="btn secondary" id="switchScenarioBtn" type="button">切换高压场景</button>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi"><strong id="metricCount">4</strong><span>命中指标</span></div>
+            <div class="kpi"><strong id="sourceCount">3</strong><span>数据来源</span></div>
+            <div class="kpi"><strong id="confidence">高</strong><span>结果置信度</span></div>
+          </div>
+
+          <div class="conversation" id="conversation"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">后台 Skill 执行链路</div>
+            <div class="panel-note">展示意图理解、指标映射、口径转换、SQL生成和结果解释</div>
+          </div>
+          <span class="pill">问数 Skill</span>
+        </div>
+        <div class="panel-body">
+          <div class="section">
+            <div class="section-title">平台路由</div>
+            <div class="pipeline" id="routerPipeline"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">SKILL.md 工作流进度</div>
+            <div class="pipeline" id="skillPipeline"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">问数逻辑与口径解释</div>
+            <div id="causeTrace"></div>
+            <div class="logic-box" id="logicBox"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">SQL / 指标映射结果</div>
+            <div class="sql-box" id="sqlBox"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Skill 包调用关系</div>
+            <div class="toolbar" style="margin-top:0;">
+              <button class="mini-btn" id="viewSkillBtn" type="button">查看 SKILL.md</button>
+              <button class="mini-btn" id="viewRulesBtn" type="button">查看 metric_mapping.md</button>
+              <button class="mini-btn" id="viewTemplateBtn" type="button">查看 answer_template.md</button>
+            </div>
+            <div class="list">
+              <div class="item">
+                <strong>SKILL.md</strong>
+                <span>负责识别问数意图、拆解指标、组织回答结构和权限边界。</span>
+              </div>
+              <div class="item">
+                <strong>metric_mapping.md</strong>
+                <span>把“资产总计、授信余额、逾期、应收异常”等业务说法映射到指标字段、时间口径和维度。</span>
+              </div>
+              <div class="item">
+                <strong>answer_template.md</strong>
+                <span>要求输出“先回答、再解释口径、再列来源、最后补风险提示”的结构，不让模型散着说。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">指标与样例数据区</div>
+            <div class="panel-note">切换不同口径和企业，展示问数结果不是固定文案</div>
+          </div>
+          <span class="pill">脱敏数据</span>
+        </div>
+        <div class="panel-body">
+          <div class="segmented">
+            <button type="button" class="active" data-view="summary">汇总视图</button>
+            <button type="button" data-view="timeline">时间视图</button>
+            <button type="button" data-view="credit">授信视图</button>
+          </div>
+          <div class="result-card">
+            <h3 id="answerTitle">问数结果摘要</h3>
+            <p id="answerText"></p>
+          </div>
+          <div class="data-card">
+            <h3>指标明细</h3>
+            <div id="dataRows"></div>
+          </div>
+          <div class="data-card">
+            <h3>口径说明</h3>
+            <p id="dataNote"></p>
+          </div>
+          <div class="data-card">
+            <h3>风险提示</h3>
+            <div class="list" id="riskHints"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="fileModal" role="dialog" aria-modal="true" aria-labelledby="fileModalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title" id="fileModalTitle">文件内容</div>
+        <button class="btn secondary" id="closeModalBtn" type="button">关闭</button>
+      </div>
+      <div class="modal-body">
+        <pre id="fileModalContent"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const skillMdContent = `---
+name: credit-data-qna
+description: 当客户经理、风险经理或授信审查人员需要用自然语言查询客户经营、财务、授信、征信、预警和风险指标时，使用本 Skill。
+---
+
+# 信贷智能问数 Skill
+
+本 Skill 用于银行信贷条线的经营分析、授信管理和风险核查问数场景。
+
+## 核心工作流
+
+1. 识别自然语言中的客户、时间、指标、口径和问题意图。
+2. 将业务说法映射为标准指标和字段。
+3. 生成 SQL 或指标查询计划。
+4. 返回结果并解释口径、时间维度和来源。
+5. 对异常结果补充风险提示和人工复核建议。
+
+## 合规边界
+
+- 不编造不存在的数据。
+- 不绕过权限访问客户数据。
+- 结果必须标注时间口径、指标定义和来源范围。
+- 如用户提问含糊，应主动做口径澄清或列出假设。`;
+
+    const rulesMdContent = `# metric_mapping.md
+
+## 常见问法映射
+
+- “资产总计” -> total_assets
+- “营业收入” -> revenue
+- “净利润” -> net_profit
+- “经营性现金流” -> operating_cashflow
+- “授信余额” -> credit_balance
+- “担保余额” -> guarantee_balance
+- “逾期” -> overdue_flag / overdue_amount
+- “关注类” -> concern_class_flag
+- “应收账款异常” -> ar_ratio / ar_growth
+
+## 时间口径规则
+
+- “近四年” = T, T-1, T-2, T-3
+- “最近三年” = 最近三个完整年度
+- “截至本月” = 当前月末快照
+- “按2008年为基准” = 以 2008 年为 T，回溯 T-1, T-2, T-3`;
+
+    const templateMdContent = `# answer_template.md
+
+1. 先给出直接答案
+2. 说明时间范围和统计口径
+3. 列出关键指标或年度序列
+4. 补充异常解释或风险提示
+5. 标明该结果仍需人工复核`;
+
+    const cases = {
+      a: {
+        name: "石油集团客户",
+        replyTitle: "石油集团客户近四年资产总计查询",
+        replyText: "以 2008 年为基准，石油集团客户近四年资产总计分别为：2008 年 12,860 亿元，2007 年 11,940 亿元，2006 年 10,880 亿元，2005 年 9,760 亿元。整体呈连续增长趋势，2008 年较 2005 年增长约 31.8%。",
+        note: "当前问法已按“2008 年为 T，向前取 T-1 到 T-3”做时间展开，金额单位已统一换算为亿元。",
+        logic: [
+          "识别客户实体：石油集团客户",
+          "识别指标：资产总计",
+          "识别时间口径：以 2008 年为基准的近四年 = 2008 / 2007 / 2006 / 2005",
+          "识别输出方式：给出四年序列，并补充趋势解释"
+        ],
+        sql: `SELECT year, total_assets\nFROM corp_financial_snapshot\nWHERE corp_name = '石油集团客户'\n  AND year IN (2008, 2007, 2006, 2005)\nORDER BY year DESC;`,
+        summaryRows: [
+          ["2008 资产总计", "12,860 亿元"],
+          ["2007 资产总计", "11,940 亿元"],
+          ["2006 资产总计", "10,880 亿元"],
+          ["2005 资产总计", "9,760 亿元"],
+          ["四年增幅", "+31.8%"]
+        ],
+        timelineRows: [
+          ["2008", "总资产 12,860 亿元，油气主业扩张带动规模上升"],
+          ["2007", "总资产 11,940 亿元，资产规模继续扩大"],
+          ["2006", "总资产 10,880 亿元，资本开支开始上行"],
+          ["2005", "总资产 9,760 亿元，作为基期参考"]
+        ],
+        creditRows: [
+          ["授信余额", "6,200 亿元"],
+          ["担保余额", "1,180 亿元"],
+          ["关注类记录", "无"],
+          ["逾期记录", "无"]
+        ],
+        risks: [
+          ["问数结果是历史规模趋势，不等同于偿债能力结论。"],
+          ["若用于授信判断，仍需结合现金流、债务结构和行业周期。"]
+        ],
+        metricCount: 4,
+        sourceCount: 3,
+        confidence: "高"
+      },
+      b: {
+        name: "智能装备制造客户",
+        replyTitle: "智能装备制造客户经营与异常指标问数",
+        replyText: "近三年该客户营业收入由 18.2 亿元增长至 24.6 亿元，但应收账款占收入比例从 26% 升至 43%，经营性现金流从 2,200 万降至 -1,100 万，说明规模增长伴随回款质量承压。",
+        note: "当前回答将营业收入、应收账款占比和经营性现金流做了交叉对比，不是单指标查询。",
+        logic: [
+          "识别客户实体：智能装备制造客户",
+          "识别指标组合：营业收入、应收账款、经营性现金流",
+          "识别问题意图：不是只问数，而是判断是否存在异常趋势",
+          "因此在回答中加入交叉验证和风险解释"
+        ],
+        sql: `SELECT year, revenue, ar_ratio, operating_cashflow\nFROM corp_operating_metrics\nWHERE corp_name = '智能装备制造客户'\n  AND year IN (2025, 2024, 2023)\nORDER BY year DESC;`,
+        summaryRows: [
+          ["2025 营收", "24.6 亿元"],
+          ["2025 应收占比", "43%"],
+          ["2025 经营性现金流", "-1,100 万元"],
+          ["近三年营收增幅", "+35.2%"],
+          ["近三年现金流变化", "由正转负"]
+        ],
+        timelineRows: [
+          ["2025", "营收增长，但应收占比高、现金流转负"],
+          ["2024", "营收 21.8 亿元，应收占比 35%，现金流 900 万元"],
+          ["2023", "营收 18.2 亿元，应收占比 26%，现金流 2,200 万元"]
+        ],
+        creditRows: [
+          ["授信余额", "2.8 亿元"],
+          ["担保余额", "0.62 亿元"],
+          ["关注类记录", "1 笔"],
+          ["逾期记录", "无"]
+        ],
+        risks: [
+          ["规模增长不等于经营质量改善，当前主要风险在线索在回款与现金流。"],
+          ["若继续用于审批，应结合订单真实性、客户集中度和账龄结构复核。"]
+        ],
+        metricCount: 5,
+        sourceCount: 4,
+        confidence: "中高"
+      },
+      c: {
+        name: "供应链服务客户",
+        replyTitle: "供应链服务客户授信与风险问数",
+        replyText: "当前该客户授信余额 9,800 万元，对外担保余额 2,100 万元，近 12 个月新增合同纠纷 3 件，关注类记录 1 笔，应收账款周转由 88 天拉长至 132 天，属于需要重点跟踪的授信存量客户。",
+        note: "当前回答组合了授信余额、担保、诉讼、关注类记录和周转天数，属于风险综合问数，而不是单字段查询。",
+        logic: [
+          "识别客户实体：供应链服务客户",
+          "识别指标：授信余额、担保余额、诉讼、关注类、应收周转",
+          "识别问题意图：贷后/授信风险概览",
+          "输出时补充重点跟踪建议，而不是只返回原始数字"
+        ],
+        sql: `SELECT credit_balance, guarantee_balance, concern_class_flag, lawsuit_count_12m, ar_turnover_days\nFROM corp_credit_risk_profile\nWHERE corp_name = '供应链服务客户';`,
+        summaryRows: [
+          ["授信余额", "9,800 万元"],
+          ["担保余额", "2,100 万元"],
+          ["关注类记录", "1 笔"],
+          ["12个月新增纠纷", "3 件"],
+          ["应收周转", "132 天"]
+        ],
+        timelineRows: [
+          ["授信状态", "本年存量授信规模上升，担保责任加重"],
+          ["公开风险", "合同纠纷数量较上年增加"],
+          ["回款表现", "应收周转从 88 天拉长至 132 天"]
+        ],
+        creditRows: [
+          ["当前授信额度", "1.2 亿元"],
+          ["已用余额", "9,800 万元"],
+          ["保证金覆盖", "12%"],
+          ["逾期记录", "无逾期但存在关注类"]
+        ],
+        risks: [
+          ["该结果适合做贷后/授信概览，不构成自动压降或续贷结论。"],
+          ["若客户用于审批讨论，仍需穿透回款来源、关联担保和涉诉性质。"]
+        ],
+        metricCount: 5,
+        sourceCount: 5,
+        confidence: "中高"
+      }
+    };
+
+    const routeSteps = [
+      ["意图识别", "识别为信贷经营/授信问数任务。", "ok"],
+      ["Router 路由", "命中 credit-data-qna Skill。", "info"],
+      ["加载 Skill 包", "加载 SKILL.md、metric_mapping.md、answer_template.md。", "info"]
+    ];
+
+    const skillSteps = [
+      ["SKILL.md 第1步", "抽取客户名称、时间范围、指标和问法意图。", "ok"],
+      ["SKILL.md 第2步", "将业务语言映射为标准指标、字段和时间口径。", "ok"],
+      ["SKILL.md 第3步", "生成 SQL / 指标查询计划，并校验权限边界。", "ok"],
+      ["SKILL.md 第4步", "读取结果并组织回答结构。", "warn"],
+      ["SKILL.md 第5步", "补充口径解释、异常说明和人工复核提示。", "ok"]
+    ];
+
+    let activeCase = "a";
+    let activeView = "summary";
+    let runState = 0;
+    let logLines = [];
+
+    const el = {
+      enterprise: document.getElementById("enterprise"),
+      scope: document.getElementById("scope"),
+      prompt: document.getElementById("prompt"),
+      runBtn: document.getElementById("runBtn"),
+      switchScenarioBtn: document.getElementById("switchScenarioBtn"),
+      conversation: document.getElementById("conversation"),
+      metricCount: document.getElementById("metricCount"),
+      sourceCount: document.getElementById("sourceCount"),
+      confidence: document.getElementById("confidence"),
+      routerPipeline: document.getElementById("routerPipeline"),
+      skillPipeline: document.getElementById("skillPipeline"),
+      causeTrace: document.getElementById("causeTrace"),
+      logicBox: document.getElementById("logicBox"),
+      sqlBox: document.getElementById("sqlBox"),
+      answerTitle: document.getElementById("answerTitle"),
+      answerText: document.getElementById("answerText"),
+      dataRows: document.getElementById("dataRows"),
+      dataNote: document.getElementById("dataNote"),
+      riskHints: document.getElementById("riskHints"),
+      logBox: document.getElementById("logicBox"),
+      viewSkillBtn: document.getElementById("viewSkillBtn"),
+      viewRulesBtn: document.getElementById("viewRulesBtn"),
+      viewTemplateBtn: document.getElementById("viewTemplateBtn"),
+      fileModal: document.getElementById("fileModal"),
+      fileModalTitle: document.getElementById("fileModalTitle"),
+      fileModalContent: document.getElementById("fileModalContent"),
+      closeModalBtn: document.getElementById("closeModalBtn")
+    };
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function openFileModal(title, content) {
+      el.fileModalTitle.textContent = title;
+      el.fileModalContent.textContent = content;
+      el.fileModal.classList.add("open");
+    }
+
+    function closeFileModal() {
+      el.fileModal.classList.remove("open");
+    }
+
+    function renderConversation(item) {
+      el.conversation.innerHTML =
+        '<div class="bubble user"><p>' + escapeHtml(el.prompt.value) + '</p></div>' +
+        '<div class="bubble assistant"><strong>' + escapeHtml(item.replyTitle) + '</strong><p>' + escapeHtml(item.replyText) + '</p></div>';
+    }
+
+    function renderRows(rows) {
+      return rows.map((row) =>
+        '<div class="data-row"><span>' + escapeHtml(row[0]) + '</span><span>' + escapeHtml(row[1]) + '</span></div>'
+      ).join("");
+    }
+
+    function renderData(item) {
+      const rows = activeView === "timeline" ? item.timelineRows : activeView === "credit" ? item.creditRows : item.summaryRows;
+      el.answerTitle.textContent = item.replyTitle;
+      el.answerText.textContent = item.replyText;
+      el.dataRows.innerHTML = renderRows(rows);
+      el.dataNote.textContent = item.note;
+      el.riskHints.innerHTML = item.risks.map((risk) =>
+        '<div class="item"><strong>风险提示</strong><span>' + escapeHtml(risk[0]) + '</span></div>'
+      ).join("");
+      el.metricCount.textContent = item.metricCount;
+      el.sourceCount.textContent = item.sourceCount;
+      el.confidence.textContent = item.confidence;
+    }
+
+    function renderStepList(container, steps, activeCount, runningIndex) {
+      container.innerHTML = steps.map((step, index) => {
+        const done = index < activeCount;
+        const isRunning = index === runningIndex;
+        const cls = isRunning ? "running" : done ? "" : "pending";
+        const tagClass = isRunning ? "blue" : done ? (step[2] === "warn" ? "amber" : "green") : "";
+        const tagText = isRunning ? "执行中" : done ? "完成" : "等待";
+        return '<div class="pipe-step ' + cls + '">' +
+          '<div class="pipe-step-num">' + (index + 1) + '</div>' +
+          '<div><div class="pipe-step-title">' + escapeHtml(step[0]) + '</div><div class="pipe-step-text">' + escapeHtml(step[1]) + '</div></div>' +
+          '<span class="tag ' + tagClass + '">' + tagText + '</span>' +
+        '</div>';
+      }).join("");
+    }
+
+    function renderTrace(item) {
+      const activeCount = Math.min(runState, skillSteps.length);
+      const runningIndex = runState < skillSteps.length ? runState : -1;
+      renderStepList(el.routerPipeline, routeSteps, runState ? 3 : 0, -1);
+      renderStepList(el.skillPipeline, skillSteps, activeCount, runningIndex);
+
+      if (!runState) {
+        el.causeTrace.innerHTML = '<div class="trace-card"><strong>等待调用</strong><span>点击“运行问数”后，将展示自然语言是如何被拆成客户、指标、时间口径和查询计划的。</span></div>';
+        el.logicBox.textContent = "等待生成问数逻辑...";
+        el.sqlBox.textContent = "等待生成 SQL / 指标映射结果...";
+        return;
+      }
+
+      el.causeTrace.innerHTML =
+        '<div class="trace-card"><strong>调用因果链</strong><span>Router 命中 credit-data-qna → SKILL.md 拆解自然语言问数 → metric_mapping.md 完成指标与时间口径映射 → 生成查询计划 → 按 answer_template.md 组织回答。</span></div>';
+      el.logicBox.textContent = item.logic.join("\n");
+      el.sqlBox.textContent = item.sql;
+    }
+
+    function renderAll() {
+      const item = cases[activeCase];
+      renderConversation(item);
+      renderData(item);
+      renderTrace(item);
+    }
+
+    function runQuery() {
+      const item = cases[activeCase];
+      runState = 0;
+      renderTrace(item);
+      el.runBtn.disabled = true;
+      const timer = setInterval(() => {
+        runState += 1;
+        renderTrace(item);
+        if (runState >= skillSteps.length) {
+          clearInterval(timer);
+          el.runBtn.disabled = false;
+          renderConversation(item);
+          renderData(item);
+        }
+      }, 320);
+    }
+
+    Array.from(document.querySelectorAll("[data-prompt]")).forEach((button) => {
+      button.addEventListener("click", () => {
+        el.prompt.value = button.dataset.prompt;
+      });
+    });
+
+    Array.from(document.querySelectorAll("[data-view]")).forEach((button) => {
+      button.addEventListener("click", () => {
+        activeView = button.dataset.view;
+        document.querySelectorAll("[data-view]").forEach((item) => item.classList.toggle("active", item === button));
+        renderData(cases[activeCase]);
+      });
+    });
+
+    el.enterprise.addEventListener("change", () => {
+      activeCase = el.enterprise.value;
+      if (activeCase === "a") {
+        el.prompt.value = "查询客户“石油集团客户”以 2008 年为基准的近四年资产总计。";
+      } else if (activeCase === "b") {
+        el.prompt.value = "这个客户最近三年营业收入、净利润和经营性现金流有什么变化？";
+      } else {
+        el.prompt.value = "帮我看这个客户当前授信余额、担保余额、是否有逾期或关注类记录。";
+      }
+      runState = 0;
+      renderAll();
+    });
+
+    el.runBtn.addEventListener("click", runQuery);
+    el.switchScenarioBtn.addEventListener("click", () => {
+      activeCase = activeCase === "c" ? "a" : activeCase === "a" ? "b" : "c";
+      el.enterprise.value = activeCase;
+      el.enterprise.dispatchEvent(new Event("change"));
+    });
+
+    el.viewSkillBtn.addEventListener("click", () => openFileModal("SKILL.md", skillMdContent));
+    el.viewRulesBtn.addEventListener("click", () => openFileModal("metric_mapping.md", rulesMdContent));
+    el.viewTemplateBtn.addEventListener("click", () => openFileModal("answer_template.md", templateMdContent));
+    el.closeModalBtn.addEventListener("click", closeFileModal);
+    el.fileModal.addEventListener("click", (event) => {
+      if (event.target === el.fileModal) closeFileModal();
+    });
+
+    renderAll();
+  </script>
+  <script>
+    window.FDE_DEMO_README = {
+      homeHref: "../../index.html",
+      title: "信贷智能问数分析工作台 Demo README",
+      badge: "AI信贷 / 问数 / 仅Demo",
+      scene: "面向客户经理、风险经理和授信审查人员，演示如何把自然语言问法转换为信贷经营、授信、风险指标的结构化查询，再输出可复核的业务回答。",
+      sections: [
+        "左侧业务问答工作台：输入自然语言问题，或点击推荐问法直接发起问数。",
+        "中间后台 Skill 链路：展示意图识别、指标映射、时间口径展开、SQL/查询计划生成和结果解释。",
+        "右侧指标与样例数据区：切换汇总、时间、授信三种视图，观察同一问法在不同企业和口径下的回答变化。",
+        "弹窗演示说明：沉淀售前讲解路径、故事线和数据切换方式。"
+      ],
+      path: [
+        "先用默认问题“查询客户以2008年为基准的近四年资产总计”，点击“运行问数”，强调这是业务语言，不是 SQL。",
+        "看中间链路：Router 命中 credit-data-qna Skill，再由 SKILL.md 调用 metric_mapping.md，把“近四年”“资产总计”这些业务话翻成标准指标与时间口径。",
+        "讲问数逻辑与 SQL：说明系统不仅会回一句答案，还能解释它理解了哪个客户、哪个指标、哪个时间范围。",
+        "切换到“智能装备制造客户”，用三年经营变化问题演示系统会自动从单指标问数升级成交叉分析。",
+        "再切到“供应链服务客户”，演示授信余额、担保余额、关注类记录、诉讼与应收周转一并组织成风险概览。",
+        "最后点开 SKILL.md、metric_mapping.md 和 answer_template.md，强调这不是一个会聊天的壳，而是一套可沉淀的问数 Skill 资产。"
+      ],
+      storyline: [
+        "先把客户带入熟悉痛点：信贷条线真正缺的不是再多一个 BI 界面，而是有人能听懂业务问题，并把问题翻译成对的数据答案。",
+        "然后说明这个 demo 不是简单聊天问答，而是自然语言理解、指标映射、口径展开和结果解释的组合能力。",
+        "默认先用历史资产总计趋势建立信任，让客户看到系统能把模糊问法翻成清楚的数据口径。",
+        "再用经营异常和授信风险问法展示它不只是回数字，而是能把数字组织成风险解释和业务判断辅助。",
+        "最后落在差异化上：竞对可能展示的是一个聊天框，我们展示的是一个可解释、可追溯、可沉淀为 Skill 的信贷问数工作台。"
+      ],
+      switches: [
+        "石油集团客户适合演示“时间口径展开”，突出系统理解 2008 为基准、近四年回溯的能力。",
+        "智能装备制造客户适合演示“交叉分析”，让客户看到问数结果会自动把营收、应收和现金流组织到一起。",
+        "供应链服务客户适合演示“风险概览问数”，把授信、担保、诉讼、关注类和周转天数组合回答。",
+        "右侧从汇总视图切到时间视图或授信视图，可以强调同一个问题在不同展示口径下不是同一份固定文案。"
+      ],
+      talkTrack: [
+        "这个 demo 的 AI 味儿不在会不会回答一句话，而在于是否能把业务语言翻译成结构化问数任务。",
+        "规则负责口径边界，大模型负责理解问法、组织结果和生成业务化解释。",
+        "正式落地时可以接入客户授权数据仓、指标平台和权限体系，形成真正可用的信贷问数入口。"
+      ],
+      boundary: "当前页面使用脱敏模拟数据和示意 SQL，不构成真实客户数据查询、正式风险结论或生产问数系统结果；正式落地需接入客户授权数据源、权限模型和审计日志。"
+    };
+  </script>
+  <script src="../demo-page-helper.js"></script>
+</body>
+</html>

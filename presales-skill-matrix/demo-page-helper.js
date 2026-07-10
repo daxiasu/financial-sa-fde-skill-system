@@ -212,6 +212,10 @@
             ${list(config.path || [], true)}
           </div>
           <div class="fde-demo-readme-card wide">
+            <h3>故事线</h3>
+            ${list(config.storyline || [], true)}
+          </div>
+          <div class="fde-demo-readme-card wide">
             <h3>数据切换与结果变化</h3>
             ${list(config.switches || [], false)}
           </div>

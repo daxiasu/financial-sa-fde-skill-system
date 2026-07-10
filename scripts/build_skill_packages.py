@@ -52,6 +52,32 @@ PACKAGE_DEFINITIONS = {
             {"path": "credit-due-diligence-report-demo.html", "note": "可打开的本地演示页面"},
         ],
     },
+    "credit-data-qna": {
+        "root": "presales-skill-matrix/credit-data-qna/",
+        "name": "credit-data-qna",
+        "summary": "信贷智能问数 Skill。文件清单来自本仓库内可复核的 demo 配套 Skill 包。",
+        "coreFiles": [
+            {"path": "SKILL.md", "note": "核心技能定义文件"},
+            {"path": "references/metric_mapping.md", "note": "指标与口径映射文件"},
+            {"path": "references/answer_template.md", "note": "回答模板文件"},
+        ],
+        "demoFiles": [
+            {"path": "credit-data-qna-demo.html", "note": "可打开的本地演示页面"},
+        ],
+    },
+    "credit-knowledge-qa": {
+        "root": "presales-skill-matrix/credit-knowledge-qa/",
+        "name": "credit-knowledge-qa",
+        "summary": "信贷知识问答 Skill。文件清单来自本仓库内可复核的 demo 配套 Skill 包。",
+        "coreFiles": [
+            {"path": "SKILL.md", "note": "核心技能定义文件"},
+            {"path": "references/retrieval_policy.md", "note": "检索与模式策略文件"},
+            {"path": "references/answer_template.md", "note": "回答模板文件"},
+        ],
+        "demoFiles": [
+            {"path": "credit-knowledge-qa-demo.html", "note": "可打开的本地演示页面"},
+        ],
+    },
     "dumate-equity-industry-research": {
         "root": "presales-skill-matrix/ai-stock-researcher/",
         "name": "ai-stock-researcher",

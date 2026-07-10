@@ -1,0 +1,1187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>信贷知识问答工作台</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fbff;
+      --line: #d8dee8;
+      --text: #172033;
+      --muted: #637083;
+      --blue: #1d4ed8;
+      --blue-soft: #eff6ff;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --cyan: #0f766e;
+      --shadow: 0 10px 30px rgba(23, 32, 51, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 1220px;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(29, 78, 216, 0.07), transparent 26%),
+        linear-gradient(180deg, #f8fbff 0%, #f5f7fb 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.45;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 64px 1fr;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      position: sticky;
+      top: 0;
+      z-index: 6;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: #ffffff;
+      background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 760;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .pill {
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #d8dee7;
+      background: #f8fafc;
+      color: #435264;
+      font-weight: 740;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(380px, 0.95fr) minmax(430px, 1.08fr) minmax(380px, 0.97fr);
+      gap: 14px;
+      padding: 14px;
+      min-height: 0;
+    }
+
+    .notice {
+      grid-column: 1 / -1;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #f3d18a;
+      border-radius: 8px;
+      background: #fff8e8;
+      color: #7c4a03;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .notice strong { color: #5f3900; }
+
+    .panel {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 54px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 760;
+    }
+
+    .panel-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .panel-body {
+      min-height: 0;
+      overflow: auto;
+      padding: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    label {
+      color: #334155;
+      font-size: 12px;
+      font-weight: 680;
+    }
+
+    textarea,
+    select,
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--text);
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    select:focus,
+    textarea:focus,
+    input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .control-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0 14px;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 9px 12px;
+      background: #edf2f7;
+      color: #1f2937;
+      cursor: pointer;
+      font-weight: 680;
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .btn.secondary {
+      background: #ffffff;
+      border-color: #cfd7e3;
+    }
+
+    .mode-switch {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .mode-btn {
+      min-height: 34px;
+      border: 1px solid #dbe4f0;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #334155;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .mode-btn.active {
+      border-color: #9bbcff;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .kb-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .kb-tag {
+      border: 1px solid #d8dee7;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #435264;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .kb-tag.active {
+      border-color: #bfdbfe;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .chat-window {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .bubble {
+      max-width: 94%;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.6;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+
+    .bubble.user {
+      justify-self: end;
+      background: #eef5ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+    }
+
+    .bubble.assistant {
+      justify-self: start;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      color: var(--text);
+    }
+
+    .bubble.assistant strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .kpi {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #fbfcfd;
+      padding: 10px;
+      display: grid;
+      gap: 3px;
+    }
+
+    .kpi strong {
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .kpi span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+
+    .section:first-child {
+      border-top: 0;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .pipeline {
+      display: grid;
+      gap: 9px;
+    }
+
+    .pipe-step {
+      display: grid;
+      grid-template-columns: 26px 1fr auto;
+      gap: 8px;
+      align-items: start;
+      border: 1px solid #e1e7f0;
+      border-radius: 8px;
+      padding: 10px;
+      background: #ffffff;
+    }
+
+    .pipe-step.pending {
+      background: #f8fafc;
+      color: #64748b;
+    }
+
+    .pipe-step.running {
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
+
+    .pipe-step-num {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: #eaf2ff;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .pipe-step-title {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .pipe-step-text {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .tag {
+      min-height: 24px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid #d4dce8;
+      background: #f8fafc;
+      color: #475569;
+    }
+
+    .tag.blue {
+      color: var(--blue);
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .tag.green {
+      color: var(--green);
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+
+    .tag.amber {
+      color: var(--amber);
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    .tag.red {
+      color: var(--red);
+      background: #fff1f0;
+      border-color: #fecaca;
+    }
+
+    .trace-card {
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      background: #eff6ff;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .trace-card strong {
+      display: block;
+      color: #1d4ed8;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .trace-card span {
+      display: block;
+      color: #334155;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .result-card,
+    .list-card,
+    .doc-card {
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 11px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .result-card h3,
+    .list-card h3,
+    .doc-card h3 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .result-card p,
+    .list-card p,
+    .doc-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .citations {
+      display: grid;
+      gap: 8px;
+    }
+
+    .citation {
+      border: 1px solid #e1e7f0;
+      border-radius: 7px;
+      background: #fbfcfd;
+      padding: 9px 10px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .citation strong {
+      font-size: 13px;
+    }
+
+    .citation span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .doc-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid #eef2f6;
+      padding-top: 7px;
+      font-size: 12px;
+    }
+
+    .doc-row:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .doc-row span:first-child {
+      color: var(--muted);
+    }
+
+    .doc-row span:last-child {
+      color: #1f2937;
+      font-weight: 720;
+      text-align: right;
+    }
+
+    .mini-btn {
+      border: 1px solid #cfd7e3;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #334155;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.46);
+      padding: 24px;
+      z-index: 20;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(980px, 92vw);
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .modal-body {
+      overflow: auto;
+      padding: 14px;
+      background: #0f172a;
+    }
+
+    .modal-body pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #dbeafe;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1220px) {
+      body { min-width: 0; }
+      .main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-mark">知</div>
+        <div>
+          <h1>信贷知识问答工作台</h1>
+          <div class="subtitle">左侧提问并控制模式与范围，中间展示回答与引用依据，右侧可切换知识库、口径和回答边界。</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="pill">AI信贷</span>
+        <span class="pill">知识问答</span>
+        <span class="pill">合规</span>
+        <span class="pill">仅 Demo</span>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="notice">
+        <strong>演示口径：</strong>
+        当前页面使用脱敏制度样例和模拟知识片段展示信贷知识问答 Skill 的工作方式；真实投产需接入客户授权的制度库、知识库权限、版本管理和问答审计体系。
+      </div>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">知识问答工作台</div>
+            <div class="panel-note">模拟客户经理 / 产品经理 / 风险经理对信贷制度、流程和操作口径提问</div>
+          </div>
+          <span class="pill">受控问答入口</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label for="question">提问内容</label>
+            <textarea id="question">外国政府贷款转贷款业务涉及的部委规章制度有哪些？请给我严格依赖知识库的回答，并列出引用依据。</textarea>
+          </div>
+
+          <div class="field">
+            <label>回答模式</label>
+            <div class="mode-switch">
+              <button class="mode-btn active" type="button" data-mode="strict">严格模式</button>
+              <button class="mode-btn" type="button" data-mode="standard">标准模式</button>
+              <button class="mode-btn" type="button" data-mode="search">搜索模式</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>知识库范围</label>
+            <div class="kb-tags">
+              <button class="kb-tag active" type="button" data-kb="loan">智慧信贷制度库</button>
+              <button class="kb-tag active" type="button" data-kb="product">产品管理制度库</button>
+              <button class="kb-tag" type="button" data-kb="ops">操作流程库</button>
+              <button class="kb-tag" type="button" data-kb="foreign">外贷转贷制度库</button>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <div class="field" style="margin-bottom:0;">
+              <label for="citationPolicy">引用策略</label>
+              <select id="citationPolicy">
+                <option value="required">必须引用来源</option>
+                <option value="preferred">优先引用来源</option>
+                <option value="none">仅给结论</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="answerBoundary">回答边界</label>
+              <select id="answerBoundary">
+                <option value="strict">仅限知识库内容</option>
+                <option value="controlled">知识库为主 + 允许结构化归纳</option>
+                <option value="broad">允许补充行业常识</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <button class="btn primary" id="runBtn" type="button">运行问答</button>
+            <button class="btn secondary" id="switchCaseBtn" type="button">切换制度场景</button>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi"><strong id="docCount">4</strong><span>命中文档</span></div>
+            <div class="kpi"><strong id="citationCount">5</strong><span>引用锚点</span></div>
+            <div class="kpi"><strong id="answerSafety">严格</strong><span>回答约束</span></div>
+          </div>
+
+          <div class="chat-window" id="chatWindow"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">后台 Skill 执行链路</div>
+            <div class="panel-note">展示模式控制、范围限制、检索策略、证据引用和答案生成</div>
+          </div>
+          <span class="pill">知识问答 Skill</span>
+        </div>
+        <div class="panel-body">
+          <div class="section">
+            <div class="section-title">平台路由</div>
+            <div class="pipeline" id="routerPipeline"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">SKILL.md 工作流进度</div>
+            <div class="pipeline" id="skillPipeline"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">回答模式与范围控制</div>
+            <div id="causeTrace"></div>
+            <div class="result-card">
+              <h3>当前控制逻辑</h3>
+              <p id="logicText"></p>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Skill 包调用关系</div>
+            <div class="toolbar" style="margin-top:0;">
+              <button class="mini-btn" id="viewSkillBtn" type="button">查看 SKILL.md</button>
+              <button class="mini-btn" id="viewRulesBtn" type="button">查看 retrieval_policy.md</button>
+              <button class="mini-btn" id="viewTemplateBtn" type="button">查看 answer_template.md</button>
+            </div>
+            <div class="list-card">
+              <h3>核心文件</h3>
+              <div class="citation"><strong>SKILL.md</strong><span>定义问答适用场景、模式选择、边界控制、引用要求和回答结构。</span></div>
+              <div class="citation"><strong>retrieval_policy.md</strong><span>定义严格模式、标准模式、搜索模式的检索深度、外部知识允许度和引用纪律。</span></div>
+              <div class="citation"><strong>answer_template.md</strong><span>要求输出“先回答、再给依据、再标限制、最后给下一步动作”的结构。</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">知识库与引用区</div>
+            <div class="panel-note">展示当前范围下命中的知识片段、文档元信息和引用锚点</div>
+          </div>
+          <span class="pill">可追溯证据</span>
+        </div>
+        <div class="panel-body">
+          <div class="result-card">
+            <h3 id="answerTitle">问答结果</h3>
+            <p id="answerText"></p>
+          </div>
+
+          <div class="section">
+            <div class="section-title">引用依据</div>
+            <div class="citations" id="citations"></div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">命中文档范围</div>
+            <div class="doc-card">
+              <h3>知识库命中清单</h3>
+              <div id="docRows"></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">边界提示</div>
+            <div class="list-card" id="boundaryList"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="fileModal" role="dialog" aria-modal="true" aria-labelledby="fileModalTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title" id="fileModalTitle">文件内容</div>
+        <button class="btn secondary" id="closeModalBtn" type="button">关闭</button>
+      </div>
+      <div class="modal-body">
+        <pre id="fileModalContent"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const skillMdContent = `---
+name: credit-knowledge-qa
+description: 当客户经理、产品经理、风险经理或运营人员需要查询信贷制度、操作流程、审批口径、知识库问答边界和制度依据时，使用本 Skill。
+---
+
+# 信贷知识问答 Skill
+
+本 Skill 面向银行信贷知识问答场景，重点解决“提问自然、回答受控、来源可见、边界清楚”的问题。
+
+## 核心工作流
+
+1. 识别问题类型、制度主题、知识范围和回答边界。
+2. 根据模式选择检索策略：严格模式 / 标准模式 / 搜索模式。
+3. 限定知识库范围，过滤不在授权范围内的文档。
+4. 抽取证据片段和引用锚点。
+5. 按模板生成答案，并明确回答限制与下一步动作。
+
+## 合规边界
+
+- 严格模式下只允许基于命中知识片段回答。
+- 未命中文档时不得编造制度结论。
+- 对流程性问题可做结构化归纳，但必须保留依据来源。
+- 若问题超出当前知识库范围，应明确提示范围限制。`;
+
+    const rulesMdContent = `# retrieval_policy.md
+
+## 严格模式
+
+- 仅基于命中文档片段回答
+- 必须引用来源
+- 不补外部常识
+- 未命中时明确回答“当前知识库未检索到足够依据”
+
+## 标准模式
+
+- 以知识库为主
+- 允许对多个片段做结构化归纳
+- 优先引用来源
+- 可补充制度内的流程解释
+
+## 搜索模式
+
+- 知识库优先
+- 当库内不足时，可建议扩展搜索
+- 适合探索类问题，不适合直接做正式制度结论`;
+
+    const templateMdContent = `# answer_template.md
+
+1. 直接回答问题
+2. 列出引用依据
+3. 说明回答适用范围与限制
+4. 如有必要，给出下一步建议或需补充查询的方向`;
+
+    const cases = {
+      foreign: {
+        title: "外国政府贷款转贷款业务涉及的部委规章制度",
+        question: "外国政府贷款转贷款业务涉及的部委规章制度有哪些？请给我严格依赖知识库的回答，并列出引用依据。",
+        answer: "根据当前命中的知识库内容，外国政府贷款转贷款业务涉及的主要部委规章制度包括：国家发展改革委关于国际金融组织和外国政府贷款投资项目管理的暂行办法，财政部关于外国政府贷款转贷管理办法，以及财政部关于国际金融组织和外国政府贷款赠款管理办法等。当前回答严格依赖已命中的制度片段，没有补充知识库外信息。",
+        logic: "当前为严格模式，只读取已选知识库范围内的制度文档；回答必须逐条给出依据，不允许超出知识片段自由发挥。",
+        docs: [
+          ["智慧信贷制度库", "外贷转贷制度汇编（2023版）"],
+          ["产品管理制度库", "外国政府贷款转贷管理办法摘要"],
+          ["外贷转贷制度库", "国际金融组织和外国政府贷款项目管理规则"]
+        ],
+        citations: [
+          ["引用1", "国家发展和改革委员会《国际金融组织和外国政府贷款投资项目管理暂行办法》", "用于回答涉及项目管理的部委规章依据。"],
+          ["引用2", "财政部《外国政府贷款转贷管理办法》", "用于回答转贷管理的核心制度依据。"],
+          ["引用3", "财政部《国际金融组织和外国政府贷款赠款管理办法》", "用于回答赠款及相关管理制度依据。"],
+          ["引用4", "制度汇编关于国家部委推荐清单的要求", "用于回答项目准入与对接要求。"],
+          ["引用5", "外汇监管相关规定片段", "用于回答外贷转贷业务中的外汇合规要求。"]
+        ],
+        boundaries: [
+          "严格模式下，当前回答不补充知识库外法规和行业常识。",
+          "若客户需要最新版制度原文，应进一步指定制度名称和版本年份。"
+        ],
+        docCount: 3,
+        citationCount: 5,
+        answerSafety: "严格"
+      },
+      contract: {
+        title: "银团合同管理与转让流程问答",
+        question: "银团合同转让业务里，客户经理在系统里具体怎么操作？请按标准模式回答，并列出核心依据。",
+        answer: "根据当前命中的知识片段，客户经理需先进入合同管理下的银团合同管理模块，在录入转让协议信息、上传附件并提交后，再进入分行权限审批流程。标准模式下，系统对制度片段做了流程化归纳，因此回答会比严格模式更结构化。",
+        logic: "当前为标准模式，允许对多个制度片段进行流程化归纳，但仍以知识库文档为主，不越出已选制度范围。",
+        docs: [
+          ["智慧信贷制度库", "银团贷款合同管理操作指引"],
+          ["操作流程库", "银团合同转让系统操作说明"],
+          ["产品管理制度库", "银团转让审批节点配置说明"]
+        ],
+        citations: [
+          ["引用1", "银团贷款合同管理操作指引", "用于回答入口路径和角色职责。"],
+          ["引用2", "银团合同转让系统操作说明", "用于回答页面录入、附件上传和提交流程。"],
+          ["引用3", "银团转让审批节点配置说明", "用于回答分行权限审批流程。"]
+        ],
+        boundaries: [
+          "标准模式允许结构化归纳，但不代表回答覆盖所有异常分支流程。",
+          "如涉及不同分行差异化配置，仍需查对应分行参数设置。"
+        ],
+        docCount: 3,
+        citationCount: 3,
+        answerSafety: "标准"
+      },
+      compliance: {
+        title: "关注类贷款认定口径问答",
+        question: "关注类贷款认定时，是否只看逾期天数？如果用搜索模式回答，应该怎么限定风险？",
+        answer: "当前搜索模式下，系统会先优先检索制度库内关于关注类贷款认定的规则，再提示用户：关注类认定通常不能只看逾期天数，还应结合借款人经营变化、现金流恶化、担保弱化、关联风险传导等因素。但由于当前模式允许扩展搜索，因此这类回答应明确区分“制度明确规定”与“经验性风险提示”。",
+        logic: "当前为搜索模式，可以在知识库优先的前提下建议扩展搜索，因此回答中必须明确区分制度依据和经验解释，避免把扩展信息说成正式口径。",
+        docs: [
+          ["智慧信贷制度库", "不良与关注类贷款认定办法"],
+          ["产品管理制度库", "风险分类管理细则"]
+        ],
+        citations: [
+          ["引用1", "不良与关注类贷款认定办法", "用于回答制度内关于风险分类的明确要求。"],
+          ["引用2", "风险分类管理细则", "用于回答除逾期天数外的其他识别维度。"]
+        ],
+        boundaries: [
+          "搜索模式不适合作为正式制度结论输出模式，更适合探索和补充理解。",
+          "如果客户要求形成正式答复，应切回严格模式或标准模式。"
+        ],
+        docCount: 2,
+        citationCount: 2,
+        answerSafety: "搜索"
+      }
+    };
+
+    const routeSteps = [
+      ["意图识别", "识别为信贷制度 / 流程 / 口径知识问答任务。", "ok"],
+      ["Router 路由", "命中 credit-knowledge-qa Skill。", "info"],
+      ["加载 Skill 包", "加载 SKILL.md、retrieval_policy.md、answer_template.md。", "info"]
+    ];
+
+    const skillSteps = [
+      ["SKILL.md 第1步", "识别问题主题、制度范围和模式要求。", "ok"],
+      ["SKILL.md 第2步", "限定知识库范围并过滤不在授权范围内的文档。", "ok"],
+      ["SKILL.md 第3步", "按严格/标准/搜索模式选择检索与引用策略。", "ok"],
+      ["SKILL.md 第4步", "抽取证据片段并生成引用锚点。", "warn"],
+      ["SKILL.md 第5步", "按 answer_template.md 输出回答、限制与下一步建议。", "ok"]
+    ];
+
+    let activeCase = "foreign";
+    let activeMode = "strict";
+    let activeBoundary = "strict";
+    let runState = 0;
+
+    const el = {
+      question: document.getElementById("question"),
+      citationPolicy: document.getElementById("citationPolicy"),
+      answerBoundary: document.getElementById("answerBoundary"),
+      runBtn: document.getElementById("runBtn"),
+      switchCaseBtn: document.getElementById("switchCaseBtn"),
+      chatWindow: document.getElementById("chatWindow"),
+      docCount: document.getElementById("docCount"),
+      citationCount: document.getElementById("citationCount"),
+      answerSafety: document.getElementById("answerSafety"),
+      routerPipeline: document.getElementById("routerPipeline"),
+      skillPipeline: document.getElementById("skillPipeline"),
+      causeTrace: document.getElementById("causeTrace"),
+      logicText: document.getElementById("logicText"),
+      answerTitle: document.getElementById("answerTitle"),
+      answerText: document.getElementById("answerText"),
+      citations: document.getElementById("citations"),
+      docRows: document.getElementById("docRows"),
+      boundaryList: document.getElementById("boundaryList"),
+      viewSkillBtn: document.getElementById("viewSkillBtn"),
+      viewRulesBtn: document.getElementById("viewRulesBtn"),
+      viewTemplateBtn: document.getElementById("viewTemplateBtn"),
+      fileModal: document.getElementById("fileModal"),
+      fileModalTitle: document.getElementById("fileModalTitle"),
+      fileModalContent: document.getElementById("fileModalContent"),
+      closeModalBtn: document.getElementById("closeModalBtn")
+    };
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function openFileModal(title, content) {
+      el.fileModalTitle.textContent = title;
+      el.fileModalContent.textContent = content;
+      el.fileModal.classList.add("open");
+    }
+
+    function closeFileModal() {
+      el.fileModal.classList.remove("open");
+    }
+
+    function activeItem() {
+      return cases[activeCase];
+    }
+
+    function renderChat(item) {
+      const modeLabel = activeMode === "strict" ? "严格模式" : activeMode === "standard" ? "标准模式" : "搜索模式";
+      el.chatWindow.innerHTML =
+        '<div class="bubble user">' + escapeHtml(el.question.value) + '</div>' +
+        '<div class="bubble assistant"><strong>' + escapeHtml(modeLabel) + '回答</strong>' + escapeHtml(item.answer) + '</div>';
+    }
+
+    function renderStepList(container, steps, activeCount, runningIndex) {
+      container.innerHTML = steps.map((step, index) => {
+        const done = index < activeCount;
+        const isRunning = index === runningIndex;
+        const cls = isRunning ? "running" : done ? "" : "pending";
+        const tagClass = isRunning ? "blue" : done ? (step[2] === "warn" ? "amber" : "green") : "";
+        const tagText = isRunning ? "执行中" : done ? "完成" : "等待";
+        return '<div class="pipe-step ' + cls + '">' +
+          '<div class="pipe-step-num">' + (index + 1) + '</div>' +
+          '<div><div class="pipe-step-title">' + escapeHtml(step[0]) + '</div><div class="pipe-step-text">' + escapeHtml(step[1]) + '</div></div>' +
+          '<span class="tag ' + tagClass + '">' + tagText + '</span>' +
+        '</div>';
+      }).join("");
+    }
+
+    function renderTrace(item) {
+      const activeCount = Math.min(runState, skillSteps.length);
+      const runningIndex = runState < skillSteps.length ? runState : -1;
+      renderStepList(el.routerPipeline, routeSteps, runState ? 3 : 0, -1);
+      renderStepList(el.skillPipeline, skillSteps, activeCount, runningIndex);
+
+      if (!runState) {
+        el.causeTrace.innerHTML = '<div class="trace-card"><strong>等待调用</strong><span>点击“运行问答”后，将展示模式控制、知识库范围限制和证据引用如何共同决定回答方式。</span></div>';
+        el.logicText.textContent = "等待生成模式和范围控制逻辑...";
+        return;
+      }
+
+      const modeDesc = activeMode === "strict"
+        ? "严格模式只允许基于命中文档回答，并强制引用来源。"
+        : activeMode === "standard"
+          ? "标准模式以知识库为主，允许对多个片段做结构化归纳。"
+          : "搜索模式允许知识库优先 + 扩展理解，但必须明确区分制度依据和扩展说明。";
+
+      el.causeTrace.innerHTML =
+        '<div class="trace-card"><strong>调用因果链</strong><span>Router 命中 credit-knowledge-qa → retrieval_policy.md 选择 ' + escapeHtml(modeDesc) + ' → 限定当前知识库范围 → 抽取引用锚点 → 按 answer_template.md 输出受控回答。</span></div>';
+      el.logicText.textContent = item.logic;
+    }
+
+    function renderDocs(item) {
+      el.answerTitle.textContent = item.title;
+      el.answerText.textContent = item.answer;
+      el.docCount.textContent = item.docCount;
+      el.citationCount.textContent = item.citationCount;
+      el.answerSafety.textContent = activeMode === "strict" ? "严格" : activeMode === "standard" ? "标准" : "搜索";
+
+      el.citations.innerHTML = item.citations.map((citation) =>
+        '<div class="citation"><strong>' + escapeHtml(citation[0]) + '｜' + escapeHtml(citation[1]) + '</strong><span>' + escapeHtml(citation[2]) + '</span></div>'
+      ).join("");
+
+      el.docRows.innerHTML = item.docs.map((doc) =>
+        '<div class="doc-row"><span>' + escapeHtml(doc[0]) + '</span><span>' + escapeHtml(doc[1]) + '</span></div>'
+      ).join("");
+
+      el.boundaryList.innerHTML = item.boundaries.map((line) =>
+        '<div class="citation"><strong>边界提醒</strong><span>' + escapeHtml(line) + '</span></div>'
+      ).join("");
+    }
+
+    function renderAll() {
+      const item = activeItem();
+      renderChat(item);
+      renderTrace(item);
+      renderDocs(item);
+    }
+
+    function runQuery() {
+      const item = activeItem();
+      runState = 0;
+      renderTrace(item);
+      el.runBtn.disabled = true;
+      const timer = setInterval(() => {
+        runState += 1;
+        renderTrace(item);
+        if (runState >= skillSteps.length) {
+          clearInterval(timer);
+          el.runBtn.disabled = false;
+          renderChat(item);
+          renderDocs(item);
+        }
+      }, 320);
+    }
+
+    Array.from(document.querySelectorAll('[data-mode]')).forEach((button) => {
+      button.addEventListener('click', () => {
+        activeMode = button.dataset.mode;
+        document.querySelectorAll('[data-mode]').forEach((node) => node.classList.toggle('active', node === button));
+        if (activeMode === 'strict') {
+          el.answerBoundary.value = 'strict';
+        } else if (activeMode === 'standard') {
+          el.answerBoundary.value = 'controlled';
+        } else {
+          el.answerBoundary.value = 'broad';
+        }
+        renderAll();
+      });
+    });
+
+    Array.from(document.querySelectorAll('[data-kb]')).forEach((button) => {
+      button.addEventListener('click', () => {
+        button.classList.toggle('active');
+      });
+    });
+
+    el.answerBoundary.addEventListener('change', () => {
+      activeBoundary = el.answerBoundary.value;
+      renderAll();
+    });
+
+    el.runBtn.addEventListener('click', runQuery);
+
+    el.switchCaseBtn.addEventListener('click', () => {
+      activeCase = activeCase === 'foreign' ? 'contract' : activeCase === 'contract' ? 'compliance' : 'foreign';
+      const item = activeItem();
+      el.question.value = item.question;
+      renderAll();
+    });
+
+    el.viewSkillBtn.addEventListener('click', () => openFileModal('SKILL.md', skillMdContent));
+    el.viewRulesBtn.addEventListener('click', () => openFileModal('retrieval_policy.md', rulesMdContent));
+    el.viewTemplateBtn.addEventListener('click', () => openFileModal('answer_template.md', templateMdContent));
+    el.closeModalBtn.addEventListener('click', closeFileModal);
+    el.fileModal.addEventListener('click', (event) => {
+      if (event.target === el.fileModal) closeFileModal();
+    });
+
+    el.question.value = activeItem().question;
+    renderAll();
+  </script>
+  <script>
+    window.FDE_DEMO_README = {
+      homeHref: "../../index.html",
+      title: "信贷知识问答工作台 Demo README",
+      badge: "AI信贷 / 知识问答 / 仅Demo",
+      scene: "面向客户经理、产品经理、风险经理和运营人员，演示如何在受控知识库范围内，对信贷制度、流程、操作口径做可引用、可限界、可审计的知识问答。",
+      sections: [
+        "左侧知识问答工作台：输入问题，并控制回答模式、知识库范围、引用策略和回答边界。",
+        "中间后台 Skill 链路：展示模式选择、范围控制、检索策略、证据抽取和答案生成。",
+        "右侧知识库与引用区：展示问答结果、引用锚点、命中文档和边界提示。",
+        "弹窗演示说明：沉淀售前讲法、故事线和对竞对差异化表达。"
+      ],
+      path: [
+        "先用默认问题运行，直接展示这不是一个普通聊天框，而是受控知识问答工作台。",
+        "强调左侧可以控制严格模式、标准模式、搜索模式，并且能限制知识库范围，这一点比单纯聊天问答更接近真实生产需求。",
+        "看中间链路：SKILL.md 先识别问题类型，再按 retrieval_policy.md 决定检索和回答策略。",
+        "看右侧引用依据：不是只给答案，而是把来源、命中文档和边界提示一起给出来。",
+        "切到银团合同转让或关注类贷款认定场景，说明同一个知识问答 Skill 可以覆盖制度、流程、口径三类问题。",
+        "最后点开 retrieval_policy.md，讲清楚严格模式、标准模式、搜索模式的差异，这一点是对竞对最有杀伤力的地方。"
+      ],
+      storyline: [
+        "先把问题讲透：知识库问答如果只是聊天式回答，客户最担心的就是‘答得像真的，但我不知道它到底依据了什么’。",
+        "然后直接展示我们和竞对的差异：不是只有聊天输入框，而是把回答模式、读取范围、引用策略和边界控制都做成了显式操作面。",
+        "默认先用严格模式建立可信感，让客户看到系统可以做到‘只在知识库范围内回答，而且必须给依据’。",
+        "再切到标准模式或搜索模式，说明这套系统不是只有一种回答风格，而是可以根据业务场景控制回答约束。",
+        "最后收口：竞对更像是一个会回答的界面，我们这里展示的是一个可控、可引证、可治理的信贷知识问答工作台。"
+      ],
+      switches: [
+        "严格模式适合正式制度问答，强调只基于命中文档回答并必须引用来源。",
+        "标准模式适合流程解释，允许在知识库范围内对多个片段做结构化归纳。",
+        "搜索模式适合探索类问题，但必须清楚地区分制度依据和扩展说明。",
+        "知识库范围收窄或扩大时，会直接影响命中文档和最终答案边界。"
+      ],
+      talkTrack: [
+        "这个 demo 的 AI 味儿，不是会不会答一句话，而是能不能把问答约束、范围控制和证据引用一起做出来。",
+        "规则负责边界，大模型负责理解问题、组织证据和生成受控答案。",
+        "正式落地时，这类能力非常适合挂在银行知识库、制度库和流程库之上。"
+      ],
+      boundary: "当前页面使用脱敏制度样例和模拟知识片段，不构成正式制度解释、监管答复或生产知识库查询结果；正式落地需接入客户授权知识库、版本控制、权限体系和问答审计日志。"
+    };
+  </script>
+  <script src="../demo-page-helper.js"></script>
+</body>
+</html>
