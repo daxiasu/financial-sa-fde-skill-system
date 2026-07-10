@@ -1153,7 +1153,7 @@
               <tbody>
                 <tr><td>建设状态</td><td>说明内容成熟度。</td><td>规划 / 已制作 / 已开发</td><td>看是否已有真实定义、真实文件、可运行或可演示资产。</td></tr>
                 <tr><td>展示状态</td><td>控制页面如何展示。</td><td>catalog / skill / demo</td><td>catalog 是目录项；skill 是已有 Skill 定义；demo 是已有演示页面。</td></tr>
-                <tr><td>交付真实性</td><td>说明仓库里到底有什么。</td><td>目录规划 / 仅Demo / 真实SKILL.md / 真实Skill包 / 真实Skill包+Demo</td><td>按仓库真实文件判断，不能为了页面效果补假 references、scripts 或 tests。</td></tr>
+                <tr><td>可演示</td><td>说明当前是否可直接用于现场演示。</td><td>可演示 / 不可演示</td><td>只看是否已有可打开的 Demo 页面；不再区分真实 Skill 包还是 Demo+Skill。</td></tr>
                 <tr><td>Skill分类</td><td>历史兼容字段。</td><td>自由文本</td><td>可保留旧描述，但新增内容优先维护四个主维度。</td></tr>
                 <tr><td>标签</td><td>自由检索词。</td><td>P800、日报、净值、信创等</td><td>只放关键词，不承担主分类职责。</td></tr>
               </tbody>
@@ -1386,7 +1386,9 @@
       "TEAM-SCN-dumate-wealth-product-interpretation": "这个 Skill 的价值在于帮助投顾、理财经理和客户经理快速把复杂的基金/财富产品材料转化成客户能理解的产品解读、净值走势解释和沟通话术。它适合售前展示“金融数据 + 大模型表达”的组合能力：左侧是客户问题和产品材料，中间是分析链路，右侧是净值、持仓、同类对比等数据变化，能直观看出不同数据输入会如何影响最终结论。",
       "TEAM-SCN-dumate-equity-industry-research": "这个 Skill 的价值在于把个股研究、产业链分析、行情数据、新闻舆情和报告生成组织成一个投研工作流，而不是让分析师在多个工具之间手工拼材料。它适合展示 Agent 编排的必要性：单一 Skill 很难完成完整投研判断，需要多个分析角色和数据工具协同，最后形成可读、可追溯、可继续追问的研究报告或 PPT。",
       "TEAM-SCN-eop-scene-daily-report-analyse": "这个 Skill 的价值在于服务 SA 团队自身管理，把分散在成员日报里的项目进展、变化、阻塞和风险自动汇总为 leader 可直接使用的周报/日报分析。它不是客户金融业务场景，而是 SA-AI 内化场景：用真实内部工作流证明 Skill 可以先在团队管理、项目复盘和风险预警中提升效率，再反哺售前方法论和客户共创案例。",
-      "TEAM-SCN-credit-due-diligence-report": "这个 Skill 的价值在于把银行贷前尽调从“人工收材料、人工翻报告、人工拼结论”推进到可复核的调查工作流：它围绕企业基本信息、经营现场、财务报表、流水税票、征信、司法舆情、关联方和担保圈，自动形成尽调报告草稿、风险问题清单、补充材料清单和授信建议。售前演示时，它能说明 FDE 不是简单代写报告，而是把信贷专家的核查路径、证据口径和人工复核点沉淀成可复制的 Skill 链路。"
+      "TEAM-SCN-credit-due-diligence-report": "这个 Skill 的价值在于把银行贷前尽调从“人工收材料、人工翻报告、人工拼结论”推进到可复核的调查工作流：它围绕企业基本信息、经营现场、财务报表、流水税票、征信、司法舆情、关联方和担保圈，自动形成尽调报告草稿、风险问题清单、补充材料清单和授信建议。售前演示时，它能说明 FDE 不是简单代写报告，而是把信贷专家的核查路径、证据口径和人工复核点沉淀成可复制的 Skill 链路。",
+      "TEAM-SCN-credit-data-qna": "这个 Skill 的价值在于把信贷条线最常见的经营分析、授信核查和风险问数需求，从“找报表、找字段、找口径”升级成自然语言可发起、口径可解释、结果可复核的问数工作台。它适合售前展示大模型和数据能力如何结合：不是单纯聊天，而是把业务问法翻译成结构化查询计划，再返回有时间口径、有来源范围、有风险解释的结果。",
+      "TEAM-SCN-credit-knowledge-qa": "这个 Skill 的价值在于把信贷制度、流程、审批口径和操作规范的知识问答，从普通聊天框升级成一个受控问答工作台：回答模式可切换、知识库范围可限制、引用依据可见、边界提示明确。售前演示时，它非常适合说明我们不是做一个‘会答问题的界面’，而是在做一个可治理、可审计、可接真实制度库的信贷知识问答能力。"
     };
 
     function skillValueForScene(scene) {
@@ -1682,8 +1684,8 @@
     }
 
     const BUSINESS_TAGS = ["AI信贷", "信贷", "贷前", "贷中", "贷后", "风控", "财富管理", "投研", "投资", "营销", "对公营销", "客服", "合规", "投标", "方案写作", "团队管理", "技术评估", "资料检索", "办公", "科技", "车险"];
-    const AI_CREDIT_DEMO_SCENES = ["B-SCN-025", "B-SCN-026", "TEAM-SCN-credit-due-diligence-report"];
-    const AI_CREDIT_DEMO_SKILLS = ["B-L2-025", "B-L2-026", "credit-due-diligence-report"];
+    const AI_CREDIT_DEMO_SCENES = ["B-SCN-025", "B-SCN-026", "TEAM-SCN-credit-due-diligence-report", "TEAM-SCN-credit-data-qna", "TEAM-SCN-credit-knowledge-qa"];
+    const AI_CREDIT_DEMO_SKILLS = ["B-L2-025", "B-L2-026", "credit-due-diligence-report", "credit-data-qna", "credit-knowledge-qa"];
 
     function addBusinessTag(list, value) {
       if (BUSINESS_TAGS.includes(value)) {
@@ -1815,15 +1817,10 @@
 
     function authenticityStatus(item) {
       const scene = item?.["L2_ID"] ? sceneForL2(item) : item;
-      const explicit = item?.["交付真实性"] || scene?.["交付真实性"];
-      if (explicit) return explicit;
-      const skillPath = item?.["Skill文件路径"] || scene?.["Skill文件路径"] || "";
       const demoPath = item?.["Demo页面路径"] || scene?.["Demo页面路径"] || "";
       const type = item?.["L2_ID"] ? demoInfo(item) : sceneSkillType(scene);
-      if (skillPath && (demoPath || type.typeValue === "已制作Demo")) return "真实Skill包+Demo";
-      if (skillPath) return "真实SKILL.md";
-      if (demoPath || type.typeValue === "已制作Demo") return "仅Demo";
-      return "目录规划";
+      if (demoPath || type.typeValue === "已制作Demo") return "可演示";
+      return "不可演示";
     }
 
     function taxonomyNarrative(item, kind = "scene") {
@@ -1834,7 +1831,7 @@
       const mode = implementationMode(item);
       const truth = authenticityStatus(item);
       const subject = kind === "skill" ? "这个 L2 Skill" : "这个场景";
-      return subject + "归入“" + scenarioType + "”，业务上可通过“" + business + "”命中；落地时按“" + shape + "”沉淀，执行机制主标为“" + mode + "”。当前交付真实性为“" + truth + "”，表示页面展示会以仓库真实资产为准，Demo 只是演示层，不替代真实 SKILL.md 和配套文件。";
+      return subject + "归入“" + scenarioType + "”，业务上可通过“" + business + "”命中；落地时按“" + shape + "”沉淀，执行机制主标为“" + mode + "”。当前状态为“" + truth + "”，表示它是否已经可以直接在工作台中做现场演示。";
     }
 
     function relatedIds(scene) {
@@ -2097,9 +2094,9 @@
           { value: "已制作Skill", label: "已制作 Skill", count: skillTypeCounts["已制作Skill"] || 0 },
           { value: "已制作Demo", label: "已制作 Demo", count: skillTypeCounts["已制作Demo"] || 0 }
         ]),
-        filterGroup("真实性", "authenticity", [
+        filterGroup("可演示", "authenticity", [
           { value: "全部", count: authenticityBase.length },
-          ...optionsFromCounts(authenticityCounts, ["目录规划", "仅Demo", "真实SKILL.md", "真实Skill包", "真实Skill包+Demo"])
+          ...optionsFromCounts(authenticityCounts, ["可演示", "不可演示"])
         ])
       ].join("");
 
@@ -2179,7 +2176,7 @@
           '<div class="meta-box"><strong>业务分类/标签</strong><p>' + escapeHtml(business) + '</p></div>' +
           '<div class="meta-box"><strong>落地形态</strong><p>' + escapeHtml(profile.shape) + '</p></div>' +
           '<div class="meta-box"><strong>实现模式</strong><p>' + escapeHtml(mode) + '</p></div>' +
-          '<div class="meta-box"><strong>交付真实性</strong><p>' + escapeHtml(truth) + '</p></div>' +
+          '<div class="meta-box"><strong>可演示</strong><p>' + escapeHtml(truth) + '</p></div>' +
           '<div class="meta-box"><strong>平台依赖</strong><p>' + escapeHtml(profile.platform) + '</p></div>' +
           '<div class="meta-box"><strong>后续工作</strong><p>' + escapeHtml(profile.next) + '</p></div>' +
           '<div class="meta-box"><strong>FDE 工作重点</strong><p>' + escapeHtml(profile.fde) + '</p></div>' +
@@ -2256,7 +2253,7 @@
           '<div class="meta-box"><strong>Skill 类型</strong><p>' + escapeHtml(type.status) + '</p></div>' +
           '<div class="meta-box"><strong>落地形态</strong><p>' + escapeHtml(profile.shape) + '</p></div>' +
           '<div class="meta-box"><strong>实现模式</strong><p>' + escapeHtml(mode) + '</p></div>' +
-          '<div class="meta-box"><strong>交付真实性</strong><p>' + escapeHtml(truth) + '</p></div>' +
+          '<div class="meta-box"><strong>可演示</strong><p>' + escapeHtml(truth) + '</p></div>' +
           '<div class="meta-box"><strong>关键输入</strong><p>' + escapeHtml(skill["关键输入"]) + '</p></div>' +
           '<div class="meta-box"><strong>关键输出</strong><p>' + escapeHtml(skill["关键输出"]) + '</p></div>' +
           '<div class="meta-box"><strong>后续工作</strong><p>' + escapeHtml(profile.next) + '</p></div>' +
